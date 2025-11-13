@@ -1,14 +1,13 @@
-import { neonConfig } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-import ws from "ws";
-
-neonConfig.webSocketConstructor = ws;
 
 const createClient = (url?: string) => {
-  const connectionString = url || process.env.DATABASE_URL;
-  const adapter = new PrismaNeon({ connectionString });
-  return new PrismaClient({ adapter });
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: url || process.env.DATABASE_URL,
+      },
+    },
+  });
 };
 
 declare global {
