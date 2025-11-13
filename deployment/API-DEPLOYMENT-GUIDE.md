@@ -171,17 +171,14 @@ Since we're in a monorepo, we need to tell Railway where the API is:
 
 ### Set Build Configuration
 
-Railway should auto-detect Node.js, but verify:
-
 1. Go to "Settings" → "Build"
-2. **Builder**: NIXPACKS (auto-detected)
-3. **Build Command**: Leave empty (not needed with tsx)
-4. **Install Command**: `pnpm install` (auto-detected)
+2. **Builder**: Dockerfile
+3. Railway will automatically detect and use the `Dockerfile` located in `apps/api/`.
 
 ### Set Start Command
 
 1. Go to "Settings" → "Deploy"
-2. **Start Command**: `pnpm start`
+2. The start command is defined within the `Dockerfile`.
 3. **Restart Policy**: `ON_FAILURE`
 4. **Max Retries**: `10`
 

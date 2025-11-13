@@ -192,9 +192,10 @@ railway up --service api
 2. **Configure Service**
    - **Name:** `astracms-api`
    - **Root Directory:** `apps/api`
-   - **Build Command:** `cd ../.. && pnpm install`
-   - **Start Command:** `cd apps/api && pnpm start`
+   - **Build Command:** Leave empty (defined in Dockerfile)
+   - **Start Command:** Leave empty (defined in Dockerfile)
    - **Port:** `8000`
+   - Railway will automatically detect and use the `Dockerfile` located in `apps/api/`.
 
 3. **Add Environment Variables**
    ```
@@ -455,8 +456,8 @@ railway logs --service astracms-api --follow
 Name: astracms-api
 Repository: astracms
 Root Directory: apps/api
-Build Command: cd ../.. && pnpm install
-Start Command: cd apps/api && pnpm start
+Build Command: Leave empty (defined in Dockerfile)
+Start Command: Leave empty (defined in Dockerfile)
 Port: 8000
 Health Check: /status
 ```

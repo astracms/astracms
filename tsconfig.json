@@ -3,7 +3,6 @@
   "references": [
     { "path": "./apps/api" },
     { "path": "./apps/cms" },
-    { "path": "./apps/web" },
     { "path": "./packages/db" },
     { "path": "./packages/parser" },
     { "path": "./packages/ui" }

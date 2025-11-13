@@ -36,10 +36,10 @@ This guide will walk you through setting up the complete Railway infrastructure 
 │                           │                            │
 │  ┌────────────────────────┼──────────────────────────┐ │
 │  │                        │                          │ │
-│  │  ┌──────────┐  ┌───────┴──────┐  ┌────────────┐ │ │
-│  │  │PostgreSQL│  │    Redis     │  │   Minio    │ │ │
-│  │  │ Database │  │    Cache     │  │  Storage   │ │ │
-│  │  └──────────┘  └──────────────┘  └────────────┘ │ │
+│  │  ┌──────────┐  ┌────────────┐ │ │
+│  │  │PostgreSQL│  │   Minio    │ │ │
+│  │  │ Database │  │  Storage   │ │ │
+│  │  └──────────┘  └────────────┘ │ │
 │  │                                                  │ │
 │  └──────────────── Infrastructure ─────────────────┘ │
 │                                                        │

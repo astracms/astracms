@@ -283,16 +283,11 @@ ls -la .next/standalone
 
 2. **Configure Service:**
    - **Name:** `astracms-cms`
-   - **Root Directory:** Leave empty (Railway detects monorepo)
-   - **Build Command:** 
-     ```bash
-     cd apps/cms && pnpm install && pnpm build
-     ```
-   - **Start Command:**
-     ```bash
-     cd apps/cms && pnpm start
-     ```
+   - **Root Directory:** `apps/cms`
+   - **Build Command:** Leave empty (defined in Dockerfile)
+   - **Start Command:** Leave empty (defined in Dockerfile)
    - **Port:** `3000`
+   - Railway will automatically detect and use the `Dockerfile` located in `apps/cms/`.
 
 #### Step 2: Add Environment Variables
 

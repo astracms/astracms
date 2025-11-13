@@ -66,12 +66,11 @@ railway add --database postgres
    - Click "Update"
 
 3. **Build Settings** (Settings → Build):
-   - Builder: `NIXPACKS` (auto-detected)
-   - Build Command: Leave empty
-   - Install Command: `pnpm install` (auto-detected)
+   - Builder: Dockerfile
+   - Railway will automatically detect and use the `Dockerfile` located in `apps/api/`.
 
 4. **Deploy Settings** (Settings → Deploy):
-   - Start Command: `pnpm start`
+   - The start command is defined within the `Dockerfile`.
    - Restart Policy: `ON_FAILURE`
    - Max Retries: `10`
 
