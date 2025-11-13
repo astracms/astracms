@@ -17,7 +17,7 @@ RUN npm install -g pnpm
 
 # Install dependencies
 # Use --prod to install only production dependencies
-RUN pnpm install --prod --filter=api --ignore-scripts
+RUN pnpm install --prod --filter=api --ignore-scripts 
 
 # Copy source code
 COPY apps/api/src apps/api/src

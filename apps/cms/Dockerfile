@@ -15,7 +15,7 @@ COPY packages/ui/package.json packages/ui/
 RUN npm install -g pnpm
 
 # Install dependencies
-RUN pnpm install --filter=cms
+RUN pnpm install --filter=cms --ignore-scripts
 
 # Stage 2: Builder
 FROM --platform=linux/amd64 node:20-alpine AS builder
