@@ -118,33 +118,7 @@ postgresql://postgres:password@hostname.railway.internal:5432/railway
 
 ---
 
-## Part 4: Provision Redis (Upstash)
 
-### Using CLI
-
-```bash
-# Add Redis to your project
-railway add --database redis
-```
-
-### Using Dashboard
-
-1. Click "New" → "Database" → "Redis"
-2. Railway will provision Upstash Redis automatically
-
-### Get Redis Credentials
-
-```bash
-railway variables
-```
-
-Look for:
-- `REDIS_URL` - Redis endpoint (https://...)
-- `REDIS_TOKEN` - Redis authentication token
-
-**Copy both values**, you'll need them.
-
----
 
 ## Part 5: Provision Minio (S3 Storage)
 
@@ -230,9 +204,15 @@ Go to your API service → "Variables" tab and add:
 NODE_ENV=production
 PORT=8000
 DATABASE_URL=${{Postgres.DATABASE_URL}}
-REDIS_URL=${{Redis.REDIS_URL}}
-REDIS_TOKEN=${{Redis.REDIS_TOKEN}}
 API_VERSION=v1
+```
+
+**For Upstash Redis:**
+Manually add `UPSTASH_REDIS_URL` and `UPSTASH_REDIS_TOKEN` to your API service's environment variables in Railway. Obtain these values directly from your Upstash Redis instance.
+
+```env
+UPSTASH_REDIS_URL=your_upstash_redis_url
+UPSTASH_REDIS_TOKEN=your_upstash_redis_token
 ```
 
 ### Add CORS Origins (Initial)
@@ -533,7 +513,7 @@ Before moving to CMS deployment, verify:
 
 - [ ] API service is running (green status in Railway)
 - [ ] PostgreSQL database is connected
-- [ ] Redis is connected (rate limiting works)
+- [ ] UPSTASH_REDIS_URL and UPSTASH_REDIS_TOKEN are set and Redis is connected (rate limiting works)
 - [ ] Health check returns `{"status":"ok"}`
 - [ ] Database migrations completed successfully
 - [ ] Test workspace created in database
@@ -583,15 +563,15 @@ psql $DATABASE_URL -c "SELECT 1;"
 **Symptom**: Rate limiting doesn't work, analytics fail
 
 **Solution**:
-```bash
-# Verify Redis variables are set
-railway variables | grep REDIS
+- Verify `UPSTASH_REDIS_URL` and `UPSTASH_REDIS_TOKEN` are manually set in your Railway environment variables.
+- Check your Upstash Redis instance status.
 
-# Test Redis connection
+```bash
+# Test Redis connection (ensure UPSTASH_REDIS_URL and UPSTASH_REDIS_TOKEN are set in your shell)
 railway shell --service astracms-api
 node
-> const { Redis } = require('@upstash/redis');
-> const redis = new Redis({ url: process.env.REDIS_URL, token: process.env.REDIS_TOKEN });
+
+> const redis = new Redis({ url: process.env.UPSTASH_REDIS_URL, token: process.env.UPSTASH_REDIS_TOKEN });
 > await redis.ping();
 ```
 
@@ -643,8 +623,8 @@ Once your API is deployed and working:
    ```
    API_URL=https://api.astracms.com
    DATABASE_URL=<from Railway>
-   REDIS_URL=<from Railway>
-   REDIS_TOKEN=<from Railway>
+   UPSTASH_REDIS_URL=<from Upstash>
+   UPSTASH_REDIS_TOKEN=<from Upstash>
    ```
 
 2. **Deploy CMS**: 
@@ -687,15 +667,7 @@ railway up
 railway restart --service astracms-api
 ```
 
-### Service References
 
-In Railway environment variables, use:
-```
-${{Postgres.DATABASE_URL}}
-${{Redis.REDIS_URL}}
-${{Redis.REDIS_TOKEN}}
-${{minio.MINIO_ROOT_USER}}
-```
 
 ---
 
@@ -705,9 +677,8 @@ ${{minio.MINIO_ROOT_USER}}
 - **Included**: $5 credit/month
 - **API Service**: ~$2-3/month
 - **PostgreSQL**: ~$1-2/month
-- **Redis**: ~$1/month
 - **Minio**: ~$1/month
-- **Total**: ~$5-7/month
+- **Total**: ~$4-6/month
 
 ### Hobby Plan ($5/month)
 - **Included**: $5 credit + better limits

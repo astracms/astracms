@@ -17,7 +17,7 @@ Node.js API server for AstraCMS, built with Hono and deployed on Railway.
 - **Framework**: [Hono](https://hono.dev/) - Ultra-fast web framework
 - **Runtime**: Node.js 20+
 - **Database**: PostgreSQL (via Prisma)
-- **Cache/Rate Limiting**: Upstash Redis
+- **Cache/Rate Limiting**: Railway Redis (ioredis)
 - **Deployment**: Railway.app
 
 ## Getting Started
@@ -26,7 +26,7 @@ Node.js API server for AstraCMS, built with Hono and deployed on Railway.
 
 - Node.js 20 or higher
 - PostgreSQL database
-- Redis instance (Upstash recommended)
+- Redis instance (Railway Redis with ioredis recommended)
 
 ### Installation
 
@@ -143,7 +143,7 @@ Responses include `Cache-Control` headers with `stale-if-error` directive for im
 
 1. Railway account with project created
 2. PostgreSQL database provisioned
-3. Redis (Upstash) provisioned
+3. Redis (Railway Redis with ioredis) provisioned
 
 ### Environment Variables
 
@@ -211,7 +211,7 @@ Common status codes:
 ## Local Development Tips
 
 1. **Database Setup**: Ensure PostgreSQL is running locally or use Railway's database
-2. **Redis Setup**: Use Upstash free tier for development
+2. **Redis Setup**: Use Railway Redis with ioredis for development
 3. **Hot Reload**: The dev server uses `tsx watch` for instant reloads
 4. **Testing**: Use tools like `curl`, Postman, or Thunder Client
 

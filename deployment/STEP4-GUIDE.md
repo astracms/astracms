@@ -144,9 +144,9 @@ REDIS_URL=${REDIS.REDIS_URL}
 REDIS_TOKEN=${REDIS.REDIS_TOKEN}
 
 # ================================================
-# WEBHOOKS (QSTASH - UPSTASH)
+# WEBHOOKS (QSTASH)
 # ================================================
-# Get from: https://upstash.com/
+
 QSTASH_TOKEN=qstash_xxxxxxxxxxxxxxxxxxxxxxxx
 
 # ================================================

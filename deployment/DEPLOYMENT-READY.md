@@ -26,7 +26,7 @@
   - [x] `.dev.vars.example` deleted
   - [x] Cloudflare bindings removed from all routes
 - [x] Implemented Node.js server with `@hono/node-server`
-- [x] Updated middleware for Upstash Redis (Node.js SDK)
+- [x] Updated middleware for Railway Redis (ioredis)
 - [x] Created comprehensive deployment documentation
 - [x] TypeScript compilation: **PASSING ✅**
 - [x] All API endpoints tested and working
@@ -328,7 +328,7 @@ SITE_URL=https://blog.astracms.com
 - **Hono**: https://hono.dev
 - **Astro**: https://docs.astro.build
 - **Prisma**: https://www.prisma.io/docs
-- **Upstash Redis**: https://docs.upstash.com/redis
+- **Railway Redis**: [ioredis documentation](https://github.com/luin/ioredis)
 
 ---
 
@@ -340,7 +340,7 @@ SITE_URL=https://blog.astracms.com
 - **Apps**: 3 (API, CMS, Web)
 - **Tech Stack**: Node.js, Next.js 16, Astro, Hono, Prisma
 - **Database**: PostgreSQL
-- **Cache**: Redis (Upstash)
+- **Cache**: Redis (ioredis)
 - **Storage**: Minio S3
 
 ---

@@ -18,6 +18,7 @@
     "astro": "^5.15.0",
     "clsx": "^2.1.1",
     "free-astro-components": "^1.2.0",
+
     "sharp": "^0.34.3",
     "shiki": "^3.12.2",
     "tailwind-merge": "^2.5.4",

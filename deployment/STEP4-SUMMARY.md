@@ -331,7 +331,7 @@ After CMS is deployed and tested:
 **External Services:**
 - Resend: https://resend.com (email)
 - Polar: https://polar.sh (billing)
-- Upstash: https://upstash.com (webhooks)
+
 
 ---
 

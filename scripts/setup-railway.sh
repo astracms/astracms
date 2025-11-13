@@ -285,9 +285,9 @@ MINIO_BUCKET_NAME=astracms-media
 MINIO_PUBLIC_URL=
 
 # ================================================
-# WEBHOOKS (QSTASH - UPSTASH)
+# WEBHOOKS (QSTASH)
 # ================================================
-# Get from: https://upstash.com/
+
 QSTASH_TOKEN=
 
 # ================================================

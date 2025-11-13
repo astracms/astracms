@@ -2,7 +2,7 @@
 import type { SvgComponent } from "astro/types";
 import Container from "@/components/Container.astro";
 import Neon from "@/components/icons/sponsors/Neon.astro";
-import Upstash from "@/components/icons/sponsors/Upstash.astro";
+
 import Layout from "@/layouts/Layout.astro";
 import { SITE } from "@/lib/constants";
 
@@ -14,13 +14,7 @@ type Sponsor = {
 };
 
 const sponsorsData: Sponsor[] = [
-  {
-    name: "Upstash",
-    url: "https://upstash.com?utm_source=astracms",
-    icon: Upstash,
-    description:
-      "Powers our caching, webhooks and rate limiting infrastructure",
-  },
+
   {
     name: "Neon",
     url: "https://neon.com?utm_source=astracms",

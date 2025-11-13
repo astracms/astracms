@@ -132,40 +132,7 @@ This guide will walk you through setting up the complete Railway infrastructure 
 
 ---
 
-## 🔴 PART 3: Redis Setup
 
-### 3.1 Add Redis Cache
-
-1. **In Your Project:**
-   - Click "+ New"
-   - Select "Database"
-   - Choose "Add Redis"
-
-2. **Redis Created!**
-
-### 3.2 Get Redis Credentials
-
-1. **Click on Redis Service**
-
-2. **Go to "Variables" Tab**
-
-3. **Copy These Variables:**
-   ```bash
-   REDIS_URL=redis://default:***@***:6379
-   REDIS_PRIVATE_URL=redis://default:***@***:6379
-   REDIS_PUBLIC_URL=redis://default:***@***:6379
-   ```
-
-4. **Save These Securely**
-
-### 3.3 Configure Redis Settings
-
-**Recommended Settings:**
-- **Max Memory:** 100MB (Hobby) / 1GB (Pro)
-- **Eviction Policy:** allkeys-lru
-- **Persistence:** RDB (default)
-
----
 
 ## 📦 PART 4: Minio Storage Setup
 
@@ -310,10 +277,10 @@ DATABASE_URL=postgresql://postgres:***@***:5432/railway
 DATABASE_PRIVATE_URL=postgresql://postgres:***@***:5432/railway
 
 # ================================================
-# REDIS (from Railway Redis)
+# REDIS (Upstash Redis - manually configured)
 # ================================================
-REDIS_URL=redis://default:***@***:6379
-REDIS_TOKEN=your-redis-password
+UPSTASH_REDIS_URL=your_upstash_redis_url
+UPSTASH_REDIS_TOKEN=your_upstash_redis_token
 
 # ================================================
 # AUTHENTICATION
@@ -364,7 +331,7 @@ MINIO_BUCKET_NAME=astracms-media
 MINIO_PUBLIC_URL=https://your-minio-url.up.railway.app/astracms-media
 
 # ================================================
-# WEBHOOKS (QSTASH - UPSTASH)
+# WEBHOOKS (QSTASH)
 # ================================================
 QSTASH_TOKEN=qstash_xxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -414,7 +381,6 @@ Before deploying apps, we need to:
 
 ```
 ✅ PostgreSQL     - Running (Green)
-✅ Redis          - Running (Green)
 ✅ Minio          - Running (Green)
 ```
 
@@ -442,25 +408,7 @@ SELECT version();
 \q
 ```
 
-### 7.3 Test Redis Connection
 
-```bash
-# Connect to Redis
-railway run redis-cli -u $REDIS_URL
-
-# Test command
-PING
-# Should return: PONG
-
-# Set test key
-SET test "Hello AstraCMS"
-
-# Get test key
-GET test
-
-# Exit
-exit
-```
 
 ### 7.4 Test Minio Storage
 
@@ -495,13 +443,11 @@ exit
 - [ ] Railway account created
 - [ ] Project created: `astracms-production`
 - [ ] PostgreSQL service running
-- [ ] Redis service running
 - [ ] Minio service running
 - [ ] Minio bucket `astracms-media` created
 - [ ] Bucket policy set to public read
 - [ ] CORS configured on Minio
 - [ ] All database credentials saved
-- [ ] All Redis credentials saved
 - [ ] All Minio credentials saved
 - [ ] `.env.production` file created locally
 - [ ] All required secrets generated
@@ -515,9 +461,8 @@ exit
 
 **Hobby Plan ($5/month credit):**
 - PostgreSQL: ~$1-2/month
-- Redis: ~$1/month
 - Minio: ~$1-2/month
-- **Estimate:** $3-5/month (within free credit)
+- **Estimate:** $2-4/month (within free credit)
 
 **Pro Plan ($20/month + usage):**
 - Includes more resources
@@ -552,19 +497,7 @@ psql $DATABASE_URL
 - Use `DATABASE_PRIVATE_URL` for internal connections
 - Verify credentials in Railway dashboard
 
-### Redis Issues
 
-**Problem:** Redis connection timeout
-```bash
-# Check Redis URL format
-echo $REDIS_URL
-
-# Should be: redis://user:pass@host:port
-```
-
-**Solution:**
-- Use `REDIS_PRIVATE_URL` for internal connections
-- Check Redis service is running
 
 ### Minio Issues
 
@@ -604,10 +537,7 @@ echo $REDIS_URL
 - **Backups:** Automatic (Railway)
 - **Version:** 15
 
-### Redis
-- **Connection:** [saved in password manager]
-- **Max Memory:** 100MB
-- **Policy:** allkeys-lru
+
 
 ### Minio
 - **Console:** [minio-url]:9001
@@ -630,13 +560,15 @@ Before proceeding to Step 3, verify:
 
 - [ ] Railway project created and accessible
 - [ ] PostgreSQL running and tested
-- [ ] Redis running and tested
 - [ ] Minio running and tested
 - [ ] Minio bucket created and configured
-- [ ] All credentials documented securely
+- [ ] Bucket policy set to public read
+- [ ] CORS configured on Minio
+- [ ] All database credentials documented securely
+- [ ] All Minio credentials saved
 - [ ] `.env.production` file created
 - [ ] Infrastructure costs understood
-- [ ] GitHub repo connected to Railway
+- [ ] GitHub repository connected to Railway
 - [ ] Railway CLI installed and authenticated
 
 ---

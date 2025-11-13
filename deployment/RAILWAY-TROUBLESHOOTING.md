@@ -130,7 +130,7 @@
    ```bash
    railway shell --service astracms-api
    node
-   > const { Redis } = require('@upstash/redis');
+   
    > const redis = new Redis({ url: process.env.REDIS_URL, token: process.env.REDIS_TOKEN });
    > await redis.ping();
    ```

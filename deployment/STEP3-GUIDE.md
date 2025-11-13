@@ -33,7 +33,7 @@ Successfully migrated the AstraCMS API from Cloudflare Workers to Node.js for Ra
 
 ### 3. Middleware Migration
 ✅ **Updated `src/middleware/ratelimit.ts`**
-- Changed from `@upstash/redis/cloudflare` to `@upstash/redis`
+
 - Updated to use Node.js Redis client
 - Fixed context environment access
 - Added proper error handling
@@ -91,7 +91,7 @@ Successfully migrated the AstraCMS API from Cloudflare Workers to Node.js for Ra
 │   ┌─────────────────────────────┐  │
 │   │   tsx (TypeScript runtime) │  │
 │   │   @hono/node-server        │  │
-│   │   @upstash/redis (Node)    │  │
+
 │   │   dotenv                   │  │
 │   └─────────────────────────────┘  │
 └─────────────────────────────────────┘
@@ -138,8 +138,8 @@ Create `.env` file in `apps/api/` for local testing:
 DATABASE_URL=postgresql://postgres:***@***:5432/railway
 
 # Redis (optional for local dev)
-REDIS_URL=redis://default:***@***:6379
-REDIS_TOKEN=your-redis-token
+UPSTASH_REDIS_URL=your_upstash_redis_url
+UPSTASH_REDIS_TOKEN=your_upstash_redis_token
 
 # Environment
 NODE_ENV=development
@@ -200,10 +200,16 @@ railway up --service api
    ```
    DATABASE_URL=${POSTGRESQL.DATABASE_URL}
    DATABASE_PRIVATE_URL=${POSTGRESQL.DATABASE_PRIVATE_URL}
-   REDIS_URL=${REDIS.REDIS_URL}
-   REDIS_TOKEN=${REDIS.REDIS_TOKEN}
    NODE_ENV=production
    PORT=8000
+   ```
+
+   **For Upstash Redis:**
+   Manually add `UPSTASH_REDIS_URL` and `UPSTASH_REDIS_TOKEN` to your API service's environment variables in Railway. Obtain these values directly from your Upstash Redis instance.
+
+   ```env
+   UPSTASH_REDIS_URL=your_upstash_redis_url
+   UPSTASH_REDIS_TOKEN=your_upstash_redis_token
    ```
 
 4. **Configure Health Check**
@@ -253,7 +259,7 @@ railway up --service api
 - [x] Environment variables load correctly
 - [x] Graceful shutdown works
 - [ ] Database connection works (requires local DB)
-- [ ] Redis connection works (requires Redis)
+- [ ] Redis connection works (requires UPSTASH_REDIS_URL and UPSTASH_REDIS_TOKEN)
 - [ ] API routes respond (requires workspace setup)
 
 ### Railway Testing
@@ -263,7 +269,7 @@ railway up --service api
 - [ ] Custom domain accessible
 - [ ] SSL certificate active
 - [ ] Database connection works
-- [ ] Redis connection works
+- [ ] Redis connection works (using UPSTASH_REDIS_URL and UPSTASH_REDIS_TOKEN)
 - [ ] API endpoints respond correctly
 - [ ] Rate limiting works
 - [ ] Analytics tracking works
@@ -326,12 +332,9 @@ psql $DATABASE_URL -c "SELECT 1;"
 
 #### Issue: Redis connection timeout
 ```bash
-# Solution: Check Redis URL and token
-echo $REDIS_URL
-echo $REDIS_TOKEN
-
-# Test connection
-redis-cli -u $REDIS_URL PING
+# Solution: Check UPSTASH_REDIS_URL and UPSTASH_REDIS_TOKEN are manually set in Railway
+# Test connection (ensure UPSTASH_REDIS_URL is set in your shell)
+redis-cli -u $UPSTASH_REDIS_URL PING
 ```
 
 #### Issue: Module not found
@@ -361,8 +364,8 @@ PORT=8000                             # API port (Railway auto-injects)
 
 ### Optional (for features)
 ```bash
-REDIS_URL=redis://...                 # From Railway Redis
-REDIS_TOKEN=...                       # From Railway Redis
+UPSTASH_REDIS_URL=your_upstash_redis_url      # From Upstash
+UPSTASH_REDIS_TOKEN=your_upstash_redis_token  # From Upstash
 CORS_ORIGINS=https://astracms.com,... # Comma-separated origins
 API_VERSION=v1                        # API version prefix
 ```
@@ -462,9 +465,9 @@ Health Check: /status
 ```bash
 # Auto-injected by Railway
 DATABASE_URL=${POSTGRESQL.DATABASE_URL}
-REDIS_URL=${REDIS.REDIS_URL}
-
-# Manually set
+# Manually set for Upstash Redis
+# UPSTASH_REDIS_URL=your_upstash_redis_url
+# UPSTASH_REDIS_TOKEN=your_upstash_redis_token
 NODE_ENV=production
 PORT=8000
 ```

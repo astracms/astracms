@@ -46,19 +46,7 @@ railway add --database postgres
 
 ---
 
-## Step 3: Add Redis (Upstash)
 
-### Via CLI
-```bash
-railway add --database redis
-```
-
-### Via Dashboard
-1. Click "New" → "Database" → "Add Redis"
-2. Railway provisions Upstash Redis automatically
-3. Note `REDIS_URL` and `REDIS_TOKEN` in Variables tab
-
----
 
 ## Step 4: Add API Service
 
@@ -92,10 +80,16 @@ railway add --database redis
    NODE_ENV=production
    PORT=8000
    DATABASE_URL=${{Postgres.DATABASE_URL}}
-   REDIS_URL=${{Redis.REDIS_URL}}
-   REDIS_TOKEN=${{Redis.REDIS_TOKEN}}
    API_VERSION=v1
    CORS_ORIGINS=*
+   ```
+
+   **For Upstash Redis:**
+   Manually add `UPSTASH_REDIS_URL` and `UPSTASH_REDIS_TOKEN` to your API service's environment variables in Railway. Obtain these values directly from your Upstash Redis instance.
+
+   ```env
+   UPSTASH_REDIS_URL=your_upstash_redis_url
+   UPSTASH_REDIS_TOKEN=your_upstash_redis_token
    ```
 
 6. **Generate Domain** (Settings → Networking):
@@ -212,9 +206,8 @@ Railway's V2 configuration has limited support for:
 - Try using `${{Postgres.DATABASE_URL}}` syntax
 
 ### Redis Connection Error
-- Verify REDIS_URL and REDIS_TOKEN are set
-- Check Redis service is running
-- Use `${{Redis.REDIS_URL}}` syntax
+- Verify `UPSTASH_REDIS_URL` and `UPSTASH_REDIS_TOKEN` are manually set in your Railway environment variables.
+- Check your Upstash Redis instance status.
 
 ---
 
@@ -226,9 +219,7 @@ In Railway environment variables, reference other services:
 # Postgres
 DATABASE_URL=${{Postgres.DATABASE_URL}}
 
-# Redis
-REDIS_URL=${{Redis.REDIS_URL}}
-REDIS_TOKEN=${{Redis.REDIS_TOKEN}}
+
 
 # Other services (if needed)
 API_URL=${{astracms-api.RAILWAY_PUBLIC_DOMAIN}}
