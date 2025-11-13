@@ -1,10 +1,11 @@
 # Stage 1: Dependencies
+
 FROM --platform=linux/amd64 node:20-alpine AS deps
 
 WORKDIR /app
 
-# Copy pnpm-lock.yaml and package.json files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy package.json files for monorepo
+COPY package.json ./
 COPY apps/cms/package.json apps/cms/
 COPY packages/db/package.json packages/db/
 COPY packages/parser/package.json packages/parser/
@@ -12,25 +13,17 @@ COPY packages/tsconfig/package.json packages/tsconfig/
 COPY packages/ui/package.json packages/ui/
 COPY turbo.json ./
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Install dependencies
-RUN pnpm install --filter=cms --ignore-scripts
+RUN npm install --omit=dev
 
 # Stage 2: Builder
 FROM --platform=linux/amd64 node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install pnpm in the builder stage
-RUN npm install -g pnpm
-
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json ./package.json
-COPY --from=deps /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=deps /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=deps /app/apps/cms/package.json apps/cms/package.json
 COPY --from=deps /app/packages/db packages/db
 COPY --from=deps /app/packages/parser packages/parser
@@ -41,7 +34,7 @@ COPY --from=deps /app/packages/ui packages/ui
 COPY apps/cms apps/cms
 
 # Build the Next.js application
-RUN pnpm build --filter=cms
+RUN npm run build --workspace=apps/cms
 
 # Stage 3: Runner
 FROM --platform=linux/amd64 node:20-alpine AS runner

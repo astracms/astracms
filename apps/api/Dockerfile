@@ -1,11 +1,11 @@
 # Stage 1: Builder
+
 FROM --platform=linux/amd64 node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy pnpm-lock.yaml and package.json files
-# to leverage Docker cache for dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy package.json files for monorepo
+COPY package.json ./
 COPY apps/api/package.json apps/api/
 COPY packages/db/package.json packages/db/
 COPY packages/parser/package.json packages/parser/
@@ -13,12 +13,8 @@ COPY packages/tsconfig/package.json packages/tsconfig/
 COPY packages/ui/package.json packages/ui/
 COPY turbo.json ./
 
-# Install pnpm
-RUN npm install -g pnpm
-
 # Install dependencies
-# Use --prod to install only production dependencies
-RUN pnpm install --prod --filter=api --ignore-scripts 
+RUN npm install --omit=dev
 
 # Copy source code
 COPY apps/api/src apps/api/src
@@ -41,15 +37,13 @@ COPY --from=builder /app/packages/parser ./packages/parser
 COPY --from=builder /app/packages/tsconfig ./packages/tsconfig
 COPY --from=builder /app/packages/ui ./packages/ui
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # Expose the port the app runs on
 EXPOSE 8000
 
 # Run database migrations before starting the application
 # The DATABASE_URL environment variable must be available at this point.
-RUN pnpm --filter=db prisma migrate deploy
+RUN npm run --workspace=packages/db prisma:migrate:deploy
 
 # Set the command to start the application
-CMD ["pnpm", "start", "--filter=api"]
+CMD ["npm", "start", "--workspace=apps/api"]
