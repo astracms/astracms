@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +23,7 @@ import { Input } from "@astracms/ui/components/input";
 import { Label } from "@astracms/ui/components/label";
 import { toast } from "@astracms/ui/components/sonner";
 import { Textarea } from "@astracms/ui/components/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";

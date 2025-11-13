@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { buttonVariants } from "@astracms/ui/components/button";
 import {
   SidebarInset,
@@ -14,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@astracms/ui/components/tooltip";
 import { cn } from "@astracms/ui/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SidebarSimpleIcon, XIcon } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";

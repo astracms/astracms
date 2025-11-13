@@ -1,15 +1,15 @@
 "use server";
 
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { db } from "@astracms/db";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import type { User } from "better-auth";
 import { nanoid } from "nanoid";
 import { isAllowedAvatarUrl } from "@/lib/constants";
 import {
-  S3_BUCKET_NAME,
-  S3_PUBLIC_URL,
   getS3Client,
   isS3Available,
+  S3_BUCKET_NAME,
+  S3_PUBLIC_URL,
 } from "@/lib/s3";
 
 export async function storeUserImageAction(user: User) {
@@ -52,7 +52,7 @@ export async function storeUserImageAction(user: User) {
         Body: buffer,
         ContentType: contentType,
         ContentLength: buffer.length,
-      }),
+      })
     );
 
     const publicUrl = `${S3_PUBLIC_URL}/${key}`;

@@ -1,10 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@astracms/ui/components/button";
 import { Checkbox } from "@astracms/ui/components/checkbox";
 import { Input } from "@astracms/ui/components/input";
 import { Label } from "@astracms/ui/components/label";
 import { Separator } from "@astracms/ui/components/separator";
 import { toast } from "@astracms/ui/components/sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleNotchIcon } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

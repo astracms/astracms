@@ -3,8 +3,8 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
-import { S3_BUCKET_NAME, getS3Client, isS3Available } from "@/lib/s3";
 import { rateLimitHeaders, userAvatarUploadRateLimiter } from "@/lib/ratelimit";
+import { getS3Client, isS3Available, S3_BUCKET_NAME } from "@/lib/s3";
 import { uploadSchema, validateUpload } from "@/lib/validations/upload";
 
 export async function POST(request: Request) {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   if (!isS3Available()) {
     return NextResponse.json(
       { error: "Storage service not configured" },
-      { status: 503 },
+      { status: 503 }
     );
   }
 
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   if (!parsedBody.success) {
     return NextResponse.json(
       { error: "Invalid request body" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     if (!success) {
       return NextResponse.json(
         { error: "Too Many Requests", remaining },
-        { status: 429, headers: rateLimitHeaders(limit, remaining, reset) },
+        { status: 429, headers: rateLimitHeaders(limit, remaining, reset) }
       );
     }
   }
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     default:
       return NextResponse.json(
         { error: "Invalid upload type" },
-        { status: 400 },
+        { status: 400 }
       );
   }
 
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       ContentType: fileType,
       ContentLength: fileSize,
     }),
-    { expiresIn: 3600 },
+    { expiresIn: 3600 }
   );
 
   return NextResponse.json({ url: presignedUrl, key });

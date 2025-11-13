@@ -59,7 +59,8 @@ export const InviteUserEmail = ({
             </Heading>
             <Text className="text-center text-[14px] text-black leading-[24px]">
               <strong>{invitedByUsername}</strong> has invited you to the{" "}
-              <strong>{teamName}</strong> workspace on <strong>Astracms.</strong>
+              <strong>{teamName}</strong> workspace on{" "}
+              <strong>Astracms.</strong>
             </Text>
             <Section>
               <Row>

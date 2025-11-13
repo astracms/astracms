@@ -1,10 +1,10 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@astracms/ui/components/button";
 import { DialogClose } from "@astracms/ui/components/dialog";
 import { Input } from "@astracms/ui/components/input";
 import { Label } from "@astracms/ui/components/label";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon } from "@phosphor-icons/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";

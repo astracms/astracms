@@ -63,8 +63,8 @@ export const WelcomeEmail = ({ userEmail }: WelcomeEmailProps) => {
             <Text className="text-[#666666] text-[12px] leading-[24px]">
               This email was intended for{" "}
               <span className="text-black">{userEmail}</span>. If you did not
-              create an account, please send an email to support@astracms.com
-              to get in touch with us.
+              create an account, please send an email to support@astracms.com to
+              get in touch with us.
             </Text>
           </Container>
         </Body>

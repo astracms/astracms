@@ -1,9 +1,9 @@
-import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { db } from "@astracms/db";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerSession } from "@/lib/auth/session";
-import { S3_BUCKET_NAME, getS3Client, isS3Available } from "@/lib/s3";
+import { getS3Client, isS3Available, S3_BUCKET_NAME } from "@/lib/s3";
 import { loadMediaApiFilters } from "@/lib/search-params";
 import { DeleteSchema } from "@/lib/validations/upload";
 import { getWebhooks, WebhookClient } from "@/lib/webhooks/webhook-client";
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   if (!orgId) {
     return NextResponse.json(
       { error: "Active workspace not found in session" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -131,7 +131,7 @@ export async function DELETE(request: Request) {
   if (idsToDelete.length === 0) {
     return NextResponse.json(
       { error: "mediaId or mediaIds is required" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -174,7 +174,7 @@ export async function DELETE(request: Request) {
             key.split("/").some((seg) => ["", ".", ".."].includes(seg))
           ) {
             throw new Error(
-              "Invalid storage key: contains empty or traversal path segments.",
+              "Invalid storage key: contains empty or traversal path segments."
             );
           }
           const s3Client = getS3Client();
@@ -182,19 +182,19 @@ export async function DELETE(request: Request) {
             new DeleteObjectCommand({
               Bucket: S3_BUCKET_NAME,
               Key: key,
-            }),
+            })
           );
           successfullyDeletedFromR2.push({ id: media.id, media });
         } catch (error) {
           console.error(
             `Failed to delete media object from R2 for media ID ${media.id}. URL: ${media.url}`,
-            error,
+            error
           );
           failedIds.push(media.id);
         }
       } else {
         console.error(
-          `Media with ID ${media.id} has no URL. Deleting database record only.`,
+          `Media with ID ${media.id} has no URL. Deleting database record only.`
         );
         successfullyDeletedFromR2.push({ id: media.id, media });
       }
@@ -229,7 +229,7 @@ export async function DELETE(request: Request) {
     if (deletedIds.length === 0) {
       return NextResponse.json(
         { error: "No media items were deleted successfully" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -242,7 +242,7 @@ export async function DELETE(request: Request) {
             ? `Deleted ${deletedIds.length} items, ${failedIds.length} failed`
             : `Deleted ${deletedIds.length} items successfully`,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     const message =

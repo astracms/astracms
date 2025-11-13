@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Avatar,
   AvatarFallback,
@@ -19,6 +18,7 @@ import { Input } from "@astracms/ui/components/input";
 import { Label } from "@astracms/ui/components/label";
 import { toast } from "@astracms/ui/components/sonner";
 import { cn } from "@astracms/ui/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CircleNotchIcon,
   ImageIcon,

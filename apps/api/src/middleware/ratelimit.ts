@@ -128,9 +128,8 @@ function memoryRateLimit(
     };
   }
 
-  // Within existing window
-  // biome-ignore lint/nursery/noIncrementDecrement: <explanation>
-  cached.count++;
+  // Within existing windos
+  cached.count += 1;
   const success = cached.count <= limit;
   const remaining = Math.max(0, limit - cached.count);
 

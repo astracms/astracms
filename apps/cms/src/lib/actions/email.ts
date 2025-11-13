@@ -33,7 +33,7 @@ export async function sendInviteEmailAction({
 }: SendInviteEmailProps) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "Astracms <emails@astracms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: inviteeEmail,
       subject: `Join ${workspaceName} on Astracms`,
       text: "This is a mock invite email",
@@ -66,7 +66,7 @@ export async function sendInviteEmailAction({
 
   try {
     const response = await resend.emails.send({
-      from: "Astracms <emails@astracms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: inviteeEmail,
       subject: `Join ${workspaceName} on Astracms`,
       react: InviteUserEmail({
@@ -158,7 +158,7 @@ export async function sendResetPasswordAction({
 }) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "Astracms <emails@astracms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: userEmail,
       subject: "Reset Your Password",
       text: "This is a mock reset password email",
@@ -172,7 +172,7 @@ export async function sendResetPasswordAction({
 
   try {
     const response = await resend.emails.send({
-      from: "Astracms <emails@astracms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: userEmail,
       subject: "Reset Your Password",
       react: ResetPasswordEmail({
@@ -202,7 +202,7 @@ export async function sendWelcomeEmailAction({
 }) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "Astracms <emails@astracms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: userEmail,
       text: "This is a mock welcome email",
       subject: "Welcome to Astracms!",
@@ -216,7 +216,7 @@ export async function sendWelcomeEmailAction({
 
   try {
     await resend.emails.send({
-      from: "Astracms <emails@astracms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: userEmail,
       subject: "Welcome to Astracms!",
       react: WelcomeEmail({

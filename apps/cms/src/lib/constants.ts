@@ -153,7 +153,7 @@ export function isAllowedAvatarUrl(url: string): boolean {
     // Check if hostname matches exactly or is a subdomain of allowed hosts
     return ALLOWED_AVATAR_HOSTS.some(
       (allowedHost) =>
-        hostname === allowedHost || hostname.endsWith(`.${allowedHost}`),
+        hostname === allowedHost || hostname.endsWith(`.${allowedHost}`)
     );
   } catch {
     // Invalid URL
@@ -194,7 +194,7 @@ export const MEDIA_SORT_BY = ["createdAt", "name"] as const;
 export const SORT_DIRECTIONS = ["asc", "desc"] as const;
 
 export const MEDIA_SORTS = MEDIA_SORT_BY.flatMap((field) =>
-  SORT_DIRECTIONS.map((direction) => `${field}_${direction}` as const),
+  SORT_DIRECTIONS.map((direction) => `${field}_${direction}` as const)
 );
 
 export const MEDIA_TYPES = ["image", "video", "audio", "document"] as const;

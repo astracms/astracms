@@ -1,6 +1,5 @@
-
-import { redis } from "./redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { redis } from "./redis";
 
 export const rateLimitHeaders = (
   limit: number,
@@ -15,18 +14,14 @@ export const rateLimitHeaders = (
 
 // Create a new ratelimiter, that allows 5 requests per 10 seconds
 export const userAvatarUploadRateLimiter = new Ratelimit({
-  redis: redis!, // Assumes redis is initialized and not null
+  redis, // Assumes redis is initialized and not null
   limiter: Ratelimit.fixedWindow(5, "10s"),
   analytics: true,
 });
 
 // Create a new ratelimiter for AI suggestions, that allows 10 requests per 60 seconds
 export const aiSuggestionsRateLimiter = new Ratelimit({
-  redis: redis!, // Assumes redis is initialized and not null
+  redis, // Assumes redis is initialized and not null
   limiter: Ratelimit.fixedWindow(10, "60s"),
   analytics: true,
 });
-
-
-
-

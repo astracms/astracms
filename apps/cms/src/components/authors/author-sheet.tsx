@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: IDs are unique within their respective modals */
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Avatar,
   AvatarFallback,
@@ -21,6 +20,7 @@ import {
 import { toast } from "@astracms/ui/components/sonner";
 import { Textarea } from "@astracms/ui/components/textarea";
 import { cn } from "@astracms/ui/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CircleNotchIcon,
   ImageIcon,

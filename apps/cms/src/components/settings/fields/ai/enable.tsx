@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import { Label } from "@astracms/ui/components/label";
 import { toast } from "@astracms/ui/components/sonner";
 import { Switch } from "@astracms/ui/components/switch";
 import { cn } from "@astracms/ui/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useId } from "react";

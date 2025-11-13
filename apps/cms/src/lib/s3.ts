@@ -39,7 +39,7 @@ export function isS3Available(): boolean {
 export function getS3Client(): S3Client {
   if (!s3) {
     throw new Error(
-      "Minio S3 is not configured. Please set MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, and MINIO_PUBLIC_URL environment variables.",
+      "Minio S3 is not configured. Please set MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, and MINIO_PUBLIC_URL environment variables."
     );
   }
   return s3;
