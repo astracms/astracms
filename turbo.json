@@ -55,6 +55,10 @@
     },
     "db:generate": {
       "cache": false
+    },
+    "start": {
+      "cache": false,
+      "env": ["NODE_ENV", "DATABASE_URL"]
     }
   }
 }

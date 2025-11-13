@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
 import dotenv from "dotenv";
+// biome-ignore lint/style/noExportedImports: <explanation>
 import app from "./app";
-import type { AppEnv } from "./types/hono";
 
 // Load environment variables
 dotenv.config();
@@ -23,7 +23,7 @@ app.use("*", async (c, next) => {
 });
 
 // Get port from environment or default to 8000
-const port = parseInt(process.env.PORT || "8000", 10);
+const port = Number.parseInt(process.env.PORT || "8000", 10);
 
 // Create and start server
 const server = serve({
@@ -45,7 +45,7 @@ const gracefulShutdown = () => {
   setTimeout(() => {
     console.error("❌ Forced shutdown after timeout");
     process.exit(1);
-  }, 10000);
+  }, 10_000);
 };
 
 // Handle shutdown signals
