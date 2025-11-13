@@ -1,11 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { buttonVariants } from "@astracms/ui/components/button";
 import { Input } from "@astracms/ui/components/input";
 import { Label } from "@astracms/ui/components/label";
 import { toast } from "@astracms/ui/components/sonner";
 import { cn } from "@astracms/ui/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeSlashIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -91,7 +91,7 @@ export function LoginForm() {
 
   return (
     <div className="grid gap-6">
-      <div className="grid grid-cols-2 gap-4">
+      {/* <div className="grid grid-cols-2 gap-4">
         <button
           className={cn(
             buttonVariants({ variant: "outline", size: "lg" }),
@@ -139,7 +139,7 @@ export function LoginForm() {
           Or
         </span>
         <span className="inline-block h-px w-full border-t bg-border" />
-      </div>
+      </div> */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-3">
           <div className="grid gap-1">
