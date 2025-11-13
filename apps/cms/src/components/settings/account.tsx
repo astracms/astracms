@@ -1,0 +1,128 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@astracms/ui/components/button";
+import { Checkbox } from "@astracms/ui/components/checkbox";
+import { Input } from "@astracms/ui/components/input";
+import { Label } from "@astracms/ui/components/label";
+import { Separator } from "@astracms/ui/components/separator";
+import { toast } from "@astracms/ui/components/sonner";
+import { CircleNotchIcon } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { type ProfileData, profileSchema } from "@/lib/validations/settings";
+import { useUser } from "@/providers/user";
+import { ErrorMessage } from "../auth/error-message";
+
+type AccountFormProps = {
+  email: string;
+  name: string;
+};
+
+function AccountForm({ name, email }: AccountFormProps) {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ProfileData>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: { name: name || "", email: email || "" },
+  });
+
+  const [dataChanged, setDataChanged] = useState(false);
+  const router = useRouter();
+  const { updateUser } = useUser();
+
+  const onSubmit = async (formData: ProfileData) => {
+    try {
+      await updateUser(formData);
+      toast.success("Account details updated");
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    const dataSubscription = watch((value) => {
+      setDataChanged(value.name !== name);
+    });
+
+    return () => {
+      dataSubscription.unsubscribe();
+    };
+  }, [watch, name]);
+
+  return (
+    <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+      <section className="mt-5 grid grid-cols-2 gap-6">
+        <div className="flex flex-col gap-2">
+          <Label>Name</Label>
+          <Input {...register("name")} />
+          {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Email</Label>
+          <Input
+            {...register("email")}
+            className="cursor-not-allowed"
+            readOnly
+          />
+          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
+        </div>
+      </section>
+      <Separator />
+      <section className="space-y-8">
+        <div>
+          <h1 className="font-semibold text-lg">Notifications</h1>
+          <p className="text-muted-foreground text-sm">
+            Manage your personal notification settings for this workspace. Read
+            the governance documentation to learn more.
+          </p>
+        </div>
+        <ul className="flex flex-col gap-6">
+          <li className="flex gap-4">
+            <Checkbox checked disabled id="newsletter" />{" "}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="newsletter">Receive newsletter</Label>
+              <p className="text-muted-foreground text-sm">
+                I want to receive updates about relevant products or services.
+              </p>
+            </div>
+          </li>
+          <li className="flex gap-4">
+            <Checkbox id="member" />{" "}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="member">Member activities</Label>
+              <p className="text-muted-foreground text-sm">
+                Stay informed and receive notifications when team members join
+                or leave this workspace.
+              </p>
+            </div>
+          </li>
+          <li className="flex gap-4">
+            <Checkbox id="publish" />{" "}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="publish">Publishing activities</Label>
+              <p className="text-muted-foreground text-sm">
+                Receive notifications when scheduled articles are published.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <Separator />
+      <section className="flex w-full justify-end gap-4">
+        <Button
+          className="flex w-20 items-center gap-2 self-end"
+          disabled={!dataChanged || isSubmitting}
+        >
+          {isSubmitting ? <CircleNotchIcon className="animate-spin" /> : "Save"}
+        </Button>
+      </section>
+    </form>
+  );
+}
+
+export default AccountForm;

@@ -1,0 +1,22 @@
+---
+import FooterComponent from "@/components/Footer.astro";
+import HeadComponent from "@/components/Head.astro";
+import HeaderComponent from "@/components/Header.astro";
+import ScrollToTop from "@/components/ScrollToTop.astro";
+
+const { title, description, image } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <HeadComponent title={title} description={description} image={image}/>
+  </head>
+  <body>
+    <HeaderComponent />
+    <main>
+      <slot/>
+    </main>
+    <FooterComponent />
+    <ScrollToTop />
+  </body>
+</html>

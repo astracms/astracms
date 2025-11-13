@@ -1,0 +1,322 @@
+# Railway.toml - AstraCMS Deployment Configuration
+# This configuration deploys a monorepo with multiple services to Railway
+
+# Global build configuration
+[build]
+builder = "nixpacks"
+nixpacksPlan = """
+[phases.setup]
+nixPkgs = ['nodejs_20', 'pnpm']
+
+[phases.install]
+cmds = ['pnpm install --frozen-lockfile']
+
+[phases.build]
+cmds = ['pnpm build']
+"""
+
+# Global deployment settings
+[deploy]
+numReplicas = 1
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+region = "us-west1"
+
+# ============================================
+# CMS SERVICE (Next.js Admin Panel)
+# ============================================
+[[services]]
+name = "astracms-cms"
+root = "/"
+buildCommand = "pnpm install --frozen-lockfile && pnpm build --filter=cms"
+startCommand = "cd apps/cms && pnpm start"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 300
+port = 3000
+
+[services.build]
+watchPatterns = [
+  "apps/cms/**",
+  "packages/**",
+  "pnpm-lock.yaml"
+]
+
+[[services.domains]]
+domain = "astracms.com"
+
+[[services.domains]]
+domain = "www.astracms.com"
+
+[services.envVars]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
+
+# ============================================
+# API SERVICE (Hono API - Node.js)
+# ============================================
+[[services]]
+name = "astracms-api"
+root = "/"
+buildCommand = """
+pnpm install --frozen-lockfile && \
+cd apps/api && \
+pnpm add @hono/node-server tsx && \
+pnpm build
+"""
+startCommand = "cd apps/api && node dist/server.js"
+healthcheckPath = "/status"
+healthcheckTimeout = 60
+port = 8000
+
+[services.build]
+watchPatterns = [
+  "apps/api/**",
+  "packages/db/**",
+  "pnpm-lock.yaml"
+]
+
+[[services.domains]]
+domain = "api.astracms.com"
+
+[services.envVars]
+NODE_ENV = "production"
+PORT = "8000"
+
+# ============================================
+# WEB SERVICE (Next.js Public Blog)
+# ============================================
+[[services]]
+name = "astracms-web"
+root = "/"
+buildCommand = "pnpm install --frozen-lockfile && pnpm build --filter=web"
+startCommand = "cd apps/web && pnpm start"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+port = 3001
+
+[services.build]
+watchPatterns = [
+  "apps/web/**",
+  "packages/**",
+  "pnpm-lock.yaml"
+]
+
+[[services.domains]]
+domain = "blog.astracms.com"
+
+[services.envVars]
+NODE_ENV = "production"
+NEXT_TELEMETRY_DISABLED = "1"
+
+# ============================================
+# DATABASE SERVICE (PostgreSQL)
+# ============================================
+[[services]]
+name = "astracms-db"
+type = "postgresql"
+plan = "starter"
+
+[services.database]
+name = "astracms"
+owner = "astracms"
+extensions = ["uuid-ossp", "pgcrypto"]
+
+# ============================================
+# REDIS SERVICE (Caching & Rate Limiting)
+# ============================================
+[[services]]
+name = "astracms-redis"
+type = "redis"
+plan = "starter"
+
+[services.redis]
+maxmemoryPolicy = "allkeys-lru"
+maxmemory = "100mb"
+
+# ============================================
+# MINIO SERVICE (S3-Compatible Storage)
+# ============================================
+[[services]]
+name = "astracms-storage"
+root = "/"
+buildCommand = "echo 'No build needed for Minio'"
+startCommand = """
+docker run -p 9000:9000 -p 9001:9001 \
+  -e MINIO_ROOT_USER=$MINIO_ACCESS_KEY \
+  -e MINIO_ROOT_PASSWORD=$MINIO_SECRET_KEY \
+  -v /data:/data \
+  minio/minio server /data --console-address ":9001"
+"""
+healthcheckPath = "/minio/health/live"
+healthcheckTimeout = 30
+port = 9000
+
+[[services.domains]]
+domain = "storage.astracms.com"
+
+[[services.domains]]
+domain = "console.storage.astracms.com"
+port = 9001
+
+[services.envVars]
+MINIO_BROWSER = "on"
+MINIO_DOMAIN = "storage.astracms.com"
+MINIO_SERVER_URL = "https://storage.astracms.com"
+MINIO_BROWSER_REDIRECT_URL = "https://console.storage.astracms.com"
+
+# ============================================
+# SHARED ENVIRONMENT VARIABLES
+# ============================================
+[env]
+# Node.js
+NODE_VERSION = "20"
+NPM_CONFIG_PRODUCTION = "false"
+
+# Database URLs (automatically injected by Railway)
+DATABASE_URL = "${{astracms-db.DATABASE_URL}}"
+DATABASE_POOL_URL = "${{astracms-db.DATABASE_POOL_URL}}"
+
+# Redis URLs (automatically injected by Railway)
+REDIS_URL = "${{astracms-redis.REDIS_URL}}"
+REDIS_PRIVATE_URL = "${{astracms-redis.REDIS_PRIVATE_URL}}"
+
+# Application URLs
+NEXT_PUBLIC_APP_URL = "https://astracms.com"
+BETTER_AUTH_URL = "https://astracms.com"
+ASTRACMS_API_URL = "https://api.astracms.com/v1"
+
+# Storage Configuration
+MINIO_ENDPOINT = "https://storage.astracms.com"
+MINIO_BUCKET_NAME = "astracms-media"
+MINIO_PUBLIC_URL = "https://storage.astracms.com/astracms-media"
+S3_BUCKET_NAME = "astracms-media"
+S3_PUBLIC_URL = "https://storage.astracms.com/astracms-media"
+
+# ============================================
+# BUILD OPTIMIZATION
+# ============================================
+[build.cache]
+paths = [
+  "node_modules/",
+  ".next/cache/",
+  ".turbo/",
+  "apps/cms/.next/cache/",
+  "apps/web/.next/cache/"
+]
+
+# ============================================
+# DEPLOYMENT HOOKS
+# ============================================
+[hooks]
+# Run database migrations after deployment
+postDeploy = """
+cd packages/db && \
+pnpm db:deploy && \
+echo 'Database migrations completed'
+"""
+
+# Health check before switching traffic
+preHealthcheck = """
+echo 'Running pre-healthcheck validations...'
+"""
+
+# ============================================
+# SCALING CONFIGURATION
+# ============================================
+[scale]
+minReplicas = 1
+maxReplicas = 3
+
+[scale.cms]
+minReplicas = 1
+maxReplicas = 5
+targetCPU = 70
+targetMemory = 80
+
+[scale.api]
+minReplicas = 2
+maxReplicas = 10
+targetCPU = 60
+targetMemory = 70
+
+[scale.web]
+minReplicas = 1
+maxReplicas = 5
+targetCPU = 70
+targetMemory = 80
+
+# ============================================
+# RESOURCE LIMITS
+# ============================================
+[resources]
+# Default resource limits
+cpu = "1"
+memory = "1Gi"
+
+[resources.cms]
+cpu = "1"
+memory = "1Gi"
+
+[resources.api]
+cpu = "0.5"
+memory = "512Mi"
+
+[resources.web]
+cpu = "0.5"
+memory = "512Mi"
+
+[resources.storage]
+cpu = "0.5"
+memory = "1Gi"
+disk = "10Gi"
+
+# ============================================
+# NETWORKING
+# ============================================
+[network]
+# Enable private networking between services
+privateNetwork = true
+
+# Configure CORS for API
+[network.api.cors]
+allowedOrigins = [
+  "https://astracms.com",
+  "https://www.astracms.com",
+  "https://blog.astracms.com"
+]
+allowedMethods = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+allowedHeaders = ["Content-Type", "Authorization", "X-Workspace-Key"]
+allowCredentials = true
+
+# ============================================
+# MONITORING & LOGGING
+# ============================================
+[monitoring]
+enabled = true
+logLevel = "info"
+
+[monitoring.metrics]
+enabled = true
+port = 9090
+path = "/metrics"
+
+[monitoring.tracing]
+enabled = true
+samplingRate = 0.1
+
+# ============================================
+# BACKUP CONFIGURATION
+# ============================================
+[backup]
+enabled = true
+schedule = "0 2 * * *"  # Daily at 2 AM
+
+[backup.database]
+enabled = true
+retention = "30d"
+type = "automated"
+
+[backup.storage]
+enabled = true
+retention = "7d"
+destination = "s3://backup-bucket/astracms"
