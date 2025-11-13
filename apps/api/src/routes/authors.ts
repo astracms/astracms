@@ -1,15 +1,18 @@
 import { createClient } from "@astracms/db";
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import type { AppEnv } from "../types/hono";
 import { AuthorQuerySchema, AuthorsQuerySchema } from "../validations/authors";
 
 const authors = new Hono<AppEnv>();
 
 authors.get("/", async (c) => {
-  const env = c.get("env");
-  const url = env.DATABASE_URL;
+  const { DATABASE_URL } = env<{
+    DATABASE_URL: string;
+  }>(c);
+
   const workspaceId = c.req.param("workspaceId");
-  const db = createClient(url);
+  const db = createClient(DATABASE_URL);
 
   // Validate query parameters
   const queryValidation = AuthorsQuerySchema.safeParse({
@@ -27,7 +30,7 @@ authors.get("/", async (c) => {
           message: err.message,
         })),
       },
-      400,
+      400
     );
   }
 
@@ -59,7 +62,7 @@ authors.get("/", async (c) => {
           requestedPage: page,
         },
       },
-      400,
+      400
     );
   }
 
@@ -125,11 +128,12 @@ authors.get("/", async (c) => {
 });
 
 authors.get("/:identifier", async (c) => {
-  const env = c.get("env");
-  const url = env.DATABASE_URL;
+  const { DATABASE_URL } = env<{
+    DATABASE_URL: string;
+  }>(c);
   const workspaceId = c.req.param("workspaceId");
   const identifier = c.req.param("identifier");
-  const db = createClient(url);
+  const db = createClient(DATABASE_URL);
 
   const queryValidation = AuthorQuerySchema.safeParse({
     limit: c.req.query("limit"),
@@ -146,7 +150,7 @@ authors.get("/:identifier", async (c) => {
           message: err.message,
         })),
       },
-      400,
+      400
     );
   }
 
@@ -206,7 +210,7 @@ authors.get("/:identifier", async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 

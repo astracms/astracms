@@ -1,13 +1,16 @@
 import { createClient } from "@astracms/db";
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import type { AppEnv } from "../types/hono";
 import { TagQuerySchema, TagsQuerySchema } from "../validations/tags";
 
 const tags = new Hono<AppEnv>();
 
 tags.get("/", async (c) => {
-  const env = c.get("env");
-  const db = createClient(env.DATABASE_URL);
+  const { DATABASE_URL } = env<{
+    DATABASE_URL: string;
+  }>(c);
+  const db = createClient(DATABASE_URL);
   const workspaceId = c.req.param("workspaceId");
 
   const queryValidation = TagsQuerySchema.safeParse({
@@ -25,7 +28,7 @@ tags.get("/", async (c) => {
           message: err.message,
         })),
       },
-      400,
+      400
     );
   }
 
@@ -52,7 +55,7 @@ tags.get("/", async (c) => {
           requestedPage: page,
         },
       },
-      400,
+      400
     );
   }
 
@@ -103,8 +106,10 @@ tags.get("/", async (c) => {
 
 tags.get("/:identifier", async (c) => {
   try {
-    const env = c.get("env");
-    const db = createClient(env.DATABASE_URL);
+    const { DATABASE_URL } = env<{
+      DATABASE_URL: string;
+    }>(c);
+    const db = createClient(DATABASE_URL);
     const workspaceId = c.req.param("workspaceId");
     const identifier = c.req.param("identifier");
 
@@ -123,7 +128,7 @@ tags.get("/:identifier", async (c) => {
             message: err.message,
           })),
         },
-        400,
+        400
       );
     }
 
@@ -183,7 +188,7 @@ tags.get("/:identifier", async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 

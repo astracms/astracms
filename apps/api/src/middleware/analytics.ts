@@ -1,11 +1,14 @@
 import { Redis } from "@upstash/redis";
 import type { Context, MiddlewareHandler, Next } from "hono";
+import { env } from "hono/adapter";
 
 // Singleton Redis client
 let redisClient: Redis | null = null;
 
 function getRedisClient(redisUrl?: string, redisToken?: string): Redis | null {
-  if (redisClient) return redisClient;
+  if (redisClient) {
+    return redisClient;
+  }
 
   if (!redisUrl || !redisToken) {
     console.error("[Analytics Redis] Missing REDIS_URL or REDIS_TOKEN");
@@ -27,13 +30,12 @@ function getRedisClient(redisUrl?: string, redisToken?: string): Redis | null {
 
 export const analytics = (): MiddlewareHandler => {
   return async (c: Context, next: Next) => {
-    // Proceed to the next middleware or route handler first
-    // to avoid delaying the response
     await next();
 
-    const env = c.get("env") as any;
-    const REDIS_URL = env?.REDIS_URL || process.env.REDIS_URL;
-    const REDIS_TOKEN = env?.REDIS_TOKEN || process.env.REDIS_TOKEN;
+    const { REDIS_URL, REDIS_TOKEN } = env<{
+      REDIS_URL: string;
+      REDIS_TOKEN: string;
+    }>(c);
 
     if (!REDIS_URL || !REDIS_TOKEN) {
       return;
@@ -60,7 +62,7 @@ export const analytics = (): MiddlewareHandler => {
         pipeline.hincrby(
           `analytics:workspace:${workspaceId}:monthly`,
           monthlyKey,
-          1,
+          1
         );
         await pipeline.exec();
       } catch (error) {

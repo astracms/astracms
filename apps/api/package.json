@@ -2,9 +2,9 @@
   "name": "api",
   "version": "0.1.0",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "echo 'Build step not needed - using tsx runtime'",
-    "start": "NODE_ENV=production tsx src/server.ts",
+    "start": "NODE_ENV=production tsx src/index.ts",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

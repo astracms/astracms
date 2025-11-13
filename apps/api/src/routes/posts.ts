@@ -1,5 +1,6 @@
 import { createClient } from "@astracms/db";
 import { Hono } from "hono";
+import { env } from "hono/adapter";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import type { AppEnv } from "../types/hono";
 import { PostsQuerySchema } from "../validations/posts";
@@ -8,11 +9,12 @@ const posts = new Hono<AppEnv>();
 
 posts.get("/", async (c) => {
   try {
-    const env = c.get("env");
-    const url = env.DATABASE_URL;
+    const { DATABASE_URL } = env<{
+      DATABASE_URL: string;
+    }>(c);
     const workspaceId = c.req.param("workspaceId");
     const format = c.req.query("format");
-    const db = createClient(url);
+    const db = createClient(DATABASE_URL);
 
     // Validate query parameters
     const queryValidation = PostsQuerySchema.safeParse({
@@ -35,7 +37,7 @@ posts.get("/", async (c) => {
             message: err.message,
           })),
         },
-        400,
+        400
       );
     }
 
@@ -103,7 +105,7 @@ posts.get("/", async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 
@@ -203,19 +205,20 @@ posts.get("/", async (c) => {
         error: "Failed to fetch posts",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      500,
+      500
     );
   }
 });
 
 posts.get("/:identifier", async (c) => {
   try {
-    const env = c.get("env");
-    const url = env.DATABASE_URL;
+    const { DATABASE_URL } = env<{
+      DATABASE_URL: string;
+    }>(c);
     const workspaceId = c.req.param("workspaceId");
     const identifier = c.req.param("identifier");
     const format = c.req.query("format");
-    const db = createClient(url);
+    const db = createClient(DATABASE_URL);
 
     const post = await db.post.findFirst({
       where: {

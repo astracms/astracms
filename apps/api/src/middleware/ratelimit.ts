@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import type { Context, MiddlewareHandler, Next } from "hono";
+import { env } from "hono/adapter";
 
 export type RateLimit = {
   limit: number;
@@ -12,7 +13,9 @@ export type RateLimit = {
 let redisClient: Redis | null = null;
 
 function getRedisClient(redisUrl?: string, redisToken?: string): Redis | null {
-  if (redisClient) return redisClient;
+  if (redisClient) {
+    return redisClient;
+  }
 
   if (!redisUrl || !redisToken) {
     console.error("[RateLimit Redis] Missing REDIS_URL or REDIS_TOKEN");
@@ -40,7 +43,7 @@ async function slidingWindowRateLimit(
   redis: Redis,
   identifier: string,
   limit: number,
-  windowSeconds: number,
+  windowSeconds: number
 ): Promise<RateLimit> {
   const now = Date.now();
   const windowStart = now - windowSeconds * 1000;
@@ -99,7 +102,7 @@ const memoryCache = new Map<string, { count: number; resetAt: number }>();
 function memoryRateLimit(
   identifier: string,
   limit: number,
-  windowSeconds: number,
+  windowSeconds: number
 ): RateLimit {
   const now = Date.now();
   const cached = memoryCache.get(identifier);
@@ -126,6 +129,7 @@ function memoryRateLimit(
   }
 
   // Within existing window
+  // biome-ignore lint/nursery/noIncrementDecrement: <explanation>
   cached.count++;
   const success = cached.count <= limit;
   const remaining = Math.max(0, limit - cached.count);
@@ -142,9 +146,10 @@ function memoryRateLimit(
 export const ratelimit = (): MiddlewareHandler => {
   return async (c: Context, next: Next) => {
     try {
-      const env = c.get("env") as any;
-      const REDIS_URL = env?.REDIS_URL || process.env.REDIS_URL;
-      const REDIS_TOKEN = env?.REDIS_TOKEN || process.env.REDIS_TOKEN;
+      const { REDIS_URL, REDIS_TOKEN } = env<{
+        REDIS_URL: string;
+        REDIS_TOKEN: string;
+      }>(c);
 
       // Get client IP or a unique identifier
       const clientIp =
@@ -176,7 +181,7 @@ export const ratelimit = (): MiddlewareHandler => {
           redis,
           identifier,
           limit,
-          windowSeconds,
+          windowSeconds
         );
       } else {
         // Fallback to memory-based rate limiting
@@ -198,7 +203,7 @@ export const ratelimit = (): MiddlewareHandler => {
             remaining: result.remaining,
             reset: result.reset,
           },
-          429,
+          429
         );
       }
 

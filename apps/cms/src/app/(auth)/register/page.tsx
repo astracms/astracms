@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { RegisterForm } from "@/components/auth/register-form";
 import AstraCMSIcon from "@/components/icons/astracms";
-import Credits from "@/components/util/credits";
 import { SITE_CONFIG } from "@/utils/site";
 
 export const metadata: Metadata = {
@@ -52,7 +51,6 @@ export default async function RegisterPage(props: PageProps) {
           <p className="font-medium text-lg">
             The easiest way to manage your blog.
           </p>
-          <Credits />
         </div>
       </section>
       <section className="flex h-full flex-col items-center justify-between p-4">
