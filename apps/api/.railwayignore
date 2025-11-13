@@ -1,0 +1,78 @@
+# Railway ignore file - exclude unnecessary files from deployment
+# This speeds up builds and reduces image size
+
+# Development files
+*.md
+README.md
+CHANGELOG.md
+LICENSE
+
+# Documentation
+docs/
+*.txt
+DEPLOYMENT.md
+MIGRATION-SUMMARY.md
+CLEANUP-COMPLETE.md
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+azure-pipelines.yml
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test files
+**/*.test.ts
+**/*.test.js
+**/*.spec.ts
+**/*.spec.js
+__tests__/
+test/
+tests/
+coverage/
+.nyc_output/
+
+# Build artifacts (not needed for tsx runtime)
+dist/
+build/
+out/
+
+# Cache directories
+.turbo/
+.next/
+.cache/
+
+# Environment files (use Railway variables instead)
+.env
+.env.*
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Package manager
+node_modules/
+.pnpm-debug.log
+npm-debug.log
+yarn-error.log
+
+# Other monorepo apps (only need api)
+../../apps/cms/
+../../apps/web/
+../../apps/docs/
+
+# Lock files (Railway handles this)
+package-lock.json
+yarn.lock

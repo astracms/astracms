@@ -1,0 +1,18 @@
+# Nixpacks configuration for AstraCMS API
+# This tells Railway how to build and start the API service
+
+[phases.setup]
+nixPkgs = ['nodejs_20']
+
+[phases.install]
+cmds = [
+  'corepack enable',
+  'corepack prepare pnpm@10.19.0 --activate',
+  'pnpm install --frozen-lockfile'
+]
+
+[phases.build]
+cmds = ['echo "Build step not needed - using tsx runtime"']
+
+[start]
+cmd = 'pnpm start'

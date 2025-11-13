@@ -171,6 +171,26 @@ railway up
 
 ## 🚨 Troubleshooting
 
+### "No start command was found" Error?
+
+**Solution 1: Set Start Command Manually**
+1. Go to API service → Settings → Deploy
+2. Set Start Command: `pnpm start`
+3. Click "Update" and redeploy
+
+**Solution 2: Verify Root Directory**
+1. Go to Settings → Source
+2. Confirm Root Directory is set to: `apps/api`
+3. If not set, add it and redeploy
+
+**Solution 3: Check package.json**
+1. Verify `apps/api/package.json` has:
+   ```json
+   "scripts": {
+     "start": "NODE_ENV=production tsx src/server.ts"
+   }
+   ```
+
 ### Service won't start?
 ```bash
 railway logs --service astracms-api
@@ -188,6 +208,11 @@ railway variables | grep DATABASE_URL
 railway variables | grep REDIS
 # Verify REDIS_URL and REDIS_TOKEN are set
 ```
+
+### Build fails with "workspace not found"?
+- Ensure you're deploying from the GitHub repo
+- Verify `pnpm-workspace.yaml` exists in root
+- Check that Root Directory is `apps/api` (not `/apps/api`)
 
 ---
 
