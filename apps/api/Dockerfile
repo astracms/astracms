@@ -22,6 +22,7 @@ RUN pnpm install --prod --filter=api
 # Copy source code
 COPY apps/api/src apps/api/src
 COPY packages/db/src packages/db/src
+COPY packages/db/prisma packages/db/prisma
 COPY packages/parser/src packages/parser/src
 COPY packages/tsconfig/src packages/tsconfig/src
 COPY packages/ui/src packages/ui/src
@@ -44,6 +45,10 @@ COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # Expose the port the app runs on
 EXPOSE 8000
+
+# Run database migrations before starting the application
+# The DATABASE_URL environment variable must be available at this point.
+RUN pnpm --filter=db prisma migrate deploy
 
 # Set the command to start the application
 CMD ["pnpm", "start", "--filter=api"]
