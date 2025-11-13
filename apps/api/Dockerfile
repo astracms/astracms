@@ -24,7 +24,7 @@ COPY apps/api/src apps/api/src
 COPY packages/db/src packages/db/src
 COPY packages/db/prisma packages/db/prisma
 COPY packages/parser/src packages/parser/src
-COPY packages/tsconfig/src packages/tsconfig/src
+COPY packages/tsconfig packages/tsconfig
 COPY packages/ui/src packages/ui/src
 
 # Stage 2: Runner
