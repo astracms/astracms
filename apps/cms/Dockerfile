@@ -10,6 +10,7 @@ COPY packages/db/package.json packages/db/
 COPY packages/parser/package.json packages/parser/
 COPY packages/tsconfig/package.json packages/tsconfig/
 COPY packages/ui/package.json packages/ui/
+COPY turbo.json ./
 
 # Install pnpm
 RUN npm install -g pnpm
