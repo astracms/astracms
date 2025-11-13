@@ -2,12 +2,6 @@
   "name": "astracms",
   "private": true,
   "scripts": {
-    "docker:up": "docker compose up -d",
-    "docker:down": "docker compose down",
-    "docker:clean": "docker compose down -v",
-    "docker:logs": "docker compose logs -f",
-    "docker:ps": "docker compose ps",
-    "docker:restart": "docker compose restart",
     "db:migrate": "pnpm --filter @astracms/db db:migrate",
     "db:deploy": "pnpm --filter @astracms/db db:deploy",
     "db:generate": "pnpm --filter @astracms/db db:generate",
