@@ -22,6 +22,9 @@ FROM --platform=linux/amd64 node:20-alpine AS builder
 
 WORKDIR /app
 
+# Install pnpm in the builder stage
+RUN npm install -g pnpm
+
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json ./package.json
