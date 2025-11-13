@@ -32,7 +32,7 @@ import {
   validateWorkspaceSlug,
   validateWorkspaceTimezone,
 } from "../actions/workspace";
-import { redis, safeRedis } from "../redis";
+import { redis } from "../redis";
 
 const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN,
@@ -44,16 +44,16 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
   secondaryStorage: {
-    get: async (key) => await safeRedis.get(key),
+    get: async (key) => await redis.get(key),
     set: async (key, value, ttl) => {
       if (ttl) {
-        await safeRedis.set(key, value, "EX", ttl);
+        await redis.set(key, value, { ex: ttl });
       } else {
-        await safeRedis.set(key, value);
+        await redis.set(key, value);
       }
     },
     delete: async (key) => {
-      await safeRedis.del(key);
+      await redis.del(key);
     },
   },
   session: {
