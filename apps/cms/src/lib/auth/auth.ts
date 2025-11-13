@@ -12,6 +12,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { emailOTP, organization } from "better-auth/plugins";
+import { env } from "@/env";
 import {
   sendInviteEmailAction,
   sendResetPasswordAction,
@@ -35,8 +36,8 @@ import {
 import { redis } from "../redis";
 
 const polarClient = new Polar({
-  accessToken: process.env.POLAR_ACCESS_TOKEN,
-  server: process.env.NODE_ENV === "production" ? "production" : "sandbox",
+  accessToken: env.POLAR_ACCESS_TOKEN,
+  server: env.NODE_ENV === "production" ? "production" : "sandbox",
 });
 
 export const auth = betterAuth({
@@ -77,12 +78,12 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: env.GOOGLE_CLIENT_ID || "",
+      clientSecret: env.GOOGLE_CLIENT_SECRET || "",
     },
     // github: {
-    //   clientId: process.env.GITHUB_ID || "",
-    //   clientSecret: process.env.GITHUB_SECRET || "",
+    //   clientId: env.GITHUB_ID || "",
+    //   clientSecret: env.GITHUB_SECRET || "",
     // },
   },
   advanced: {
@@ -96,7 +97,7 @@ export const auth = betterAuth({
   plugins: [
     polar({
       client: polarClient,
-      createCustomerOnSignUp: process.env.NODE_ENV === "production",
+      createCustomerOnSignUp: env.NODE_ENV === "production",
       authenticatedUsersOnly: true,
       use: [
         portal(),
@@ -104,22 +105,22 @@ export const auth = betterAuth({
         checkout({
           products: [
             {
-              productId: process.env.POLAR_HOBBY_PRODUCT_ID || "",
+              productId: env.POLAR_HOBBY_PRODUCT_ID || "",
               slug: "hobby",
             },
             {
-              productId: process.env.POLAR_PRO_PRODUCT_ID || "",
+              productId: env.POLAR_PRO_PRODUCT_ID || "",
               slug: "pro",
             },
             {
-              productId: process.env.POLAR_TEAM_PRODUCT_ID || "",
+              productId: env.POLAR_TEAM_PRODUCT_ID || "",
               slug: "team",
             },
           ],
-          successUrl: process.env.POLAR_SUCCESS_URL || "",
+          successUrl: env.POLAR_SUCCESS_URL || "",
         }),
         webhooks({
-          secret: process.env.POLAR_WEBHOOK_SECRET || "",
+          secret: env.POLAR_WEBHOOK_SECRET || "",
           onCustomerCreated: async (payload) => {
             await handleCustomerCreated(payload);
           },
@@ -153,7 +154,7 @@ export const auth = betterAuth({
         },
       },
       async sendInvitationEmail(data) {
-        const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/join/${data.id}`;
+        const inviteLink = `${env.NEXT_PUBLIC_APP_URL}/join/${data.id}`;
         await sendInviteEmailAction({
           inviteeEmail: data.email,
           inviterName: data.inviter.user.name,

@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { env } from "@/env";
 import { lastVisitedWorkspace } from "./constants";
 
 /**
@@ -34,7 +35,7 @@ export const setServerLastVisitedWorkspace = async (
     maxAge,
     sameSite: "lax",
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
   });
 };
 

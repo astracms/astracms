@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { env } from "@/env";
 import { InviteUserEmail } from "@/components/emails/invite";
 import { ResetPasswordEmail } from "@/components/emails/reset";
 import { VerifyUserEmail } from "@/components/emails/verify";
@@ -9,8 +10,8 @@ import { WelcomeEmail } from "@/components/emails/welcome";
 import { sendDevEmail } from "@/lib/email";
 import { getServerSession } from "../auth/session";
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const isDevelopment = process.env.NODE_ENV === "development";
+const resendApiKey = env.RESEND_API_KEY;
+const isDevelopment = env.NODE_ENV === "development";
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 type SendInviteEmailProps = {
