@@ -109,7 +109,7 @@ export async function sendVerificationEmailAction({
 
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "Verification <emails@astracmscms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: userEmail,
       text: "This is a mock verification email",
       subject: "Verify your email address",
@@ -126,7 +126,7 @@ export async function sendVerificationEmailAction({
 
   try {
     await resend.emails.send({
-      from: "Verification <emails@astracmscms.com>",
+      from: "Astracms <astracms@mail.netronk.com>",
       to: userEmail,
       subject: "Verify your email address",
       react: VerifyUserEmail({
