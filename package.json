@@ -19,6 +19,8 @@
     "format": "pnpx ultracite@latest fix",
     "cms:dev": "turbo dev --filter=cms",
     "api:dev": "turbo dev --filter=api",
+    "cms:start": "turbo start --filter=cms",
+    "api:start": "turbo start --filter=api",
     "test": "turbo test",
     "prepare": "husky"
   },
