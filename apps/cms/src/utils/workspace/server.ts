@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { lastVisitedWorkspace } from "./constants";
+import { env } from "@/env";
 
 /**
  * Sets the last visited workspace cookie on the server.
@@ -34,7 +35,7 @@ export const setServerLastVisitedWorkspace = async (
     maxAge,
     sameSite: "lax",
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
   });
 };
 

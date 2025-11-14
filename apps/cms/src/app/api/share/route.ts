@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import { shareLinkSchema } from "@/lib/validations/post";
+import { env } from "@/env";
 
 export async function POST(request: Request) {
   const sessionData = await getServerSession();
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
 
   if (existingShareLink) {
     return NextResponse.json({
-      shareLink: `${process.env.NEXT_PUBLIC_APP_URL}/share/${existingShareLink.token}`,
+      shareLink: `${env.NEXT_PUBLIC_APP_URL}/share/${existingShareLink.token}`,
       expiresAt: existingShareLink.expiresAt,
     });
   }
@@ -70,7 +71,7 @@ export async function POST(request: Request) {
   });
 
   return NextResponse.json({
-    shareLink: `${process.env.NEXT_PUBLIC_APP_URL}/share/${shareLink.token}`,
+    shareLink: `${env.NEXT_PUBLIC_APP_URL}/share/${shareLink.token}`,
     expiresAt: shareLink.expiresAt,
   });
 }

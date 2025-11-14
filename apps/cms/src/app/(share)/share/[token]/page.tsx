@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { ShareData, ShareStatus } from "@/types/share";
 import { highlightContent } from "@/utils/highlight";
 import SharePageClient from "./page-client";
+import { env } from "@/env";
 
 type SharePageProps = {
   params: Promise<{ token: string }>;
@@ -10,7 +11,7 @@ type SharePageProps = {
 async function fetchShareData(token: string) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/share/${token}`,
+      `${env.NEXT_PUBLIC_APP_URL}/api/share/${token}`,
       {
         cache: "force-cache",
       }

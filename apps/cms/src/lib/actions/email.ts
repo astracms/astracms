@@ -8,9 +8,10 @@ import { VerifyUserEmail } from "@/components/emails/verify";
 import { WelcomeEmail } from "@/components/emails/welcome";
 import { sendDevEmail } from "@/lib/email";
 import { getServerSession } from "../auth/session";
+import { env } from "@/env";
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const isDevelopment = process.env.NODE_ENV === "development";
+const resendApiKey = env.RESEND_API_KEY;
+const isDevelopment = env.NODE_ENV === "development";
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 type SendInviteEmailProps = {

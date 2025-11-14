@@ -12,12 +12,13 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { env } from "@/env";
 
 type WelcomeEmailProps = {
   userEmail: string;
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+const baseUrl = env.NEXT_PUBLIC_APP_URL;
 
 export const WelcomeEmail = ({ userEmail }: WelcomeEmailProps) => {
   const previewText = "Welcome to Astracms, let's get started!";

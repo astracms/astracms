@@ -12,13 +12,14 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { env } from "@/env";
 
 type ResetPasswordProps = {
   userEmail: string;
   resetLink: string;
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+const baseUrl = env.NEXT_PUBLIC_APP_URL;
 
 export const ResetPasswordEmail = ({
   userEmail,
