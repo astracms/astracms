@@ -1,4 +1,5 @@
 import axios from "axios";
+import { env } from "@/env";
 
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -9,7 +10,7 @@ export async function request<T>(
 ) {
   const response = await axios<T>({
     method,
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/api/${endpoint}`,
+    url: `${env.NEXT_PUBLIC_APP_URL}/api/${endpoint}`,
     data: body,
   });
   return response;

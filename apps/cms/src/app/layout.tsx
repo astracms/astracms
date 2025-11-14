@@ -5,6 +5,7 @@ import { Databuddy } from "@databuddy/sdk/react";
 import { Geist } from "next/font/google";
 import { SITE_CONFIG } from "@/utils/site";
 import Providers from "./providers";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
   title: SITE_CONFIG.title,
@@ -49,9 +50,9 @@ const fontSans = Geist({
 function DatabuddyAnalytics() {
   return (
     <>
-      {process.env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID && (
+      {env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID && (
         <Databuddy
-          clientId={process.env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID}
+          clientId={env.NEXT_PUBLIC_DATABUDDY_CLIENT_ID}
           enableBatching={true}
         />
       )}
@@ -67,7 +68,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {process.env.NODE_ENV === "development" && (
+        {env.NODE_ENV === "development" && (
           <script
             crossOrigin="anonymous"
             src="//unpkg.com/react-scan/dist/auto.global.js"

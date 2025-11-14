@@ -11,6 +11,7 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { env } from "@/env";
 
 type VerifyUserEmailProps = {
   userEmail: string;
@@ -18,7 +19,7 @@ type VerifyUserEmailProps = {
   type: "sign-in" | "email-verification" | "forget-password";
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+const baseUrl = env.NEXT_PUBLIC_APP_URL;
 
 export const VerifyUserEmail = ({
   userEmail,

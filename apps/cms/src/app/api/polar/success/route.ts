@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import { getLastVisitedWorkspace } from "@/utils/workspace/client";
+import { env } from "@/env";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
 
   if (!authInfo) {
     return NextResponse.redirect(
-      new URL("/login", process.env.NEXT_PUBLIC_APP_URL)
+      new URL("/login", env.NEXT_PUBLIC_APP_URL)
     );
   }
 
@@ -36,10 +37,10 @@ export async function GET(request: Request) {
     return NextResponse.redirect(
       new URL(
         `/${workspaceSlug}/settings/billing?success=true`,
-        process.env.NEXT_PUBLIC_APP_URL
+        env.NEXT_PUBLIC_APP_URL
       )
     );
   }
 
-  return NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_APP_URL));
+  return NextResponse.redirect(new URL("/", env.NEXT_PUBLIC_APP_URL));
 }
