@@ -108,7 +108,10 @@ export class WebhookClient {
       return false;
     }
 
-    return timingSafeEqual(expectedBuffer, computedBuffer);
+    return timingSafeEqual(
+      new Uint8Array(expectedBuffer),
+      new Uint8Array(computedBuffer)
+    );
   }
 
   async send<K extends keyof WebhookEvent>(args: {
