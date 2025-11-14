@@ -188,11 +188,11 @@ importers:
         specifier: ^3.10.7
         version: 3.10.7(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))(@tiptap/extension-code-block@3.6.6(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))(@tiptap/pm@3.6.6))(@tiptap/pm@3.6.6)(highlight.js@11.11.1)(lowlight@3.3.0)
       '@tiptap/extension-text-align':
-        specifier: ^2.11.2
-        version: 2.26.3(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))
+        specifier: ^3.10.7
+        version: 3.10.7(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))
       '@tiptap/extension-underline':
-        specifier: ^2.11.2
-        version: 2.26.3(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))
+        specifier: ^3.10.7
+        version: 3.10.7(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))
       '@tiptap/pm':
         specifier: ^3.6.6
         version: 3.6.6
@@ -3997,10 +3997,10 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
-  '@tiptap/extension-text-align@2.26.3':
-    resolution: {integrity: sha512-5PU2vMUKt53EVdxFqiuPockKKGeZxipwEq6fT5OZeqz3TUWiF61bO/xkwlXzfWSNm1ZkEmrkebtaeKrH4Wu22g==}
+  '@tiptap/extension-text-align@3.10.7':
+    resolution: {integrity: sha512-rAuDNhhFNYIrurzasDd5FW2DNeCxs4BgobARMDlTvGIpqf7F1eJq8nQa6wK8MD7K+ma2ZfJ6vTI73z0x64GiZw==}
     peerDependencies:
-      '@tiptap/core': ^2.7.0
+      '@tiptap/core': ^3.10.7
 
   '@tiptap/extension-text-style@2.26.3':
     resolution: {integrity: sha512-B+t6k41xtmlIxyi0r+g8MAShGMCK6kmz8EdxoLAUVrlCxYWVk6qvzoojZbjQKlb2sE+idIo4X5yCcKpdkxFe0w==}
@@ -4016,6 +4016,11 @@ packages:
     resolution: {integrity: sha512-FXQUiHjvKDIpU9Bg+fV7UqQnEjhGvVQUnrf9VOI1/9hm+GWWxAfV2asRiZgV6jeBvNJWYzUGzvQUN6vFzmVbdw==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
+
+  '@tiptap/extension-underline@3.10.7':
+    resolution: {integrity: sha512-yBL81xdbjT5Y7acoBqWpnH/SoH3bpgqaLvJBG3NNk+mdLB5HjBWTlPLKjvjQV0HRN5bZ+RJWeiRnQk1ahcfmQA==}
+    peerDependencies:
+      '@tiptap/core': ^3.10.7
 
   '@tiptap/extension-youtube@2.26.3':
     resolution: {integrity: sha512-czDl/hJTW1/np39R9dP3TzfBpFj6WjDboSMgfUKVuay1Ko/5XCpQaL4ac3ziBp/fPPwgMmo9Xs16/e89vDOPrQ==}
@@ -10519,7 +10524,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.26.3(@tiptap/pm@2.26.3)
 
-  '@tiptap/extension-text-align@2.26.3(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))':
+  '@tiptap/extension-text-align@3.10.7(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))':
     dependencies:
       '@tiptap/core': 3.10.7(@tiptap/pm@3.6.6)
 
@@ -10539,7 +10544,7 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.26.3(@tiptap/pm@2.26.3)
 
-  '@tiptap/extension-underline@2.26.3(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))':
+  '@tiptap/extension-underline@3.10.7(@tiptap/core@3.10.7(@tiptap/pm@3.6.6))':
     dependencies:
       '@tiptap/core': 3.10.7(@tiptap/pm@3.6.6)
 

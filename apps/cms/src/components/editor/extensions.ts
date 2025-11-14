@@ -23,7 +23,7 @@ const placeholder = Placeholder;
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
     class: cx(
-      "text-muted-foreground underline underline-offset-[3px] hover:text-primary transition-colors cursor-pointer"
+      "text-muted-foreground underline underline-offset-[3px] hover:text-primary transition-colors cursor-pointer",
     ),
   },
 });
@@ -122,7 +122,7 @@ const starterKit = StarterKit.configure({
 export const defaultExtensions: Extension[] = [
   starterKit as unknown as Extension,
   placeholder as unknown as Extension,
-  textAlign,
+  textAlign as unknown as Extension,
   CodeBlockLowlightEx as unknown as Extension,
   tiptapImage as unknown as Extension,
   // updatedImage as unknown as Extension,
