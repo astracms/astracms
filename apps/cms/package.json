@@ -36,14 +36,18 @@
     "@radix-ui/react-toggle-group": "^1.1.7",
     "@radix-ui/react-tooltip": "^1.1.3",
     "@react-email/components": "0.0.31",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.85.5",
     "@tanstack/react-query-devtools": "^5.85.5",
     "@tanstack/react-table": "^8.20.5",
     "@tanstack/react-virtual": "^3.13.12",
-    "@tiptap/core": "^2.11.2",
+    "@tiptap/core": "^3.10.7",
+    "@tiptap/extension-code-block": "^3.6.6",
+    "@tiptap/extension-code-block-lowlight": "^3.10.7",
     "@tiptap/extension-text-align": "^2.11.2",
     "@tiptap/extension-underline": "^2.11.2",
-    "@tiptap/react": "^2.11.2",
+    "@tiptap/pm": "^3.6.6",
+    "@tiptap/react": "^3.10.7",
     "@upstash/qstash": "^2.8.4",
     "@upstash/ratelimit": "^2.0.7",
     "@upstash/redis": "^1.35.6",
@@ -95,6 +99,6 @@
     "discord-api-types": "^0.38.22",
     "postcss": "^8",
     "tailwindcss": "^4.1.12",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }
