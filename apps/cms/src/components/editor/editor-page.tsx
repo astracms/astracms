@@ -294,25 +294,21 @@ function EditorPage({ initialData, id }: EditorPageProps) {
                     },
                   }}
                   extensions={[
-                    // @ts-expect-error
+                    // @ts-expect-error - Extension type compatibility issue
                     ...defaultExtensions,
-                    // @ts-expect-error
+                    // @ts-expect-error - Extension type compatibility issue
                     slashCommand,
-                    // @ts-expect-error
+                    // @ts-expect-error - Extension type compatibility issue
                     CharacterCount,
                   ]}
                   immediatelyRender={false}
                   initialContent={JSON.parse(watch("contentJson") || "{}")}
                   onCreate={({ editor }) => {
-                    // @ts-expect-error
                     editorRef.current = editor;
-                    // @ts-expect-error
                     setEditorInstance(editor);
                   }}
                   onUpdate={({ editor }) => {
-                    // @ts-expect-error
                     editorRef.current = editor;
-                    // @ts-expect-error
                     setEditorInstance(editor);
                     const html = editor.getHTML();
                     const json = editor.getJSON();
