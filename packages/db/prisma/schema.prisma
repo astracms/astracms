@@ -1,0 +1,408 @@
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../src/generated"
+  runtime    = "workerd"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Subscription {
+  id                 String             @id @default(cuid())
+  userId             String
+  plan               PlanType
+  status             SubscriptionStatus @default(active)
+  updatedAt          DateTime           @updatedAt
+  cancelAtPeriodEnd  Boolean            @default(false)
+  canceledAt         DateTime?
+  createdAt          DateTime           @default(now())
+  currentPeriodEnd   DateTime
+  currentPeriodStart DateTime
+  endedAt            DateTime?
+  endsAt             DateTime?
+  polarId            String             @unique
+  workspaceId        String             @unique
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace          Organization       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("subscription")
+}
+
+model Organization {
+  id                String             @id @default(cuid())
+  name              String
+  slug              String             @unique
+  logo              String?
+  metadata          String?
+  description       String?
+  subdomain         String?            @unique
+  updatedAt         DateTime           @updatedAt
+  createdAt         DateTime           @default(now())
+  timezone          String             @default("Europe/London")
+  authors           Author[]
+  categories        Category[]
+  invitations       Invitation[]
+  media             Media[]
+  members           Member[]
+  posts             Post[]
+  subscription      Subscription?
+  tags              Tag[]
+  webhooks          Webhook[]
+  editorPreferences EditorPreferences?
+  ShareLink         ShareLink[]
+  usageEvents       UsageEvent[]
+
+  @@map("workspace")
+}
+
+model EditorPreferences {
+  id          String       @id @default(cuid())
+  ai          Ai?
+  workspaceId String       @unique
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("editor_preferences")
+}
+
+model Ai {
+  id                  String            @id @default(cuid())
+  enabled             Boolean           @default(false)
+  editorPreferencesId String            @unique
+  editorPreferences   EditorPreferences @relation(fields: [editorPreferencesId], references: [id], onDelete: Cascade)
+
+  @@map("ai")
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  content     String
+  coverImage  String?
+  contentJson Json
+  description String
+  views       Int        @default(0)
+  workspaceId String
+  slug        String
+  categoryId  String
+  status      PostStatus @default(draft)
+  featured    Boolean    @default(false)
+  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime   @default(now())
+  publishedAt DateTime
+  attribution Json?
+
+  primaryAuthorId String?
+  primaryAuthor   Author?  @relation("PrimaryAuthor", fields: [primaryAuthorId], references: [id], onDelete: SetNull)
+  authors         Author[] @relation("PostToAuthor")
+
+  category   Category     @relation(fields: [categoryId], references: [id])
+  workspace  Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  tags       Tag[]        @relation("PostToTag")
+  shareLinks ShareLink[]
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId, status])
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, status, publishedAt])
+  @@index([categoryId])
+  @@map("post")
+}
+
+model ShareLink {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  postId      String
+  workspaceId String
+  password    String?
+  expiresAt   DateTime
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  post      Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  workspace Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([workspaceId])
+  @@index([expiresAt])
+  @@index([isActive])
+}
+
+model Tag {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  slug        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  workspaceId String
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  posts       Post[]       @relation("PostToTag")
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId])
+  @@map("tag")
+}
+
+model Media {
+  id          String       @id @default(cuid())
+  name        String
+  url         String
+  size        Int
+  alt         String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  workspaceId String
+  type        MediaType    @default(image)
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt])
+  @@index([workspaceId, type])
+  @@map("media")
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  slug        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  workspaceId String
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  posts       Post[]
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId])
+  @@map("category")
+}
+
+model Webhook {
+  id          String         @id @default(cuid())
+  name        String
+  endpoint    String
+  secret      String
+  enabled     Boolean        @default(true)
+  workspaceId String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  events      WebhookEvent[]
+  format      PayloadFormat  @default(json)
+  workspace   Organization   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([workspaceId, enabled])
+  @@map("webhook")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  accounts      Account[]
+  authors       Author[]
+  invitations   Invitation[]
+  members       Member[]
+  sessions      Session[]
+  subscriptions Subscription[]
+
+  @@map("user")
+}
+
+model Author {
+  id          String         @id @default(cuid())
+  name        String
+  email       String?
+  bio         String?
+  image       String?
+  role        String?
+  slug        String
+  socials     AuthorSocial[]
+  workspaceId String
+  userId      String?
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  workspace       Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  primaryPosts    Post[]       @relation("PrimaryAuthor")
+  coAuthoredPosts Post[]       @relation("PostToAuthor")
+
+  @@unique([workspaceId, userId])
+  @@unique([workspaceId, slug])
+  @@index([workspaceId, isActive])
+  @@index([userId])
+  @@map("author")
+}
+
+model AuthorSocial {
+  id        String   @id @default(cuid())
+  authorId  String
+  platform  String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+  @@map("author_social")
+}
+
+model Session {
+  id                   String   @id @default(cuid())
+  expiresAt            DateTime
+  token                String   @unique
+  createdAt            DateTime
+  updatedAt            DateTime
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  activeOrganizationId String?
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([activeOrganizationId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([providerId, accountId])
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Member {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  role           String?
+  createdAt      DateTime
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([organizationId, userId])
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id @default(cuid())
+  organizationId String
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([email])
+  @@index([inviterId])
+  @@map("invitation")
+}
+
+model UsageEvent {
+  id          String         @id @default(cuid())
+  type        UsageEventType
+  workspaceId String
+  endpoint    String?
+  size        Int?
+  createdAt   DateTime       @default(now())
+  workspace   Organization   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, type, createdAt])
+  @@index([workspaceId, createdAt])
+  @@map("usage_event")
+}
+
+enum PostStatus {
+  published
+  draft
+}
+
+enum PlanType {
+  team
+  pro
+}
+
+enum SubscriptionStatus {
+  active
+  cancelled
+  expired
+  trialing
+  past_due
+}
+
+enum WebhookEvent {
+  post_published
+  post_deleted
+  post_updated
+  category_created
+  category_updated
+  category_deleted
+  tag_created
+  tag_updated
+  tag_deleted
+  media_uploaded
+  media_updated
+  media_deleted
+}
+
+enum PayloadFormat {
+  json
+  discord
+  slack
+}
+
+enum MediaType {
+  image
+  video
+  audio
+  document
+}
+
+enum UsageEventType {
+  api_request
+  media_upload
+  webhook_delivery
+}

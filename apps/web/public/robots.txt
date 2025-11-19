@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /terms
+Disallow: /privacy
+
+Sitemap: https://astracms.dev/sitemap-index.xml

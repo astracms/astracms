@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "env": "dotenv -e .dev.vars"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
+    "@astra/db": "workspace:*",
+    "@polar-sh/sdk": "^0.41.1",
+    "@upstash/ratelimit": "^2.0.5",
+    "@upstash/redis": "^1.34.4",
+    "hono": "^4.10.3",
+    "node-html-markdown": "^1.3.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251113.0",
+    "wrangler": "^4.49.0"
+  }
+}
