@@ -1,15 +1,15 @@
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import type { Env } from "../types/env";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
-  AuthorsQuerySchema,
+  AuthorIdentifierParamSchema,
   AuthorQuerySchema,
-  AuthorsListResponseSchema,
   AuthorResponseSchema,
+  AuthorsListResponseSchema,
+  AuthorsQuerySchema,
   ErrorResponseSchema,
   WorkspaceIdParamSchema,
-  AuthorIdentifierParamSchema,
 } from "../schemas/authors";
+import type { Env } from "../types/env";
 
 const authors = new OpenAPIHono<{ Bindings: Env }>();
 
@@ -88,7 +88,7 @@ authors.openapi(listAuthorsRoute, async (c) => {
           requestedPage: page,
         },
       },
-      400,
+      400
     );
   }
 
@@ -271,7 +271,7 @@ authors.openapi(getAuthorRoute, async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 

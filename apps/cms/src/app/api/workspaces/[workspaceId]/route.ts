@@ -4,7 +4,7 @@ import { getServerSession } from "@/lib/auth/session";
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ workspaceId: string }> },
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   const workspaceId = (await params).workspaceId;
 
@@ -75,18 +75,18 @@ export async function GET(
 
   // check is user is member of the workspace
   const isUserMember = workspace.members.some(
-    (member) => member.userId === sessionData.user.id,
+    (member) => member.userId === sessionData.user.id
   );
   if (!isUserMember) {
     return NextResponse.json(
       { error: "User is not a member of the workspace" },
-      { status: 403 },
+      { status: 403 }
     );
   }
 
   // Find current user's role in this workspace
   const currentUserMember = workspace.members.find(
-    (member) => member.userId === sessionData.user.id,
+    (member) => member.userId === sessionData.user.id
   );
 
   const currentUserRole = currentUserMember?.role || null;

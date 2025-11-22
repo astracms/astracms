@@ -15,7 +15,7 @@ export const AuthorSchema = z.object({
     z.object({
       url: z.string().openapi({ example: "https://twitter.com/johndoe" }),
       platform: z.string().openapi({ example: "twitter" }),
-    }),
+    })
   ),
 });
 

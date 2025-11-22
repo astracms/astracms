@@ -1,16 +1,16 @@
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { NodeHtmlMarkdown } from "node-html-markdown";
-import type { Env } from "../types/env";
 import {
-  PostsQuerySchema,
-  PostsListResponseSchema,
-  PostResponseSchema,
   ErrorResponseSchema,
-  WorkspaceIdParamSchema,
-  PostIdentifierParamSchema,
   PostFormatQuerySchema,
+  PostIdentifierParamSchema,
+  PostResponseSchema,
+  PostsListResponseSchema,
+  PostsQuerySchema,
+  WorkspaceIdParamSchema,
 } from "../schemas/posts";
+import type { Env } from "../types/env";
 
 const posts = new OpenAPIHono<{ Bindings: Env }>();
 
@@ -149,7 +149,7 @@ posts.openapi(listPostsRoute, async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 
@@ -249,7 +249,7 @@ posts.openapi(listPostsRoute, async (c) => {
         error: "Failed to fetch posts",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      500,
+      500
     );
   }
 });

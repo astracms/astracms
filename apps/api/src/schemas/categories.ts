@@ -50,14 +50,14 @@ export const PostWithCategorySchema = z
           .string()
           .nullable()
           .openapi({ example: "https://example.com/avatar.jpg" }),
-      }),
+      })
     ),
     tags: z.array(
       z.object({
         id: z.string().openapi({ example: "cm1tag123" }),
         name: z.string().openapi({ example: "JavaScript" }),
         slug: z.string().openapi({ example: "javascript" }),
-      }),
+      })
     ),
     category: z
       .object({

@@ -1,15 +1,15 @@
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import type { Env } from "../types/env";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
-  CategoriesQuerySchema,
-  CategoryQuerySchema,
   CategoriesListResponseSchema,
+  CategoriesQuerySchema,
+  CategoryIdentifierParamSchema,
+  CategoryQuerySchema,
   CategoryResponseSchema,
   ErrorResponseSchema,
   WorkspaceIdParamSchema,
-  CategoryIdentifierParamSchema,
 } from "../schemas/categories";
+import type { Env } from "../types/env";
 
 const categories = new OpenAPIHono<{ Bindings: Env }>();
 
@@ -84,7 +84,7 @@ categories.openapi(listCategoriesRoute, async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 
@@ -250,7 +250,7 @@ categories.openapi(getCategoryRoute, async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 

@@ -1,15 +1,15 @@
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import type { Env } from "../types/env";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
-  TagsQuerySchema,
-  TagQuerySchema,
-  TagsListResponseSchema,
-  TagResponseSchema,
   ErrorResponseSchema,
-  WorkspaceIdParamSchema,
   TagIdentifierParamSchema,
+  TagQuerySchema,
+  TagResponseSchema,
+  TagsListResponseSchema,
+  TagsQuerySchema,
+  WorkspaceIdParamSchema,
 } from "../schemas/tags";
+import type { Env } from "../types/env";
 
 const tags = new OpenAPIHono<{ Bindings: Env }>();
 
@@ -83,7 +83,7 @@ tags.openapi(listTagsRoute, async (c) => {
           requestedPage: page,
         },
       },
-      400,
+      400
     );
   }
 
@@ -250,7 +250,7 @@ tags.openapi(getTagRoute, async (c) => {
             requestedPage: page,
           },
         },
-        400,
+        400
       );
     }
 

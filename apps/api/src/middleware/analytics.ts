@@ -2,8 +2,8 @@ import { createClient } from "@astra/db";
 import type { Context, MiddlewareHandler, Next } from "hono";
 import { createPolarClient } from "../lib/polar";
 
-export const analytics = (): MiddlewareHandler => {
-  return async (c: Context, next: Next) => {
+export const analytics =
+  (): MiddlewareHandler => async (c: Context, next: Next) => {
     const path = c.req.path;
     const method = c.req.method;
 
@@ -65,4 +65,3 @@ export const analytics = (): MiddlewareHandler => {
 
     c.executionCtx?.waitUntil(task());
   };
-};
