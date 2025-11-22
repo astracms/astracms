@@ -22,7 +22,6 @@
     "api:dev": "turbo dev --filter=api",
     "docs:dev": "turbo dev --filter=docs",
     "cms:build": "turbo build --filter=cms",
-    "postinstall": "pnpm --filter @astra/db db:generate",
     "web:build": "turbo build --filter=web",
     "test": "turbo test",
     "prepare": "husky"
