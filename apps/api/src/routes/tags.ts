@@ -1,34 +1,66 @@
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import { Hono } from "hono";
 import type { Env } from "../types/env";
-import { TagQuerySchema, TagsQuerySchema } from "../validations/tags";
+import {
+  TagsQuerySchema,
+  TagQuerySchema,
+  TagsListResponseSchema,
+  TagResponseSchema,
+  ErrorResponseSchema,
+  WorkspaceIdParamSchema,
+  TagIdentifierParamSchema,
+} from "../schemas/tags";
 
-const tags = new Hono<{ Bindings: Env }>();
+const tags = new OpenAPIHono<{ Bindings: Env }>();
 
-tags.get("/", async (c) => {
-  const db = createClient(c.env.DATABASE_URL);
-  const workspaceId = c.req.param("workspaceId");
-
-  const queryValidation = TagsQuerySchema.safeParse({
-    limit: c.req.query("limit"),
-    page: c.req.query("page"),
-    include: c.req.query("include"),
-  });
-
-  if (!queryValidation.success) {
-    return c.json(
-      {
-        error: "Invalid query parameters",
-        details: queryValidation.error.errors.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-        })),
+// List tags route
+const listTagsRoute = createRoute({
+  method: "get",
+  path: "/",
+  tags: ["Tags"],
+  summary: "List tags",
+  description: "Get a paginated list of tags with post counts",
+  request: {
+    params: WorkspaceIdParamSchema,
+    query: TagsQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: TagsListResponseSchema,
+        },
       },
-      400
-    );
-  }
+      description: "Successfully retrieved tags",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
 
-  const { limit, page } = queryValidation.data;
+tags.openapi(listTagsRoute, async (c) => {
+  const db = createClient(c.env.DATABASE_URL);
+  const { workspaceId } = c.req.valid("param");
+  const queryParams = c.req.valid("query");
+
+  // Transform query parameters
+  const limit = Number.parseInt(queryParams.limit, 10) || 10;
+  const page = Number.parseInt(queryParams.page, 10) || 1;
+
   const totalTags = await db.tag.count({
     where: {
       workspaceId,
@@ -51,7 +83,7 @@ tags.get("/", async (c) => {
           requestedPage: page,
         },
       },
-      400
+      400,
     );
   }
 
@@ -100,32 +132,69 @@ tags.get("/", async (c) => {
   });
 });
 
-tags.get("/:identifier", async (c) => {
+// Get single tag route
+const getTagRoute = createRoute({
+  method: "get",
+  path: "/{identifier}",
+  tags: ["Tags"],
+  summary: "Get a single tag",
+  description:
+    "Get a single tag by slug or ID, optionally including related posts",
+  request: {
+    params: TagIdentifierParamSchema,
+    query: TagQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: TagResponseSchema,
+        },
+      },
+      description: "Successfully retrieved tag",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Tag not found",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
+tags.openapi(getTagRoute, async (c) => {
   try {
     const db = createClient(c.env.DATABASE_URL);
-    const workspaceId = c.req.param("workspaceId");
-    const identifier = c.req.param("identifier");
+    const { workspaceId, identifier } = c.req.valid("param");
+    const queryParams = c.req.valid("query");
 
-    const queryValidation = TagQuerySchema.safeParse({
-      limit: c.req.query("limit"),
-      page: c.req.query("page"),
-      include: c.req.query("include"),
-    });
-
-    if (!queryValidation.success) {
-      return c.json(
-        {
-          error: "Invalid query parameters",
-          details: queryValidation.error.errors.map((err) => ({
-            field: err.path.join("."),
-            message: err.message,
-          })),
-        },
-        400
-      );
-    }
-
-    const { limit, page, include = [] } = queryValidation.data;
+    // Transform query parameters
+    const limit = Number.parseInt(queryParams.limit, 10) || 10;
+    const page = Number.parseInt(queryParams.page, 10) || 1;
+    const include = queryParams.include
+      ? queryParams.include
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
 
     // First get the tag
     const tag = await db.tag.findFirst({
@@ -181,7 +250,7 @@ tags.get("/:identifier", async (c) => {
             requestedPage: page,
           },
         },
-        400
+        400,
       );
     }
 

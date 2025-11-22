@@ -1,53 +1,100 @@
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import { Hono } from "hono";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import type { Env } from "../types/env";
-import { PostsQuerySchema } from "../validations/posts";
+import {
+  PostsQuerySchema,
+  PostsListResponseSchema,
+  PostResponseSchema,
+  ErrorResponseSchema,
+  WorkspaceIdParamSchema,
+  PostIdentifierParamSchema,
+  PostFormatQuerySchema,
+} from "../schemas/posts";
 
-const posts = new Hono<{ Bindings: Env }>();
+const posts = new OpenAPIHono<{ Bindings: Env }>();
 
-posts.get("/", async (c) => {
+// List posts route
+const listPostsRoute = createRoute({
+  method: "get",
+  path: "/",
+  tags: ["Posts"],
+  summary: "List posts",
+  description:
+    "Get a paginated list of published posts with filtering and search capabilities",
+  request: {
+    params: WorkspaceIdParamSchema,
+    query: PostsQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: PostsListResponseSchema,
+        },
+      },
+      description: "Successfully retrieved posts",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
+posts.openapi(listPostsRoute, async (c) => {
   try {
     const url = c.env.DATABASE_URL;
-    const workspaceId = c.req.param("workspaceId");
-    const format = c.req.query("format");
+    const { workspaceId } = c.req.valid("param");
+    const queryParams = c.req.valid("query");
+
+    // Transform query parameters
+    const rawLimit =
+      queryParams.limit === "all"
+        ? "all"
+        : Number.parseInt(queryParams.limit, 10) || 10;
+    const page = Number.parseInt(queryParams.page, 10) || 1;
+    const order = queryParams.order || "desc";
+    const categories = queryParams.categories
+      ? queryParams.categories
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    const excludeCategories = queryParams.excludeCategories
+      ? queryParams.excludeCategories
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    const tags = queryParams.tags
+      ? queryParams.tags
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    const excludeTags = queryParams.excludeTags
+      ? queryParams.excludeTags
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    const query = queryParams.query;
+    const format = queryParams.format;
+
     const db = createClient(url);
-
-    // Validate query parameters
-    const queryValidation = PostsQuerySchema.safeParse({
-      limit: c.req.query("limit"),
-      page: c.req.query("page"),
-      order: c.req.query("order"),
-      categories: c.req.query("categories"),
-      excludeCategories: c.req.query("excludeCategories"),
-      tags: c.req.query("tags"),
-      excludeTags: c.req.query("excludeTags"),
-      query: c.req.query("query"),
-    });
-
-    if (!queryValidation.success) {
-      return c.json(
-        {
-          error: "Invalid query parameters",
-          details: queryValidation.error.errors.map((err) => ({
-            field: err.path.join("."),
-            message: err.message,
-          })),
-        },
-        400
-      );
-    }
-
-    const {
-      limit: rawLimit,
-      page,
-      order,
-      categories = [],
-      excludeCategories = [],
-      tags = [],
-      excludeTags = [],
-      query,
-    } = queryValidation.data;
 
     // Build the where clause
     const where = {
@@ -102,7 +149,7 @@ posts.get("/", async (c) => {
             requestedPage: page,
           },
         },
-        400
+        400,
       );
     }
 
@@ -111,7 +158,7 @@ posts.get("/", async (c) => {
     const prevPage = page > 1 ? page - 1 : null;
     const nextPage = page < totalPages ? page + 1 : null;
 
-    const posts = await db.post.findMany({
+    const postsData = await db.post.findMany({
       where,
       orderBy: {
         publishedAt: order,
@@ -167,11 +214,11 @@ posts.get("/", async (c) => {
     // Format posts based on requested format
     const formattedPosts =
       format === "markdown"
-        ? posts.map((post) => ({
+        ? postsData.map((post) => ({
             ...post,
             content: NodeHtmlMarkdown.translate(post.content || ""),
           }))
-        : posts;
+        : postsData;
 
     const paginationInfo = limit
       ? {
@@ -202,17 +249,55 @@ posts.get("/", async (c) => {
         error: "Failed to fetch posts",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      500
+      500,
     );
   }
 });
 
-posts.get("/:identifier", async (c) => {
+// Get single post route
+const getPostRoute = createRoute({
+  method: "get",
+  path: "/{identifier}",
+  tags: ["Posts"],
+  summary: "Get a single post",
+  description: "Get a single post by slug or ID",
+  request: {
+    params: PostIdentifierParamSchema,
+    query: PostFormatQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: PostResponseSchema,
+        },
+      },
+      description: "Successfully retrieved post",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Post not found",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
+posts.openapi(getPostRoute, async (c) => {
   try {
     const url = c.env.DATABASE_URL;
-    const workspaceId = c.req.param("workspaceId");
-    const identifier = c.req.param("identifier");
-    const format = c.req.query("format");
+    const { workspaceId, identifier } = c.req.valid("param");
+    const { format } = c.req.valid("query");
     const db = createClient(url);
 
     const post = await db.post.findFirst({

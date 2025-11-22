@@ -1,39 +1,67 @@
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import { Hono } from "hono";
 import type { Env } from "../types/env";
 import {
   CategoriesQuerySchema,
   CategoryQuerySchema,
-} from "../validations/categories";
+  CategoriesListResponseSchema,
+  CategoryResponseSchema,
+  ErrorResponseSchema,
+  WorkspaceIdParamSchema,
+  CategoryIdentifierParamSchema,
+} from "../schemas/categories";
 
-const categories = new Hono<{ Bindings: Env }>();
+const categories = new OpenAPIHono<{ Bindings: Env }>();
 
-categories.get("/", async (c) => {
+// List categories route
+const listCategoriesRoute = createRoute({
+  method: "get",
+  path: "/",
+  tags: ["Categories"],
+  summary: "List categories",
+  description: "Get a paginated list of categories with post counts",
+  request: {
+    params: WorkspaceIdParamSchema,
+    query: CategoriesQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: CategoriesListResponseSchema,
+        },
+      },
+      description: "Successfully retrieved categories",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
+categories.openapi(listCategoriesRoute, async (c) => {
   try {
     const url = c.env.DATABASE_URL;
-    const workspaceId = c.req.param("workspaceId");
+    const { workspaceId } = c.req.valid("param");
+    const queryParams = c.req.valid("query");
+
+    // Transform query parameters
+    const limit = Number.parseInt(queryParams.limit, 10) || 10;
+    const page = Number.parseInt(queryParams.page, 10) || 1;
     const db = createClient(url);
-
-    const queryValidation = CategoriesQuerySchema.safeParse({
-      limit: c.req.query("limit"),
-      page: c.req.query("page"),
-      include: c.req.query("include"),
-    });
-
-    if (!queryValidation.success) {
-      return c.json(
-        {
-          error: "Invalid query parameters",
-          details: queryValidation.error.errors.map((err) => ({
-            field: err.path.join("."),
-            message: err.message,
-          })),
-        },
-        400
-      );
-    }
-
-    const { limit, page } = queryValidation.data;
 
     // Get total count
     const totalCategories = await db.category.count({
@@ -56,7 +84,7 @@ categories.get("/", async (c) => {
             requestedPage: page,
           },
         },
-        400
+        400,
       );
     }
 
@@ -108,33 +136,70 @@ categories.get("/", async (c) => {
   }
 });
 
-categories.get("/:identifier", async (c) => {
+// Get single category route
+const getCategoryRoute = createRoute({
+  method: "get",
+  path: "/{identifier}",
+  tags: ["Categories"],
+  summary: "Get a single category",
+  description:
+    "Get a single category by slug or ID, optionally including related posts",
+  request: {
+    params: CategoryIdentifierParamSchema,
+    query: CategoryQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: CategoryResponseSchema,
+        },
+      },
+      description: "Successfully retrieved category",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Category not found",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
+
+categories.openapi(getCategoryRoute, async (c) => {
   try {
     const url = c.env.DATABASE_URL;
-    const workspaceId = c.req.param("workspaceId");
-    const identifier = c.req.param("identifier");
+    const { workspaceId, identifier } = c.req.valid("param");
+    const queryParams = c.req.valid("query");
+
+    // Transform query parameters
+    const limit = Number.parseInt(queryParams.limit, 10) || 10;
+    const page = Number.parseInt(queryParams.page, 10) || 1;
+    const include = queryParams.include
+      ? queryParams.include
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
     const db = createClient(url);
-
-    const queryValidation = CategoryQuerySchema.safeParse({
-      limit: c.req.query("limit"),
-      page: c.req.query("page"),
-      include: c.req.query("include"),
-    });
-
-    if (!queryValidation.success) {
-      return c.json(
-        {
-          error: "Invalid query parameters",
-          details: queryValidation.error.errors.map((err) => ({
-            field: err.path.join("."),
-            message: err.message,
-          })),
-        },
-        400
-      );
-    }
-
-    const { limit, page, include = [] } = queryValidation.data;
 
     const category = await db.category.findFirst({
       where: {
@@ -185,7 +250,7 @@ categories.get("/:identifier", async (c) => {
             requestedPage: page,
           },
         },
-        400
+        400,
       );
     }
 

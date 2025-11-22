@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   if (!orgId) {
     return NextResponse.json(
       { error: "Active workspace not found in session" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch one more than the requested limit to detect "hasNextPage"
-    const media = await db.media.findMany({
+    const mediaRecords = await db.media.findMany({
       where: {
         workspaceId: orgId,
         ...(type && { type }),
@@ -84,6 +84,13 @@ export async function GET(request: Request) {
         size: true,
       },
     });
+
+    // Return direct R2 URLs (UI will apply transformations when displaying)
+    const media = mediaRecords.map((item) => ({
+      ...item,
+      // Already contains the direct R2 URL from database
+      url: item.url,
+    }));
 
     let nextCursor: typeof cursor | undefined;
 
@@ -133,7 +140,7 @@ export async function DELETE(request: Request) {
   if (idsToDelete.length === 0) {
     return NextResponse.json(
       { error: "mediaId or mediaIds is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -163,39 +170,42 @@ export async function DELETE(request: Request) {
     for (const media of existingMedia) {
       if (media.url) {
         try {
+          // Extract the key from the URL
+          // The URL format is: https://pub-xxx.r2.dev/media/xyz.jpg
+          // We need to extract just "media/xyz.jpg" (the path after the domain)
           const rawPath = media.url.startsWith("http")
             ? new URL(media.url).pathname
             : media.url;
           let key = decodeURIComponent(rawPath).replace(/^\/+/, "");
-          if (key.startsWith(`${R2_BUCKET_NAME}/`)) {
-            key = key.slice(R2_BUCKET_NAME.length + 1);
-          }
+
+          // Remove any duplicate path segments and normalize
           key = key.replace(/\/{2,}/g, "/");
+
           if (
             !key ||
             key.split("/").some((seg) => ["", ".", ".."].includes(seg))
           ) {
             throw new Error(
-              "Invalid storage key: contains empty or traversal path segments."
+              "Invalid storage key: contains empty or traversal path segments.",
             );
           }
           await r2.send(
             new DeleteObjectCommand({
               Bucket: R2_BUCKET_NAME,
               Key: key,
-            })
+            }),
           );
           mediaDeletedFromR2.push({ id: media.id, media });
         } catch (error) {
           console.error(
             `Failed to delete media object from R2 for media ID ${media.id}. URL: ${media.url}`,
-            error
+            error,
           );
           failedIds.push(media.id);
         }
       } else {
         console.error(
-          `Media with ID ${media.id} has no URL. Deleting database record only.`
+          `Media with ID ${media.id} has no URL. Deleting database record only.`,
         );
         mediaDeletedFromR2.push({ id: media.id, media });
       }
@@ -227,7 +237,7 @@ export async function DELETE(request: Request) {
     if (deletedIds.length === 0) {
       return NextResponse.json(
         { error: "No media items were deleted successfully" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -240,7 +250,7 @@ export async function DELETE(request: Request) {
             ? `Deleted ${deletedIds.length} items, ${failedIds.length} failed`
             : `Deleted ${deletedIds.length} items successfully`,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     const message =

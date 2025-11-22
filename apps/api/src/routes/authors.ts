@@ -1,36 +1,66 @@
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { createClient } from "@astra/db";
-import { Hono } from "hono";
 import type { Env } from "../types/env";
-import { AuthorQuerySchema, AuthorsQuerySchema } from "../validations/authors";
+import {
+  AuthorsQuerySchema,
+  AuthorQuerySchema,
+  AuthorsListResponseSchema,
+  AuthorResponseSchema,
+  ErrorResponseSchema,
+  WorkspaceIdParamSchema,
+  AuthorIdentifierParamSchema,
+} from "../schemas/authors";
 
-const authors = new Hono<{ Bindings: Env }>();
+const authors = new OpenAPIHono<{ Bindings: Env }>();
 
-authors.get("/", async (c) => {
-  const url = c.env.DATABASE_URL;
-  const workspaceId = c.req.param("workspaceId");
-  const db = createClient(url);
-
-  // Validate query parameters
-  const queryValidation = AuthorsQuerySchema.safeParse({
-    limit: c.req.query("limit"),
-    page: c.req.query("page"),
-    include: c.req.query("include"),
-  });
-
-  if (!queryValidation.success) {
-    return c.json(
-      {
-        error: "Invalid query parameters",
-        details: queryValidation.error.errors.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-        })),
+// List authors route
+const listAuthorsRoute = createRoute({
+  method: "get",
+  path: "/",
+  tags: ["Authors"],
+  summary: "List authors",
+  description: "Get a paginated list of authors with post counts",
+  request: {
+    params: WorkspaceIdParamSchema,
+    query: AuthorsQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: AuthorsListResponseSchema,
+        },
       },
-      400
-    );
-  }
+      description: "Successfully retrieved authors",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
 
-  const { limit, page } = queryValidation.data;
+authors.openapi(listAuthorsRoute, async (c) => {
+  const url = c.env.DATABASE_URL;
+  const { workspaceId } = c.req.valid("param");
+  const queryParams = c.req.valid("query");
+
+  // Transform query parameters
+  const limit = Number.parseInt(queryParams.limit, 10) || 10;
+  const page = Number.parseInt(queryParams.page, 10) || 1;
+  const db = createClient(url);
 
   const totalAuthors = await db.author.count({
     where: {
@@ -58,7 +88,7 @@ authors.get("/", async (c) => {
           requestedPage: page,
         },
       },
-      400
+      400,
     );
   }
 
@@ -123,32 +153,69 @@ authors.get("/", async (c) => {
   }
 });
 
-authors.get("/:identifier", async (c) => {
-  const url = c.env.DATABASE_URL;
-  const workspaceId = c.req.param("workspaceId");
-  const identifier = c.req.param("identifier");
-  const db = createClient(url);
-
-  const queryValidation = AuthorQuerySchema.safeParse({
-    limit: c.req.query("limit"),
-    page: c.req.query("page"),
-    include: c.req.query("include"),
-  });
-
-  if (!queryValidation.success) {
-    return c.json(
-      {
-        error: "Invalid query parameters",
-        details: queryValidation.error.errors.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-        })),
+// Get single author route
+const getAuthorRoute = createRoute({
+  method: "get",
+  path: "/{identifier}",
+  tags: ["Authors"],
+  summary: "Get a single author",
+  description:
+    "Get a single author by slug or ID, optionally including related posts",
+  request: {
+    params: AuthorIdentifierParamSchema,
+    query: AuthorQuerySchema,
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: AuthorResponseSchema,
+        },
       },
-      400
-    );
-  }
+      description: "Successfully retrieved author",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Invalid query parameters or page number",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Author not found",
+    },
+    500: {
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+      description: "Internal server error",
+    },
+  },
+});
 
-  const { limit, page, include = [] } = queryValidation.data;
+authors.openapi(getAuthorRoute, async (c) => {
+  const url = c.env.DATABASE_URL;
+  const { workspaceId, identifier } = c.req.valid("param");
+  const queryParams = c.req.valid("query");
+
+  // Transform query parameters
+  const limit = Number.parseInt(queryParams.limit, 10) || 10;
+  const page = Number.parseInt(queryParams.page, 10) || 1;
+  const include = queryParams.include
+    ? queryParams.include
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+  const db = createClient(url);
 
   try {
     const author = await db.author.findFirst({
@@ -204,7 +271,7 @@ authors.get("/:identifier", async (c) => {
             requestedPage: page,
           },
         },
-        400
+        400,
       );
     }
 

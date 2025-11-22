@@ -7,7 +7,7 @@
   },
   "scripts": {
     "db:generate": "prisma generate",
-    "db:push": "prisma db push --skip-generate",
+    "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev",

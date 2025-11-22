@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { OpenAPIHono } from "@hono/zod-openapi";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { analytics } from "./middleware/analytics";
 import { ratelimit } from "./middleware/ratelimit";
@@ -8,8 +8,8 @@ import postsRoutes from "./routes/posts";
 import tagsRoutes from "./routes/tags";
 import type { Env } from "./types/env";
 
-const app = new Hono<{ Bindings: Env }>();
-const v1 = new Hono<{ Bindings: Env }>();
+const app = new OpenAPIHono<{ Bindings: Env }>();
+const v1 = new OpenAPIHono<{ Bindings: Env }>();
 
 const staleTime = 3600;
 
@@ -52,7 +52,7 @@ app.use("/:workspaceId/*", async (c, next) => {
   const isWorkspaceRoute = workspaceRoutes.some(
     (route) =>
       path === `/${workspaceId}${route}` ||
-      path.startsWith(`/${workspaceId}${route}/`)
+      path.startsWith(`/${workspaceId}${route}/`),
   );
 
   if (isWorkspaceRoute) {
@@ -64,7 +64,7 @@ app.use("/:workspaceId/*", async (c, next) => {
 });
 
 // Health
-app.get("/", (c) => c.text("Hello from astra"));
+app.get("/", (c) => c.text("Hello From astracms : visit  docs.astracms.dev"));
 app.get("/status", (c) => c.json({ status: "ok" }));
 
 // Mount routes
@@ -74,5 +74,15 @@ v1.route("/:workspaceId/posts", postsRoutes);
 v1.route("/:workspaceId/authors", authorsRoutes);
 
 app.route("/v1", v1);
+
+// OpenAPI documentation
+app.doc("/doc", {
+  openapi: "3.0.0",
+  info: {
+    version: "1.0.0",
+    title: "Astra CMS API",
+    description: "API for Astra CMS content management system",
+  },
+});
 
 export default app;

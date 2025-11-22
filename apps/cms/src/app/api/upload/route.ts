@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   if (!parsedBody.success) {
     return NextResponse.json(
       { error: "Invalid request body" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     if (!success) {
       return NextResponse.json(
         { error: "Too Many Requests", remaining },
-        { status: 429, headers: rateLimitHeaders(limit, remaining, reset) }
+        { status: 429, headers: rateLimitHeaders(limit, remaining, reset) },
       );
     }
   }
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     default:
       return NextResponse.json(
         { error: "Invalid upload type" },
-        { status: 400 }
+        { status: 400 },
       );
   }
 
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
       ContentType: fileType,
       ContentLength: fileSize,
     }),
-    { expiresIn: 3600 }
+    { expiresIn: 3600 },
   );
 
   return NextResponse.json({ url: presignedUrl, key });

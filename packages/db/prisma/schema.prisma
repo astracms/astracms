@@ -1,8 +1,11 @@
 generator client {
-  provider   = "prisma-client-js"
-  output     = "../src/generated"
-  runtime    = "workerd"
-  engineType = "library"
+  provider               = "prisma-client"
+  output                 = "../src/generated"
+  engineType             = "client"
+  runtime                = "workerd"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
 }
 
 datasource db {
@@ -152,6 +155,7 @@ model Media {
   id          String       @id @default(cuid())
   name        String
   url         String
+  key         String?
   size        Int
   alt         String?
   createdAt   DateTime     @default(now())

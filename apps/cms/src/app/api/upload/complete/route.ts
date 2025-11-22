@@ -21,11 +21,14 @@ export async function POST(request: Request) {
   if (!parsedBody.success) {
     return NextResponse.json(
       { error: "Invalid request body" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   const { type, key, fileType, fileSize } = parsedBody.data;
+
+  // Store the key without bucket name prefix in the database
+  // The key should be relative to the bucket root (e.g., "media/xyz.jpg")
   const url = `${R2_PUBLIC_URL}/${key}`;
 
   try {
@@ -55,6 +58,7 @@ export async function POST(request: Request) {
           data: {
             name: mediaName,
             url,
+            key,
             size: fileSize,
             type: mediaType,
             workspaceId,
@@ -79,7 +83,7 @@ export async function POST(request: Request) {
         }).catch((error) => {
           console.error(
             `[MediaUpload] Failed to dispatch webhooks: mediaId=${media.id}`,
-            error
+            error,
           );
         });
 
@@ -96,7 +100,7 @@ export async function POST(request: Request) {
       default:
         return NextResponse.json(
           { error: "Invalid upload type" },
-          { status: 400 }
+          { status: 400 },
         );
     }
   } catch (error) {

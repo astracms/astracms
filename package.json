@@ -21,6 +21,8 @@
     "cms:dev": "turbo dev --filter=cms",
     "api:dev": "turbo dev --filter=api",
     "docs:dev": "turbo dev --filter=docs",
+    "cms:build": "turbo build --filter=cms",
+    "web:build": "turbo build --filter=web",
     "test": "turbo test",
     "prepare": "husky"
   },
@@ -56,5 +58,5 @@
       "workerd"
     ]
   },
-  "packageManager": "pnpm@10.19.0"
+  "packageManager": "pnpm@10.23.0"
 }
