@@ -88,9 +88,12 @@ function CreateApiKeySheet({ children }: CreateApiKeySheetProps) {
 		},
 		onSuccess: (data) => {
 			toast.success("API key created successfully");
-			setCreatedKey(data);
 			reset();
 			setIsOpen(false);
+			// Delay showing the reveal dialog to avoid portal conflicts
+			setTimeout(() => {
+				setCreatedKey(data);
+			}, 100);
 			if (workspaceId) {
 				queryClient.invalidateQueries({
 					queryKey: QUERY_KEYS.API_KEYS(workspaceId),
