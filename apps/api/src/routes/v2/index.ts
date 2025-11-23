@@ -12,7 +12,8 @@ import authorsRoutes from "../authors";
 import categoriesRoutes from "../categories";
 import postsRoutes from "../posts";
 import tagsRoutes from "../tags";
-import type { Env } from "../../types/env";
+import type { Env, Variables } from "../../types/env";
+import type { ApiKeyScope } from "../../validations/api-key";
 
 /**
  * Create a route adapter that injects workspaceId from API key context
@@ -21,10 +22,10 @@ import type { Env } from "../../types/env";
  * @param requiredScope - The scope required to access this resource (e.g., "posts:read")
  */
 function createV2RouteAdapter(
-	v1Route: OpenAPIHono<{ Bindings: Env }>,
-	requiredScope: string,
+	v1Route: OpenAPIHono<{ Bindings: Env; Variables: Variables }>,
+	requiredScope: ApiKeyScope,
 ) {
-	const adapter = new OpenAPIHono<{ Bindings: Env }>();
+	const adapter = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 
 	// Apply scope validation first
 	adapter.use("*", requireScope(requiredScope));
@@ -46,13 +47,14 @@ function createV2RouteAdapter(
 
 		// Inject workspaceId into the request params
 		// This allows v1 route handlers to work with v2 authenticated requests
-		c.req.param = (key?: string) => {
+		const originalParam = c.req.param.bind(c.req);
+		c.req.param = ((key?: string) => {
 			if (key === "workspaceId") {
 				return workspaceId;
 			}
 			// For other params, use the original param function
-			return c.req.param(key);
-		};
+			return originalParam(key as never);
+		}) as typeof c.req.param;
 
 		await next();
 	});

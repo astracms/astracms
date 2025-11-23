@@ -9,9 +9,9 @@ import {
   TagsQuerySchema,
   WorkspaceIdParamSchema,
 } from "../schemas/tags";
-import type { Env } from "../types/env";
+import type { Env, Variables } from "../types/env";
 
-const tags = new OpenAPIHono<{ Bindings: Env }>();
+const tags = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 
 // List tags route
 const listTagsRoute = createRoute({
@@ -129,7 +129,7 @@ tags.openapi(listTagsRoute, async (c) => {
       totalPages,
       totalItems: totalTags,
     },
-  });
+  }, 200);
 });
 
 // Get single tag route
@@ -299,10 +299,10 @@ tags.openapi(getTagRoute, async (c) => {
             totalItems: totalPosts,
           },
         },
-      });
+      }, 200);
     }
 
-    return c.json(transformedTag);
+    return c.json(transformedTag, 200);
   } catch (error) {
     console.error("Error fetching tag:", error);
     return c.json({ error: "Failed to fetch tag" }, 500);

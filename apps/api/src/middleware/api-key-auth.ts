@@ -3,6 +3,7 @@ import type { Context, Next } from "hono";
 import { isPast } from "date-fns";
 import { scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
+import type { ApiKeyScope } from "../validations/api-key";
 
 const scryptAsync = promisify(scrypt);
 
@@ -186,7 +187,7 @@ export const apiKeyAuth = () => async (c: Context, next: Next) => {
  * Use after apiKeyAuth to check if the API key has the required scope
  */
 export const requireScope =
-	(requiredScope: string) => async (c: Context, next: Next) => {
+	(requiredScope: ApiKeyScope) => async (c: Context, next: Next) => {
 		const scopes = c.get("apiKeyScopes") as string[] | undefined;
 
 		if (!scopes) {

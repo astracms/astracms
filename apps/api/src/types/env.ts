@@ -5,3 +5,9 @@ export type Env = {
   POLAR_ACCESS_TOKEN: string;
   ENVIRONMENT?: string;
 };
+
+export type Variables = {
+  workspaceId: string;
+  apiKeyId: string;
+  apiKeyScopes: string[];
+};

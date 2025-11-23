@@ -9,9 +9,9 @@ import {
   ErrorResponseSchema,
   WorkspaceIdParamSchema,
 } from "../schemas/authors";
-import type { Env } from "../types/env";
+import type { Env, Variables } from "../types/env";
 
-const authors = new OpenAPIHono<{ Bindings: Env }>();
+const authors = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 
 // List authors route
 const listAuthorsRoute = createRoute({
@@ -147,7 +147,7 @@ authors.openapi(listAuthorsRoute, async (c) => {
         totalPages,
         totalItems: totalAuthors,
       },
-    });
+    }, 200);
   } catch (_error) {
     return c.json({ error: "Failed to fetch authors" }, 500);
   }
@@ -304,7 +304,10 @@ authors.openapi(getAuthorRoute, async (c) => {
       return c.json({
         ...author,
         posts: {
-          data: posts,
+          data: posts.map(post => ({
+            ...post,
+            publishedAt: post.publishedAt?.toISOString() ?? null,
+          })),
           pagination: {
             limit,
             currentPage: page,
@@ -314,10 +317,10 @@ authors.openapi(getAuthorRoute, async (c) => {
             totalItems: totalPosts,
           },
         },
-      });
+      }, 200);
     }
 
-    return c.json({ author });
+    return c.json({ author }, 200);
   } catch (_error) {
     return c.json({ error: "Failed to fetch author" }, 500);
   }

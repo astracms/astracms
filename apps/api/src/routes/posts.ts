@@ -10,9 +10,9 @@ import {
   PostsQuerySchema,
   WorkspaceIdParamSchema,
 } from "../schemas/posts";
-import type { Env } from "../types/env";
+import type { Env, Variables } from "../types/env";
 
-const posts = new OpenAPIHono<{ Bindings: Env }>();
+const posts = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 
 // List posts route
 const listPostsRoute = createRoute({
@@ -212,13 +212,15 @@ posts.openapi(listPostsRoute, async (c) => {
     });
 
     // Format posts based on requested format
-    const formattedPosts =
-      format === "markdown"
-        ? postsData.map((post) => ({
-            ...post,
-            content: NodeHtmlMarkdown.translate(post.content || ""),
-          }))
-        : postsData;
+    const formattedPosts = postsData.map((post) => ({
+      ...post,
+      content: format === "markdown"
+        ? NodeHtmlMarkdown.translate(post.content || "")
+        : post.content,
+      publishedAt: post.publishedAt?.toISOString() ?? null,
+      updatedAt: post.updatedAt.toISOString(),
+      attribution: typeof post.attribution === 'string' ? post.attribution : null,
+    }));
 
     const paginationInfo = limit
       ? {
@@ -241,7 +243,7 @@ posts.openapi(listPostsRoute, async (c) => {
     return c.json({
       posts: formattedPosts,
       pagination: paginationInfo,
-    });
+    }, 200);
   } catch (error) {
     console.error("Error fetching posts:", error);
     return c.json(
@@ -357,12 +359,17 @@ posts.openapi(getPostRoute, async (c) => {
     }
 
     // Format post based on requested format
-    const formattedPost =
-      format === "markdown"
-        ? { ...post, content: NodeHtmlMarkdown.translate(post.content || "") }
-        : post;
+    const formattedPost = {
+      ...post,
+      content: format === "markdown"
+        ? NodeHtmlMarkdown.translate(post.content || "")
+        : post.content,
+      publishedAt: post.publishedAt?.toISOString() ?? null,
+      updatedAt: post.updatedAt.toISOString(),
+      attribution: typeof post.attribution === 'string' ? post.attribution : null,
+    };
 
-    return c.json({ post: formattedPost });
+    return c.json({ post: formattedPost }, 200);
   } catch (_error) {
     return c.json({ error: "Failed to fetch post" }, 500);
   }

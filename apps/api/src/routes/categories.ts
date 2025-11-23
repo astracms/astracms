@@ -9,9 +9,9 @@ import {
   ErrorResponseSchema,
   WorkspaceIdParamSchema,
 } from "../schemas/categories";
-import type { Env } from "../types/env";
+import type { Env, Variables } from "../types/env";
 
-const categories = new OpenAPIHono<{ Bindings: Env }>();
+const categories = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 
 // List categories route
 const listCategoriesRoute = createRoute({
@@ -129,7 +129,7 @@ categories.openapi(listCategoriesRoute, async (c) => {
         totalPages,
         totalItems: totalCategories,
       },
-    });
+    }, 200);
   } catch (error) {
     console.error("Error fetching categories:", error);
     return c.json({ error: "Failed to fetch categories" }, 500);
@@ -319,10 +319,10 @@ categories.openapi(getCategoryRoute, async (c) => {
             totalItems: totalPosts,
           },
         },
-      });
+      }, 200);
     }
 
-    return c.json(transformedCategory);
+    return c.json(transformedCategory, 200);
   } catch (error) {
     console.error("Error fetching category:", error);
     return c.json({ error: "Failed to fetch category" }, 500);
