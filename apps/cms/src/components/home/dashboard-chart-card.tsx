@@ -71,9 +71,7 @@ export function DashboardChartCard({
         {children}
       </CardContent>
       {footer && (
-        <div className="border-t border-border/40 px-4 pb-3 pt-3">
-          {footer}
-        </div>
+        <div className="border-border/40 border-t px-4 pt-3 pb-3">{footer}</div>
       )}
     </Card>
   );

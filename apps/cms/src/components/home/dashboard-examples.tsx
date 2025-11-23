@@ -8,22 +8,22 @@
 
 "use client";
 
-import { DashboardGrid } from "./dashboard-grid";
-import { DashboardStatCard } from "./dashboard-stat-card";
-import { DashboardChartCard } from "./dashboard-chart-card";
-import { DashboardListCard } from "./dashboard-list-card";
-import { ContentWorkspaceCard } from "./content-workspace-card";
-import { TeamOverviewCard } from "./team-overview-card";
-import { PlanUsageCard } from "./plan-usage-card";
-import { UserAvatarStack } from "./user-avatar-stack";
 import {
-  FileText,
-  Users,
-  TrendUp,
   Calendar,
-  Clock,
   CheckCircle,
+  Clock,
+  FileText,
+  TrendUp,
+  Users,
 } from "@phosphor-icons/react";
+import { ContentWorkspaceCard } from "./content-workspace-card";
+import { DashboardChartCard } from "./dashboard-chart-card";
+import { DashboardGrid } from "./dashboard-grid";
+import { DashboardListCard } from "./dashboard-list-card";
+import { DashboardStatCard } from "./dashboard-stat-card";
+import { PlanUsageCard } from "./plan-usage-card";
+import { TeamOverviewCard } from "./team-overview-card";
+import { UserAvatarStack } from "./user-avatar-stack";
 
 export function DashboardExamples() {
   // Example 1: Quick Stats Grid
@@ -167,7 +167,7 @@ export function DashboardExamples() {
     {
       label: "API Requests",
       used: 8500,
-      limit: 10000,
+      limit: 10_000,
       unit: "requests",
       color: "hsl(var(--chart-1))",
     },
@@ -213,13 +213,13 @@ export function DashboardExamples() {
         <DashboardGrid columns={2}>
           {quickStats.map((stat) => (
             <DashboardStatCard
-              key={stat.title}
-              title={stat.title}
-              value={stat.value}
+              accentColor={stat.accentColor}
               description={stat.description}
               icon={stat.icon}
-              accentColor={stat.accentColor}
+              key={stat.title}
+              title={stat.title}
               trend={stat.trend}
+              value={stat.value}
             />
           ))}
         </DashboardGrid>
@@ -229,9 +229,9 @@ export function DashboardExamples() {
       <section className="space-y-4">
         <h3 className="font-medium text-lg">2. Content Workspace Cards</h3>
         <ContentWorkspaceCard
-          title="Recent Content"
           count={recentContent.length}
           items={recentContent}
+          title="Recent Content"
         />
       </section>
 
@@ -240,14 +240,14 @@ export function DashboardExamples() {
         <h3 className="font-medium text-lg">3. Activity List</h3>
         <div className="grid gap-6 lg:grid-cols-2">
           <DashboardListCard
-            title="Recent Activity"
             count={recentActivity.length}
             items={recentActivity}
+            title="Recent Activity"
           />
           <DashboardChartCard
-            title="Sample Chart Card"
-            subtitle="This is a placeholder for charts"
             dateRange="Last 30 days"
+            subtitle="This is a placeholder for charts"
+            title="Sample Chart Card"
           >
             <div className="flex h-full items-center justify-center text-muted-foreground text-sm">
               Add your chart component here (Recharts, Chart.js, etc.)
@@ -265,10 +265,10 @@ export function DashboardExamples() {
             onInvite={() => console.log("Invite clicked")}
           />
           <PlanUsageCard
-            planName="Professional Plan"
-            planBadge={{ label: "Premium", variant: "premium" }}
-            usageItems={usageItems}
             onUpgrade={() => console.log("Upgrade clicked")}
+            planBadge={{ label: "Premium", variant: "premium" }}
+            planName="Professional Plan"
+            usageItems={usageItems}
           />
         </div>
       </section>
@@ -277,9 +277,9 @@ export function DashboardExamples() {
       <section className="space-y-4">
         <h3 className="font-medium text-lg">5. Avatar Stack</h3>
         <div className="flex items-center gap-4">
-          <UserAvatarStack users={users} max={3} size="sm" />
-          <UserAvatarStack users={users} max={3} size="md" />
-          <UserAvatarStack users={users} max={3} size="lg" />
+          <UserAvatarStack max={3} size="sm" users={users} />
+          <UserAvatarStack max={3} size="md" users={users} />
+          <UserAvatarStack max={3} size="lg" users={users} />
         </div>
       </section>
     </div>

@@ -12,13 +12,13 @@ const KEY_DISPLAY_PREFIX_LENGTH = 12;
  * @returns true if the key has the correct format
  */
 export function isValidApiKeyFormat(key: string): boolean {
-	if (!key.startsWith(API_KEY_PREFIX)) {
-		return false;
-	}
+  if (!key.startsWith(API_KEY_PREFIX)) {
+    return false;
+  }
 
-	const keyPart = key.substring(API_KEY_PREFIX.length);
-	// Check if the key part contains only base62 characters
-	return /^[0-9A-Za-z]+$/.test(keyPart) && keyPart.length > 0;
+  const keyPart = key.substring(API_KEY_PREFIX.length);
+  // Check if the key part contains only base62 characters
+  return /^[0-9A-Za-z]+$/.test(keyPart) && keyPart.length > 0;
 }
 
 /**
@@ -27,7 +27,7 @@ export function isValidApiKeyFormat(key: string): boolean {
  * @returns The prefix (first 12 characters)
  */
 export function getApiKeyPrefix(key: string): string {
-	return key.substring(0, KEY_DISPLAY_PREFIX_LENGTH);
+  return key.substring(0, KEY_DISPLAY_PREFIX_LENGTH);
 }
 
 /**
@@ -36,5 +36,5 @@ export function getApiKeyPrefix(key: string): string {
  * @returns Masked key string like "astra_pk_abc***"
  */
 export function maskApiKey(keyPrefix: string): string {
-	return `${keyPrefix}${"*".repeat(32)}`;
+  return `${keyPrefix}${"*".repeat(32)}`;
 }

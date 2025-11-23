@@ -137,17 +137,20 @@ authors.openapi(listAuthorsRoute, async (c) => {
       };
     });
 
-    return c.json({
-      authors: transformedAuthors,
-      pagination: {
-        limit,
-        currentPage: page,
-        nextPage,
-        previousPage: prevPage,
-        totalPages,
-        totalItems: totalAuthors,
+    return c.json(
+      {
+        authors: transformedAuthors,
+        pagination: {
+          limit,
+          currentPage: page,
+          nextPage,
+          previousPage: prevPage,
+          totalPages,
+          totalItems: totalAuthors,
+        },
       },
-    }, 200);
+      200
+    );
   } catch (_error) {
     return c.json({ error: "Failed to fetch authors" }, 500);
   }
@@ -301,23 +304,26 @@ authors.openapi(getAuthorRoute, async (c) => {
         skip: postsToSkip,
       });
 
-      return c.json({
-        ...author,
-        posts: {
-          data: posts.map(post => ({
-            ...post,
-            publishedAt: post.publishedAt?.toISOString() ?? null,
-          })),
-          pagination: {
-            limit,
-            currentPage: page,
-            nextPage,
-            previousPage: prevPage,
-            totalPages,
-            totalItems: totalPosts,
+      return c.json(
+        {
+          ...author,
+          posts: {
+            data: posts.map((post) => ({
+              ...post,
+              publishedAt: post.publishedAt?.toISOString() ?? null,
+            })),
+            pagination: {
+              limit,
+              currentPage: page,
+              nextPage,
+              previousPage: prevPage,
+              totalPages,
+              totalItems: totalPosts,
+            },
           },
         },
-      }, 200);
+        200
+      );
     }
 
     return c.json({ author }, 200);

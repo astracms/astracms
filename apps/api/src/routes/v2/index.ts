@@ -8,12 +8,12 @@
 
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { requireScope } from "../../middleware/api-key-auth";
+import type { Env, Variables } from "../../types/env";
+import type { ApiKeyScope } from "../../validations/api-key";
 import authorsRoutes from "../authors";
 import categoriesRoutes from "../categories";
 import postsRoutes from "../posts";
 import tagsRoutes from "../tags";
-import type { Env, Variables } from "../../types/env";
-import type { ApiKeyScope } from "../../validations/api-key";
 
 /**
  * Create a route adapter that injects workspaceId from API key context
@@ -22,54 +22,58 @@ import type { ApiKeyScope } from "../../validations/api-key";
  * @param requiredScope - The scope required to access this resource (e.g., "posts:read")
  */
 function createV2RouteAdapter(
-	v1Route: OpenAPIHono<{ Bindings: Env; Variables: Variables }>,
-	requiredScope: ApiKeyScope,
+  v1Route: OpenAPIHono<{ Bindings: Env; Variables: Variables }>,
+  requiredScope: ApiKeyScope
 ) {
-	const adapter = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
+  const adapter = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 
-	// Apply scope validation first
-	adapter.use("*", requireScope(requiredScope));
+  // Apply scope validation first
+  adapter.use("*", requireScope(requiredScope));
 
-	// Forward all routes from v1 to v2 with context injection
-	adapter.use("*", async (c, next) => {
-		// Get workspaceId from context (set by apiKeyAuth middleware)
-		const workspaceId = c.get("workspaceId");
+  // Forward all routes from v1 to v2 with context injection
+  adapter.use("*", async (c, next) => {
+    // Get workspaceId from context (set by apiKeyAuth middleware)
+    const workspaceId = c.get("workspaceId");
 
-		if (!workspaceId) {
-			return c.json(
-				{
-					error: "Unauthorized",
-					message: "No workspace context found. Please authenticate with a valid API key.",
-				},
-				401,
-			);
-		}
+    if (!workspaceId) {
+      return c.json(
+        {
+          error: "Unauthorized",
+          message:
+            "No workspace context found. Please authenticate with a valid API key.",
+        },
+        401
+      );
+    }
 
-		// Inject workspaceId into the request params
-		// This allows v1 route handlers to work with v2 authenticated requests
-		const originalParam = c.req.param.bind(c.req);
-		c.req.param = ((key?: string) => {
-			if (key === "workspaceId") {
-				return workspaceId;
-			}
-			// For other params, use the original param function
-			return originalParam(key as never);
-		}) as typeof c.req.param;
+    // Inject workspaceId into the request params
+    // This allows v1 route handlers to work with v2 authenticated requests
+    const originalParam = c.req.param.bind(c.req);
+    c.req.param = ((key?: string) => {
+      if (key === "workspaceId") {
+        return workspaceId;
+      }
+      // For other params, use the original param function
+      return originalParam(key as never);
+    }) as typeof c.req.param;
 
-		await next();
-	});
+    await next();
+  });
 
-	// Mount the v1 routes
-	adapter.route("/", v1Route);
+  // Mount the v1 routes
+  adapter.route("/", v1Route);
 
-	return adapter;
+  return adapter;
 }
 
 // Create v2 route adapters with scope enforcement
 export const v2PostsRoutes = createV2RouteAdapter(postsRoutes, "posts:read");
 export const v2CategoriesRoutes = createV2RouteAdapter(
-	categoriesRoutes,
-	"categories:read",
+  categoriesRoutes,
+  "categories:read"
 );
 export const v2TagsRoutes = createV2RouteAdapter(tagsRoutes, "tags:read");
-export const v2AuthorsRoutes = createV2RouteAdapter(authorsRoutes, "authors:read");
+export const v2AuthorsRoutes = createV2RouteAdapter(
+  authorsRoutes,
+  "authors:read"
+);

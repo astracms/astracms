@@ -119,17 +119,20 @@ categories.openapi(listCategoriesRoute, async (c) => {
       };
     });
 
-    return c.json({
-      categories: transformedCategories,
-      pagination: {
-        limit,
-        currentPage: page,
-        nextPage,
-        previousPage: prevPage,
-        totalPages,
-        totalItems: totalCategories,
+    return c.json(
+      {
+        categories: transformedCategories,
+        pagination: {
+          limit,
+          currentPage: page,
+          nextPage,
+          previousPage: prevPage,
+          totalPages,
+          totalItems: totalCategories,
+        },
       },
-    }, 200);
+      200
+    );
   } catch (error) {
     console.error("Error fetching categories:", error);
     return c.json({ error: "Failed to fetch categories" }, 500);
@@ -306,20 +309,23 @@ categories.openapi(getCategoryRoute, async (c) => {
         skip: postsToSkip,
       });
 
-      return c.json({
-        ...transformedCategory,
-        posts: {
-          data: posts,
-          pagination: {
-            limit,
-            currentPage: page,
-            nextPage,
-            previousPage: prevPage,
-            totalPages,
-            totalItems: totalPosts,
+      return c.json(
+        {
+          ...transformedCategory,
+          posts: {
+            data: posts,
+            pagination: {
+              limit,
+              currentPage: page,
+              nextPage,
+              previousPage: prevPage,
+              totalPages,
+              totalItems: totalPosts,
+            },
           },
         },
-      }, 200);
+        200
+      );
     }
 
     return c.json(transformedCategory, 200);

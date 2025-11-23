@@ -82,7 +82,7 @@ export function WebhookUsageCard({ data, isLoading }: WebhookUsageCardProps) {
             </div>
           </div>
           <div className="text-right">
-            <p className="rounded-full bg-background/50 px-3 py-1.5 text-muted-foreground text-xs font-medium">
+            <p className="rounded-full bg-background/50 px-3 py-1.5 font-medium text-muted-foreground text-xs">
               {startDate && endDate
                 ? `${startDate} - ${endDate}`
                 : "Last 30 Days"}
@@ -119,7 +119,7 @@ export function WebhookUsageCard({ data, isLoading }: WebhookUsageCardProps) {
                   <ChartTooltipContent
                     labelFormatter={(value) =>
                       formatTooltipLabel(
-                        chartData.find((item) => item.label === value)?.date,
+                        chartData.find((item) => item.label === value)?.date
                       )
                     }
                     nameKey="deliveries"

@@ -11,6 +11,7 @@ import {
 import { cn } from "@astra/ui/lib/utils";
 
 import {
+  BookBookmarkIcon,
   BookOpenIcon,
   KeyIcon,
   LinkSimpleBreak,
@@ -33,7 +34,7 @@ const items = [
   {
     name: "Documentation",
     url: "https://docs.astracms.dev",
-    icon: WebhooksLogoIcon,
+    icon: BookBookmarkIcon,
   },
   {
     name: "Blog",

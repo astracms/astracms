@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { RegisterForm } from "@/components/auth/register-form";
+import SignupFeaturesCard from "@/components/auth/signup-features-card";
 import AstraIcon from "@/components/icons/astra";
 import Credits from "@/components/util/credits";
 import { SITE_CONFIG } from "@/utils/site";
-import SignupFeaturesCard from "@/components/auth/signup-features-card";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),

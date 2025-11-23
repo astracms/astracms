@@ -10,7 +10,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@astra/ui/*": ["../../packages/ui/src/*"]
-    }
+    },
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",

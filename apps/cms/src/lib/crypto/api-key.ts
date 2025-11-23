@@ -12,22 +12,22 @@ const KEY_DISPLAY_PREFIX_LENGTH = 12; // Show first 12 chars of the key
  * Base62 character set for encoding (alphanumeric, case-sensitive)
  */
 const BASE62_CHARS =
-	"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 /**
  * Convert bytes to base62 string
  */
 function toBase62(bytes: Buffer): string {
-	let result = "";
-	let num = BigInt(`0x${bytes.toString("hex")}`);
+  let result = "";
+  let num = BigInt(`0x${bytes.toString("hex")}`);
 
-	while (num > 0n) {
-		const remainder = Number(num % 62n);
-		result = BASE62_CHARS[remainder] + result;
-		num = num / 62n;
-	}
+  while (num > 0n) {
+    const remainder = Number(num % 62n);
+    result = BASE62_CHARS[remainder] + result;
+    num /= 62n;
+  }
 
-	return result || "0";
+  return result || "0";
 }
 
 /**
@@ -36,18 +36,18 @@ function toBase62(bytes: Buffer): string {
  * @returns Object containing the plain key and the prefix for display
  */
 export function generateApiKey(): {
-	key: string;
-	keyPrefix: string;
+  key: string;
+  keyPrefix: string;
 } {
-	const randomPart = randomBytes(KEY_LENGTH);
-	const base62Key = toBase62(randomPart);
-	const key = `${API_KEY_PREFIX}${base62Key}`;
-	const keyPrefix = key.substring(0, KEY_DISPLAY_PREFIX_LENGTH);
+  const randomPart = randomBytes(KEY_LENGTH);
+  const base62Key = toBase62(randomPart);
+  const key = `${API_KEY_PREFIX}${base62Key}`;
+  const keyPrefix = key.substring(0, KEY_DISPLAY_PREFIX_LENGTH);
 
-	return {
-		key,
-		keyPrefix,
-	};
+  return {
+    key,
+    keyPrefix,
+  };
 }
 
 /**
@@ -56,10 +56,10 @@ export function generateApiKey(): {
  * @returns The hashed key in the format: {salt}:{hash}
  */
 export async function hashApiKey(key: string): Promise<string> {
-	const salt = randomBytes(SALT_LENGTH);
-	const hash = (await scryptAsync(key, salt, 64)) as Buffer;
+  const salt = randomBytes(SALT_LENGTH);
+  const hash = (await scryptAsync(key, salt, 64)) as Buffer;
 
-	return `${salt.toString("hex")}:${hash.toString("hex")}`;
+  return `${salt.toString("hex")}:${hash.toString("hex")}`;
 }
 
 /**
@@ -69,30 +69,30 @@ export async function hashApiKey(key: string): Promise<string> {
  * @returns true if the key matches the hash
  */
 export async function verifyApiKey(
-	storedHash: string,
-	providedKey: string,
+  storedHash: string,
+  providedKey: string
 ): Promise<boolean> {
-	try {
-		const [saltHex, hashHex] = storedHash.split(":");
-		if (!saltHex || !hashHex) {
-			return false;
-		}
+  try {
+    const [saltHex, hashHex] = storedHash.split(":");
+    if (!saltHex || !hashHex) {
+      return false;
+    }
 
-		const salt = Buffer.from(saltHex, "hex");
-		const storedHashBuffer = Buffer.from(hashHex, "hex");
+    const salt = Buffer.from(saltHex, "hex");
+    const storedHashBuffer = Buffer.from(hashHex, "hex");
 
-		const providedHashBuffer = (await scryptAsync(
-			providedKey,
-			salt,
-			64,
-		)) as Buffer;
+    const providedHashBuffer = (await scryptAsync(
+      providedKey,
+      salt,
+      64
+    )) as Buffer;
 
-		// Use timing-safe comparison to prevent timing attacks
-		return timingSafeEqual(storedHashBuffer, providedHashBuffer);
-	} catch (error) {
-		console.error("Error verifying API key:", error);
-		return false;
-	}
+    // Use timing-safe comparison to prevent timing attacks
+    return timingSafeEqual(storedHashBuffer, providedHashBuffer);
+  } catch (error) {
+    console.error("Error verifying API key:", error);
+    return false;
+  }
 }
 
 /**
@@ -101,13 +101,13 @@ export async function verifyApiKey(
  * @returns true if the key has the correct format
  */
 export function isValidApiKeyFormat(key: string): boolean {
-	if (!key.startsWith(API_KEY_PREFIX)) {
-		return false;
-	}
+  if (!key.startsWith(API_KEY_PREFIX)) {
+    return false;
+  }
 
-	const keyPart = key.substring(API_KEY_PREFIX.length);
-	// Check if the key part contains only base62 characters
-	return /^[0-9A-Za-z]+$/.test(keyPart) && keyPart.length > 0;
+  const keyPart = key.substring(API_KEY_PREFIX.length);
+  // Check if the key part contains only base62 characters
+  return /^[0-9A-Za-z]+$/.test(keyPart) && keyPart.length > 0;
 }
 
 /**
@@ -116,7 +116,7 @@ export function isValidApiKeyFormat(key: string): boolean {
  * @returns The prefix (first 12 characters)
  */
 export function getApiKeyPrefix(key: string): string {
-	return key.substring(0, KEY_DISPLAY_PREFIX_LENGTH);
+  return key.substring(0, KEY_DISPLAY_PREFIX_LENGTH);
 }
 
 /**
@@ -125,5 +125,5 @@ export function getApiKeyPrefix(key: string): string {
  * @returns Masked key string like "astra_pk_abc***"
  */
 export function maskApiKey(keyPrefix: string): string {
-	return `${keyPrefix}${"*".repeat(32)}`;
+  return `${keyPrefix}${"*".repeat(32)}`;
 }

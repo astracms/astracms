@@ -51,7 +51,7 @@ const getToggleSidebarShortcut = () => {
     () =>
       typeof navigator !== "undefined" &&
       navigator.platform.toUpperCase().indexOf("MAC") >= 0,
-    [],
+    []
   );
   return isMac ? "⌘K" : "Ctrl+K";
 };
@@ -69,7 +69,7 @@ function EditorPage({ initialData, id }: EditorPageProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const editorRef = useRef<EditorInstance | null>(null);
   const [editorInstance, setEditorInstance] = useState<EditorInstance | null>(
-    null,
+    null
   );
   const [showSettings, setShowSettings] = useState(false);
   const { setHasUnsavedChanges } = useUnsavedChanges();
@@ -226,7 +226,7 @@ function EditorPage({ initialData, id }: EditorPageProps) {
                 <Link
                   className={cn(
                     buttonVariants({ variant: "ghost", size: "icon" }),
-                    "group cursor-default",
+                    "group cursor-default"
                   )}
                   href={`/${params.workspace}/posts`}
                 >
@@ -329,7 +329,7 @@ function EditorPage({ initialData, id }: EditorPageProps) {
         <div
           className={cn(
             "h-svh transition-[width] ease-linear",
-            open ? "w-2" : "w-0",
+            open ? "w-2" : "w-0"
           )}
         />
       )}

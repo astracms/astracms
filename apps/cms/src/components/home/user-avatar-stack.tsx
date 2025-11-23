@@ -1,6 +1,10 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@astra/ui/components/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@astra/ui/components/avatar";
 import { cn } from "@astra/ui/lib/utils";
 
 interface User {
@@ -31,26 +35,25 @@ export function UserAvatarStack({
     lg: "size-10",
   };
 
-  const getInitials = (name: string) => {
-    return name
+  const getInitials = (name: string) =>
+    name
       .split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
-  };
 
   return (
-    <div className={cn("flex -space-x-1.5", className)}>
+    <div className={cn("-space-x-1.5 flex", className)}>
       {displayedUsers.map((user, index) => (
         <Avatar
-          key={`${user.email || user.name}-${index}`}
           className={cn(
             sizeClasses[size],
             "ring-2 ring-background dark:ring-dark-tremor-background"
           )}
+          key={`${user.email || user.name}-${index}`}
         >
-          <AvatarImage src={user.imageUrl} alt={user.name} />
+          <AvatarImage alt={user.name} src={user.imageUrl} />
           <AvatarFallback className="text-xs">
             {getInitials(user.name)}
           </AvatarFallback>
@@ -60,7 +63,7 @@ export function UserAvatarStack({
         <div
           className={cn(
             sizeClasses[size],
-            "flex items-center justify-center rounded-full bg-muted text-muted-foreground text-xs font-medium ring-2 ring-background"
+            "flex items-center justify-center rounded-full bg-muted font-medium text-muted-foreground text-xs ring-2 ring-background"
           )}
         >
           +{remainingCount}

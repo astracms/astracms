@@ -1,11 +1,11 @@
 "use client";
 
-import { Card } from "@astra/ui/components/card";
 import { Badge } from "@astra/ui/components/badge";
+import { Card } from "@astra/ui/components/card";
 import { cn } from "@astra/ui/lib/utils";
-import { UserAvatarStack } from "./user-avatar-stack";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { UserAvatarStack } from "./user-avatar-stack";
 
 interface ContentItem {
   id: string;
@@ -15,7 +15,13 @@ interface ContentItem {
   thumbnail?: ReactNode;
   status?: {
     label: string;
-    variant?: "default" | "secondary" | "outline" | "positive" | "negative" | "pending";
+    variant?:
+      | "default"
+      | "secondary"
+      | "outline"
+      | "positive"
+      | "negative"
+      | "pending";
   };
   editors?: Array<{
     name: string;
@@ -39,27 +45,24 @@ interface ContentWorkspaceCardProps {
 function ContentPlaceholder() {
   return (
     <div className="relative h-full overflow-hidden rounded bg-muted">
-      <svg
-        className="absolute inset-0 size-full stroke-border"
-        fill="none"
-      >
+      <svg className="absolute inset-0 size-full stroke-border" fill="none">
         <defs>
           <pattern
+            height="10"
             id="content-pattern"
+            patternUnits="userSpaceOnUse"
+            width="10"
             x="0"
             y="0"
-            width="10"
-            height="10"
-            patternUnits="userSpaceOnUse"
           >
             <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3" />
           </pattern>
         </defs>
         <rect
-          stroke="none"
           fill="url(#content-pattern)"
-          width="100%"
           height="100%"
+          stroke="none"
+          width="100%"
         />
       </svg>
     </div>
@@ -78,22 +81,22 @@ export function ContentWorkspaceCard({
       <div className="flex items-center gap-2">
         <h3 className="font-medium text-sm">{title}</h3>
         {count !== undefined && (
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-muted-foreground text-xs font-medium">
+          <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted font-medium text-muted-foreground text-xs">
             {count}
           </span>
         )}
       </div>
 
       {items.length === 0 ? (
-        <div className="flex items-center justify-center rounded-[20px] border border-dashed border-border bg-muted/20 py-12 text-muted-foreground text-sm">
+        <div className="flex items-center justify-center rounded-[20px] border border-border border-dashed bg-muted/20 py-12 text-muted-foreground text-sm">
           {emptyMessage}
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Card
-              key={item.id}
               className="group flex flex-col justify-between overflow-hidden rounded-[20px] border-none bg-sidebar p-0 transition-all hover:shadow-lg"
+              key={item.id}
             >
               <div className="p-2">
                 <div className="h-28 overflow-hidden rounded-lg">
@@ -105,7 +108,7 @@ export function ContentWorkspaceCard({
                       {item.title}
                     </h4>
                     {item.status && (
-                      <Badge variant={item.status.variant} className="shrink-0">
+                      <Badge className="shrink-0" variant={item.status.variant}>
                         {item.status.label}
                       </Badge>
                     )}
@@ -117,8 +120,8 @@ export function ContentWorkspaceCard({
                     <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
                       {item.metadata.map((meta, index) => (
                         <span
-                          key={index}
                           className="text-muted-foreground text-xs"
+                          key={index}
                         >
                           <span className="font-medium">{meta.label}:</span>{" "}
                           {meta.value}
@@ -128,15 +131,15 @@ export function ContentWorkspaceCard({
                   )}
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-border/40 bg-background/50 px-4 py-3">
+              <div className="flex items-center justify-between border-border/40 border-t bg-background/50 px-4 py-3">
                 {item.editors && item.editors.length > 0 ? (
-                  <UserAvatarStack users={item.editors} max={3} />
+                  <UserAvatarStack max={3} users={item.editors} />
                 ) : (
                   <div />
                 )}
                 <Link
-                  href={item.href}
                   className="font-medium text-primary text-xs transition-colors hover:text-primary/80"
+                  href={item.href}
                 >
                   View more →
                 </Link>

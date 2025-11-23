@@ -1,28 +1,40 @@
 "use client";
 
+import { Badge } from "@astra/ui/components/badge";
 import { Button } from "@astra/ui/components/button";
-import { Card, CardContent } from "@astra/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@astra/ui/components/card";
 import { Progress } from "@astra/ui/components/progress";
-import { ImagesIcon, PlugsIcon, UsersIcon } from "@phosphor-icons/react";
-import dynamic from "next/dynamic";
+import { Separator } from "@astra/ui/components/separator";
+import {
+  CheckIcon,
+  ImagesIcon,
+  PlugsIcon,
+  UsersIcon,
+} from "@phosphor-icons/react";
 import { useCallback, useEffect, useState } from "react";
-import { WorkspacePageWrapper } from "@/components/layout/wrapper";
-
-const UpgradeModal = dynamic(() =>
-  import("@/components/billing/upgrade-modal").then((mod) => mod.UpgradeModal)
-);
-
 import { toast } from "sonner";
+import { WorkspacePageWrapper } from "@/components/layout/wrapper";
+import { AsyncButton } from "@/components/ui/async-button";
 import { usePlan } from "@/hooks/use-plan";
-import { authClient } from "@/lib/auth/client";
+import { authClient, checkout } from "@/lib/auth/client";
+import { PRICING_PLANS } from "@/lib/constants";
 import { useWorkspace } from "@/providers/workspace";
 import { formatBytes } from "@/utils/string";
 
 function PageClient() {
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { activeWorkspace, isOwner } = useWorkspace();
   const { planLimits, currentMemberCount, currentPlan, currentMediaUsage } =
     usePlan();
+  const [checkoutLoading, setCheckoutLoading] = useState<"pro" | "free" | null>(
+    null
+  );
 
   const subscription = activeWorkspace?.subscription;
 
@@ -32,9 +44,7 @@ function PageClient() {
         return null;
       }
 
-      // Dynamically import date-fns only when formatting is needed
-      const { format, isValid, parseISO } = await import("date-fns");
-
+      const { format: formatFn, isValid, parseISO } = await import("date-fns");
       let date: Date;
       if (typeof dateValue === "string") {
         date = parseISO(dateValue);
@@ -45,8 +55,7 @@ function PageClient() {
       if (!isValid(date)) {
         return null;
       }
-
-      return format(date, "MMM d, yyyy");
+      return formatFn(date, "MMM d, yyyy");
     },
     []
   );
@@ -58,7 +67,7 @@ function PageClient() {
       case "team":
         return "Team Plan";
       default:
-        return "Free Plan";
+        return "Hobby Plan";
     }
   };
 
@@ -94,32 +103,32 @@ function PageClient() {
       return;
     }
 
-    setBillingCycleText(`Current billing cycle: ${startDate} - ${endDate}`);
+    setBillingCycleText(`${startDate} - ${endDate}`);
   }, [
     subscription?.currentPeriodStart,
     subscription?.currentPeriodEnd,
     formatDate,
   ]);
 
-  // Update billing cycle text when subscription changes
   useEffect(() => {
     updateBillingCycleText();
   }, [updateBillingCycleText]);
 
+  // Calculate usage percentages
   const maxMediaBytes = planLimits.maxMediaStorage * 1024 * 1024;
   const mediaUsedBytes = currentMediaUsage;
-  const mediaRemainingMB = Math.max(
-    0,
-    Math.ceil(Math.max(0, maxMediaBytes - mediaUsedBytes) / (1024 * 1024))
-  );
+  const mediaRemainingBytes = Math.max(0, maxMediaBytes - mediaUsedBytes);
   const mediaPercent = maxMediaBytes
     ? Math.min(100, Math.round((mediaUsedBytes / maxMediaBytes) * 100))
     : 0;
 
   const memberMax = planLimits.maxMembers;
+  const memberRemaining = Math.max(0, memberMax - currentMemberCount);
   const memberPercent = memberMax
     ? Math.min(100, Math.round((currentMemberCount / memberMax) * 100))
     : 0;
+
+  const apiRequestsPercent = planLimits.maxApiRequests === -1 ? 0 : 0; // 0 requests used
 
   const redirectCustomerPortal = async () => {
     try {
@@ -129,109 +138,174 @@ function PageClient() {
     }
   };
 
+  const handleCheckout = async (plan: "pro" | "free") => {
+    if (!activeWorkspace?.id) {
+      return;
+    }
+
+    setCheckoutLoading(plan);
+
+    try {
+      await checkout({
+        slug: plan,
+        referenceId: activeWorkspace.id,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to process checkout");
+    } finally {
+      setCheckoutLoading(null);
+    }
+  };
+
+  const usageData = [
+    {
+      name: "API Requests",
+      icon: PlugsIcon,
+      used: "0",
+      total: formatApiRequestLimit(planLimits.maxApiRequests),
+      percentage: apiRequestsPercent,
+      remaining: formatApiRequestLimit(planLimits.maxApiRequests),
+    },
+    {
+      name: "Media Storage",
+      icon: ImagesIcon,
+      used: formatBytes(mediaUsedBytes),
+      total: formatStorageLimit(planLimits.maxMediaStorage),
+      percentage: mediaPercent,
+      remaining: formatBytes(mediaRemainingBytes),
+    },
+    {
+      name: "Team Members",
+      icon: UsersIcon,
+      used: currentMemberCount.toString(),
+      total: memberMax.toString(),
+      percentage: memberPercent,
+      remaining: memberRemaining.toString(),
+    },
+  ];
+
   return (
-    <WorkspacePageWrapper size="compact">
-      <div className="flex flex-col gap-6">
-        <Card>
-          <CardContent className="px-6 py-10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="font-semibold text-2xl">
-                  {getPlanDisplayName()}
-                </h1>
-                <p className="text-muted-foreground text-sm">
-                  {billingCycleText}
-                </p>
+    <WorkspacePageWrapper className="flex flex-col gap-8 py-12" size="compact">
+      {/* Usage Overview */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Usage Overview</CardTitle>
+          <CardDescription>
+            Track your usage across API requests, storage, and team members
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6 rounded-lg bg-muted/50 p-6 md:grid-cols-3 md:divide-x">
+            {usageData.map((item) => (
+              <div
+                className="flex items-center gap-4 px-4 first:pl-0 last:pr-0"
+                key={item.name}
+              >
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-background">
+                  <item.icon className="text-muted-foreground" size={20} />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-baseline justify-between">
+                    <p className="text-muted-foreground text-sm">{item.name}</p>
+                    <p className="text-muted-foreground text-xs tabular-nums">
+                      {item.percentage}%
+                    </p>
+                  </div>
+                  <Progress className="h-2" value={item.percentage} />
+                  <div className="flex items-baseline gap-1">
+                    <p className="font-semibold text-sm">{item.used}</p>
+                    <p className="text-muted-foreground text-xs">
+                      / {item.total}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                {isOwner && (
-                  <>
-                    <Button onClick={() => setShowUpgradeModal(true)}>
-                      {subscription?.plan ? "Change Plan" : "Upgrade"}
-                    </Button>
-                    {subscription?.plan && (
-                      <Button
-                        onClick={() => redirectCustomerPortal()}
-                        variant="outline"
-                      >
-                        Manage Subscription
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Pricing Plans */}
+      {isOwner && (
+        <>
+          <div className="mb-6">
+            <h2 className="font-semibold text-2xl">Available Plans</h2>
+            <p className="mt-1 text-muted-foreground text-sm">
+              Choose the plan that fits your needs. Upgrade or downgrade
+              anytime.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {PRICING_PLANS.map((plan) => {
+              const isCurrentPlan = currentPlan === plan.id;
+
+              return (
+                <Card
+                  className={
+                    isCurrentPlan ? "border-primary ring-1 ring-primary" : ""
+                  }
+                  key={plan.id}
+                >
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>{plan.title}</CardTitle>
+                      {isCurrentPlan && (
+                        <Badge className="font-normal" variant="default">
+                          Current Plan
+                        </Badge>
+                      )}
+                    </div>
+                    <CardDescription>{plan.description}</CardDescription>
+                    <div className="mt-4">
+                      <span className="font-bold text-4xl">
+                        {plan.price.monthly}
+                      </span>
+                      <span className="text-muted-foreground"> /month</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Separator className="mb-4" />
+                    <ul className="space-y-3">
+                      {plan.features.map((feature) => (
+                        <li className="flex items-start gap-3" key={feature}>
+                          <div className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                            <CheckIcon
+                              className="size-3 text-primary"
+                              weight="bold"
+                            />
+                          </div>
+                          <span className="text-sm">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    {isCurrentPlan ? (
+                      <Button className="w-full" disabled variant="secondary">
+                        Current Plan
                       </Button>
+                    ) : (
+                      <AsyncButton
+                        className="w-full"
+                        isLoading={checkoutLoading === plan.id}
+                        onClick={() =>
+                          handleCheckout(plan.id as "pro" | "free")
+                        }
+                      >
+                        {plan.id === "free"
+                          ? "Downgrade to Hobby"
+                          : "Upgrade to Pro"}
+                      </AsyncButton>
                     )}
-                  </>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Usage Cards */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Card>
-            <CardContent className="p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
-                  <PlugsIcon className="text-muted-foreground" size={16} />
-                </div>
-                <h3 className="font-medium">API Requests</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="font-bold text-3xl">0</div>
-                <Progress value={planLimits.maxApiRequests === -1 ? 100 : 0} />
-                <p className="text-muted-foreground text-sm">
-                  {planLimits.maxApiRequests === -1
-                    ? "Unlimited requests"
-                    : `${formatApiRequestLimit(planLimits.maxApiRequests)} remaining of ${formatApiRequestLimit(planLimits.maxApiRequests)}`}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
-                  <ImagesIcon className="text-muted-foreground" />
-                </div>
-                <h3 className="font-medium">Media</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="font-bold text-3xl">
-                  {formatBytes(currentMediaUsage)}
-                </div>
-                <Progress value={mediaPercent} />
-                <p className="text-muted-foreground text-sm">
-                  {formatStorageLimit(mediaRemainingMB)} remaining of{" "}
-                  {formatStorageLimit(planLimits.maxMediaStorage)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
-                  <UsersIcon className="text-muted-foreground" size={16} />
-                </div>
-                <h3 className="font-medium">Members</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="font-bold text-3xl">{currentMemberCount}</div>
-                <Progress value={memberPercent} />
-                <p className="text-muted-foreground text-sm">
-                  {Math.max(0, planLimits.maxMembers - currentMemberCount)}{" "}
-                  remaining of {planLimits.maxMembers}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <UpgradeModal
-          isOpen={showUpgradeModal}
-          onClose={() => setShowUpgradeModal(false)}
-        />
-      </div>
+                  </CardFooter>
+                </Card>
+              );
+            })}
+          </div>
+        </>
+      )}
     </WorkspacePageWrapper>
   );
 }

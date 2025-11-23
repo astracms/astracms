@@ -59,7 +59,7 @@ export function MediaUsageCard({ data, isLoading }: MediaUsageCardProps) {
             </div>
           </div>
           <div className="text-right">
-            <p className="rounded-full bg-background/50 px-3 py-1.5 text-muted-foreground text-xs font-medium">
+            <p className="rounded-full bg-background/50 px-3 py-1.5 font-medium text-muted-foreground text-xs">
               Recent Uploads
             </p>
           </div>

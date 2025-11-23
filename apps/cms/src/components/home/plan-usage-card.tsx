@@ -1,13 +1,13 @@
 "use client";
 
+import { Badge } from "@astra/ui/components/badge";
+import { Button } from "@astra/ui/components/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@astra/ui/components/card";
-import { Badge } from "@astra/ui/components/badge";
-import { Button } from "@astra/ui/components/button";
 import { Progress } from "@astra/ui/components/progress";
 import { cn } from "@astra/ui/lib/utils";
 import { ArrowUpRight } from "@phosphor-icons/react";
@@ -38,16 +38,14 @@ export function PlanUsageCard({
   onUpgrade,
   className,
 }: PlanUsageCardProps) {
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat("en-US", {
+  const formatNumber = (num: number) =>
+    new Intl.NumberFormat("en-US", {
       notation: "compact",
       compactDisplay: "short",
     }).format(num);
-  };
 
-  const getUsagePercentage = (used: number, limit: number) => {
-    return Math.min((used / limit) * 100, 100);
-  };
+  const getUsagePercentage = (used: number, limit: number) =>
+    Math.min((used / limit) * 100, 100);
 
   const getUsageColor = (percentage: number, customColor?: string) => {
     if (customColor) return customColor;
@@ -63,17 +61,17 @@ export function PlanUsageCard({
       <CardHeader className="px-4 pt-4 pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CardTitle className="text-base font-medium">{planName}</CardTitle>
+            <CardTitle className="font-medium text-base">{planName}</CardTitle>
             {planBadge && (
               <Badge variant={planBadge.variant}>{planBadge.label}</Badge>
             )}
           </div>
           {onUpgrade && (
             <Button
+              className="h-8 gap-1 text-xs"
+              onClick={onUpgrade}
               size="sm"
               variant="outline"
-              onClick={onUpgrade}
-              className="h-8 gap-1 text-xs"
             >
               Upgrade
               <ArrowUpRight className="size-3" />
@@ -87,7 +85,7 @@ export function PlanUsageCard({
           const isNearLimit = percentage >= 75;
 
           return (
-            <div key={index} className="space-y-2">
+            <div className="space-y-2" key={index}>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">
                   {item.label}
@@ -99,13 +97,13 @@ export function PlanUsageCard({
               </div>
               <div className="space-y-1">
                 <Progress
-                  value={percentage}
                   className="h-2"
                   style={
                     {
                       "--progress-color": getUsageColor(percentage, item.color),
                     } as React.CSSProperties
                   }
+                  value={percentage}
                 />
                 {isNearLimit && (
                   <p className="text-amber-600 text-xs dark:text-amber-400">

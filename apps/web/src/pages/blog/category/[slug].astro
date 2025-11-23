@@ -26,6 +26,7 @@ const { entry } = Astro.props;
 const categoriesEntries = await getCollection("categories");
 const postsResponse = await fetchPosts(`?categories=${entry.data.slug}`);
 ---
+
 <Layout
   title={`${entry.data.name} - ${SITE.TITLE}`}
   description={entry.data.description}

@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import FeaturesCard from "@/components/auth/features-card";
 import { LoginForm } from "@/components/auth/login-form";
 import AstraIcon from "@/components/icons/astra";
 import Credits from "@/components/util/credits";
 import { SITE_CONFIG } from "@/utils/site";
-import FeaturesCard from "@/components/auth/features-card";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),

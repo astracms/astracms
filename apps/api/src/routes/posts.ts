@@ -214,12 +214,14 @@ posts.openapi(listPostsRoute, async (c) => {
     // Format posts based on requested format
     const formattedPosts = postsData.map((post) => ({
       ...post,
-      content: format === "markdown"
-        ? NodeHtmlMarkdown.translate(post.content || "")
-        : post.content,
+      content:
+        format === "markdown"
+          ? NodeHtmlMarkdown.translate(post.content || "")
+          : post.content,
       publishedAt: post.publishedAt?.toISOString() ?? null,
       updatedAt: post.updatedAt.toISOString(),
-      attribution: typeof post.attribution === 'string' ? post.attribution : null,
+      attribution:
+        typeof post.attribution === "string" ? post.attribution : null,
     }));
 
     const paginationInfo = limit
@@ -240,10 +242,13 @@ posts.openapi(listPostsRoute, async (c) => {
           totalItems: totalPosts,
         };
 
-    return c.json({
-      posts: formattedPosts,
-      pagination: paginationInfo,
-    }, 200);
+    return c.json(
+      {
+        posts: formattedPosts,
+        pagination: paginationInfo,
+      },
+      200
+    );
   } catch (error) {
     console.error("Error fetching posts:", error);
     return c.json(
@@ -361,12 +366,14 @@ posts.openapi(getPostRoute, async (c) => {
     // Format post based on requested format
     const formattedPost = {
       ...post,
-      content: format === "markdown"
-        ? NodeHtmlMarkdown.translate(post.content || "")
-        : post.content,
+      content:
+        format === "markdown"
+          ? NodeHtmlMarkdown.translate(post.content || "")
+          : post.content,
       publishedAt: post.publishedAt?.toISOString() ?? null,
       updatedAt: post.updatedAt.toISOString(),
-      attribution: typeof post.attribution === 'string' ? post.attribution : null,
+      attribution:
+        typeof post.attribution === "string" ? post.attribution : null,
     };
 
     return c.json({ post: formattedPost }, 200);

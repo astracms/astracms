@@ -1,18 +1,18 @@
 "use client";
 
+import { FileText, FolderOpen, Tag, Users } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiUsageCard } from "@/components/home/api-usage-card";
-import { MediaUsageCard } from "@/components/home/media-usage-card";
-import { WebhookUsageCard } from "@/components/home/webhook-usage-card";
+import { ContentWorkspaceCard } from "@/components/home/content-workspace-card";
 import { DashboardGrid } from "@/components/home/dashboard-grid";
 import { DashboardStatCard } from "@/components/home/dashboard-stat-card";
-import { ContentWorkspaceCard } from "@/components/home/content-workspace-card";
+import { MediaUsageCard } from "@/components/home/media-usage-card";
+import { WebhookUsageCard } from "@/components/home/webhook-usage-card";
 import { WorkspacePageWrapper } from "@/components/layout/wrapper";
 import PageLoader from "@/components/shared/page-loader";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { QUERY_KEYS } from "@/lib/queries/keys";
 import type { UsageDashboardData } from "@/types/usage-dashboard";
-import { FileText, Users, FolderOpen, Tag } from "@phosphor-icons/react";
 
 export default function PageClient() {
   const workspaceId = useWorkspaceId();
@@ -120,18 +120,18 @@ export default function PageClient() {
 
         {/* Quick Stats */}
         <div>
-          <h2 className="mb-4 font-medium text-sm text-muted-foreground">
+          <h2 className="mb-4 font-medium text-muted-foreground text-sm">
             Quick Overview
           </h2>
           <DashboardGrid columns={2}>
             {quickStats.map((stat) => (
               <DashboardStatCard
+                accentColor={stat.accentColor}
+                description={stat.description}
+                icon={stat.icon}
                 key={stat.title}
                 title={stat.title}
                 value={stat.value}
-                description={stat.description}
-                icon={stat.icon}
-                accentColor={stat.accentColor}
               />
             ))}
           </DashboardGrid>
@@ -139,7 +139,7 @@ export default function PageClient() {
 
         {/* Usage Metrics */}
         <div>
-          <h2 className="mb-4 font-medium text-sm text-muted-foreground">
+          <h2 className="mb-4 font-medium text-muted-foreground text-sm">
             Usage & Activity
           </h2>
           <div className="space-y-8">
@@ -155,10 +155,10 @@ export default function PageClient() {
         {recentContent.length > 0 && (
           <div>
             <ContentWorkspaceCard
-              title="Recent Content"
               count={recentContent.length}
-              items={recentContent}
               emptyMessage="No recent content"
+              items={recentContent}
+              title="Recent Content"
             />
           </div>
         )}

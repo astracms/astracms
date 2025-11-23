@@ -44,7 +44,7 @@ export function DashboardStatCard({
       <CardHeader className="px-4 pt-4 pb-2">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-1">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="font-medium text-muted-foreground text-sm">
               {title}
             </CardTitle>
             <div className="flex items-baseline gap-2">
@@ -52,7 +52,7 @@ export function DashboardStatCard({
               {trend && (
                 <span
                   className={cn(
-                    "rounded-full px-2 py-0.5 text-xs font-medium",
+                    "rounded-full px-2 py-0.5 font-medium text-xs",
                     trend.isPositive
                       ? "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400"
                       : "bg-red-500/10 text-red-700 dark:bg-red-500/15 dark:text-red-400"

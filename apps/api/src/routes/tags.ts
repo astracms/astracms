@@ -119,17 +119,20 @@ tags.openapi(listTagsRoute, async (c) => {
     };
   });
 
-  return c.json({
-    tags: transformedTags,
-    pagination: {
-      limit,
-      currentPage: page,
-      nextPage,
-      previousPage: prevPage,
-      totalPages,
-      totalItems: totalTags,
+  return c.json(
+    {
+      tags: transformedTags,
+      pagination: {
+        limit,
+        currentPage: page,
+        nextPage,
+        previousPage: prevPage,
+        totalPages,
+        totalItems: totalTags,
+      },
     },
-  }, 200);
+    200
+  );
 });
 
 // Get single tag route
@@ -286,20 +289,23 @@ tags.openapi(getTagRoute, async (c) => {
         take: limit,
         skip: postsToSkip,
       });
-      return c.json({
-        ...transformedTag,
-        posts: {
-          data: posts,
-          pagination: {
-            limit,
-            currentPage: page,
-            nextPage,
-            previousPage: prevPage,
-            totalPages,
-            totalItems: totalPosts,
+      return c.json(
+        {
+          ...transformedTag,
+          posts: {
+            data: posts,
+            pagination: {
+              limit,
+              currentPage: page,
+              nextPage,
+              previousPage: prevPage,
+              totalPages,
+              totalItems: totalPosts,
+            },
           },
         },
-      }, 200);
+        200
+      );
     }
 
     return c.json(transformedTag, 200);

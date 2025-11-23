@@ -32,7 +32,13 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+*.log
 
 # Misc
 .DS_Store
 *.pem
+
+# pnpm
+.pnpm-store/
+.pnpm-debug.log

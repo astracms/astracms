@@ -1,18 +1,18 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@astra/ui/components/card";
-import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@astra/ui/components/avatar";
 import { Badge } from "@astra/ui/components/badge";
 import { Button } from "@astra/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@astra/ui/components/card";
 import { cn } from "@astra/ui/lib/utils";
 import { Plus } from "@phosphor-icons/react";
 
@@ -41,14 +41,13 @@ export function TeamOverviewCard({
   const displayedMembers = members.slice(0, maxDisplay);
   const hasMore = members.length > maxDisplay;
 
-  const getInitials = (name: string) => {
-    return name
+  const getInitials = (name: string) =>
+    name
       .split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
-  };
 
   const getStatusVariant = (status?: string) => {
     switch (status) {
@@ -70,19 +69,19 @@ export function TeamOverviewCard({
       <CardHeader className="px-4 pt-4 pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CardTitle className="text-base font-medium">
+            <CardTitle className="font-medium text-base">
               Team Members
             </CardTitle>
-            <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted text-muted-foreground text-xs font-medium">
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-muted font-medium text-muted-foreground text-xs">
               {members.length}
             </span>
           </div>
           {onInvite && (
             <Button
+              className="h-8 gap-1 text-xs"
+              onClick={onInvite}
               size="sm"
               variant="ghost"
-              onClick={onInvite}
-              className="h-8 gap-1 text-xs"
             >
               <Plus className="size-4" />
               Invite
@@ -94,11 +93,11 @@ export function TeamOverviewCard({
         <ul className="divide-y divide-border/40">
           {displayedMembers.map((member) => (
             <li
-              key={member.id}
               className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/30"
+              key={member.id}
             >
               <Avatar className="size-9">
-                <AvatarImage src={member.imageUrl} alt={member.name} />
+                <AvatarImage alt={member.name} src={member.imageUrl} />
                 <AvatarFallback className="text-xs">
                   {getInitials(member.name)}
                 </AvatarFallback>
@@ -111,13 +110,13 @@ export function TeamOverviewCard({
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge className="text-xs" variant="outline">
                     {member.role}
                   </Badge>
                   {member.status && member.status !== "active" && (
                     <Badge
-                      variant={getStatusVariant(member.status)}
                       className="text-xs"
+                      variant={getStatusVariant(member.status)}
                     >
                       {member.status}
                     </Badge>
@@ -128,10 +127,10 @@ export function TeamOverviewCard({
           ))}
         </ul>
         {hasMore && (
-          <div className="border-t border-border/40 px-4 py-3 text-center">
+          <div className="border-border/40 border-t px-4 py-3 text-center">
             <button
-              type="button"
               className="font-medium text-primary text-xs transition-colors hover:text-primary/80"
+              type="button"
             >
               View all {members.length} members →
             </button>

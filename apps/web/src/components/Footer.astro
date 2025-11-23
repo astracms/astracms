@@ -3,6 +3,7 @@ import { FOOTER_SECTIONS, FOOTER_SOCIAL_LINKS } from "@/lib/constants";
 import Container from "./Container.astro";
 import Logo from "./icons/Logo.astro";
 ---
+
 <footer>
   <div class="lg:border-x border-dashed md:w-[calc(100%-140px)] mx-auto">
     <Container class="py-12 sm:py-20 md:py-36">
@@ -15,7 +16,7 @@ import Logo from "./icons/Logo.astro";
               href="/"
               class="mb-2 flex items-center gap-2 tracking-widest w-fit font-medium"
             >
-              <Logo />
+              <Logo/>
               <span class="sr-only">astracms</span>
             </a>
             <p class="mb-1 text-sm text-muted-foreground tracking-wider">
@@ -64,7 +65,7 @@ import Logo from "./icons/Logo.astro";
             })}
           </ul>
           <p class="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} all rights reserved
+            &copy; {new Date().getFullYear()}all rights reserved
           </p>
         </div>
       </section>
