@@ -32,6 +32,7 @@ import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { QUERY_KEYS } from "@/lib/queries/keys";
 import {
 	type ApiKeyFormValues,
+	type ApiKeyScope,
 	SCOPE_PRESETS,
 	apiKeyScopes,
 	apiKeySchema,
@@ -103,7 +104,7 @@ function CreateApiKeySheet({ children }: CreateApiKeySheetProps) {
 		},
 	});
 
-	const handleScopeToggle = (scopeId: string, checked: boolean) => {
+	const handleScopeToggle = (scopeId: ApiKeyScope, checked: boolean) => {
 		const currentScopes = watchedScopes || [];
 		if (checked) {
 			setValue("scopes", [...currentScopes, scopeId]);
