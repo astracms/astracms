@@ -24,7 +24,7 @@ import {
 import { format, isPast } from "date-fns";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { maskApiKey } from "@/lib/crypto/api-key";
+import { maskApiKey } from "@/lib/utils/api-key";
 import type { ApiKey } from "@/types/api-key";
 
 const DeleteApiKeyModal = dynamic(() =>
