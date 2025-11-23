@@ -7,6 +7,7 @@ import { LoginForm } from "@/components/auth/login-form";
 import AstraIcon from "@/components/icons/astra";
 import Credits from "@/components/util/credits";
 import { SITE_CONFIG } from "@/utils/site";
+import FeaturesCard from "@/components/auth/features-card";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -27,7 +28,7 @@ export default async function LoginPage(props: PageProps) {
 
   return (
     <div className="h-screen w-full md:grid md:grid-cols-2">
-      <section className="relative hidden flex-col justify-between overflow-hidden p-10 md:flex">
+      {/*<section className="relative hidden flex-col justify-between overflow-hidden p-10 md:flex">
         <Image
           alt="Light astra texture background"
           className="object-cover object-center dark:hidden"
@@ -46,19 +47,11 @@ export default async function LoginPage(props: PageProps) {
           src="/textures/astra-dark.avif"
           unoptimized
         />
-        <div className="relative z-10">
-          <AstraIcon />
-        </div>
-        <div className="relative z-10 flex items-center justify-between gap-4">
-          <p className="font-medium text-lg">
-            The easiest way to manage your blog.
-          </p>
-          <Credits />
-        </div>
-      </section>
+      </section>*/}
+      <FeaturesCard />
       <section className="flex h-full flex-col items-center justify-between p-4">
         <div className="self-start">
-          <h1 className="sr-only font-semibold uppercase">Astra</h1>
+          <h1 className="sr-only font-semibold uppercase">Astra CMS</h1>
         </div>
         <div className="flex min-w-[300px] flex-col gap-8 rounded-md p-6 lg:w-[384px] lg:px-8 lg:py-10">
           <div className="text-center">

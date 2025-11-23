@@ -10,7 +10,12 @@ import {
 } from "@astra/ui/components/sidebar";
 import { cn } from "@astra/ui/lib/utils";
 
-import { KeyIcon, WebhooksLogoIcon } from "@phosphor-icons/react";
+import {
+  BookOpenIcon,
+  KeyIcon,
+  LinkSimpleBreak,
+  WebhooksLogoIcon,
+} from "@phosphor-icons/react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
@@ -24,6 +29,16 @@ const items = [
     name: "Webhooks",
     url: "webhooks",
     icon: WebhooksLogoIcon,
+  },
+  {
+    name: "Documentation",
+    url: "https://docs.astracms.dev",
+    icon: WebhooksLogoIcon,
+  },
+  {
+    name: "Blog",
+    url: "https://astracms.dev/blog",
+    icon: BookOpenIcon,
   },
 ];
 

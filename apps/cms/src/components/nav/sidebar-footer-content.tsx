@@ -1,7 +1,6 @@
 "use client";
 
 import { useSidebar } from "@astra/ui/components/sidebar";
-import { NavExtra } from "./nav-extra";
 import { NavUser } from "./nav-user";
 
 export function SidebarFooterContent() {
@@ -17,9 +16,8 @@ export function SidebarFooterContent() {
   }
 
   return (
-    <section className="flex items-center justify-between gap-2 p-2">
+    <section className="p-2">
       <NavUser />
-      <NavExtra />
     </section>
   );
 }

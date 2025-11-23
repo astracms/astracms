@@ -3,6 +3,7 @@
 import { Separator } from "@astra/ui/components/separator";
 import { SidebarTrigger } from "@astra/ui/components/sidebar";
 import { usePathname } from "next/navigation";
+import { AppBreadcrumb } from "./app-breadcrumb";
 
 export const PageHeader = () => {
   const pathname = usePathname();
@@ -46,9 +47,9 @@ export const PageHeader = () => {
         <SidebarTrigger className="-ml-1 size-4" />
         <Separator className="mr-2 h-4" orientation="vertical" />
       </div>
-      {/* <div>
+      <div>
         <AppBreadcrumb />
-      </div> */}
+      </div>
       <h1 className="font-medium text-lg capitalize">{getHeading()}</h1>
     </header>
   );

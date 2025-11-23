@@ -14,7 +14,14 @@ export const analytics =
       return;
     }
 
-    const workspaceId: string | null = c.req.param("workspaceId") ?? null;
+    // For v2 API, workspaceId comes from context (set by apiKeyAuth middleware)
+    // For v1 API, workspaceId comes from URL params
+    const workspaceId: string | null =
+      c.get("workspaceId") ?? c.req.param("workspaceId") ?? null;
+
+    // Get API key ID if this is an authenticated v2 request
+    const apiKeyId: string | null = c.get("apiKeyId") ?? null;
+
     const status = c.res.status ?? 200;
 
     if (!workspaceId || method === "OPTIONS" || status >= 400) {
@@ -33,6 +40,7 @@ export const analytics =
             type: "api_request",
             workspaceId,
             endpoint,
+            apiKeyId,
           },
         });
 

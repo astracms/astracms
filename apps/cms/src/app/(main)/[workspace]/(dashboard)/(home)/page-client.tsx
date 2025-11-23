@@ -4,11 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { ApiUsageCard } from "@/components/home/api-usage-card";
 import { MediaUsageCard } from "@/components/home/media-usage-card";
 import { WebhookUsageCard } from "@/components/home/webhook-usage-card";
+import { DashboardGrid } from "@/components/home/dashboard-grid";
+import { DashboardStatCard } from "@/components/home/dashboard-stat-card";
+import { ContentWorkspaceCard } from "@/components/home/content-workspace-card";
 import { WorkspacePageWrapper } from "@/components/layout/wrapper";
 import PageLoader from "@/components/shared/page-loader";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { QUERY_KEYS } from "@/lib/queries/keys";
 import type { UsageDashboardData } from "@/types/usage-dashboard";
+import { FileText, Users, FolderOpen, Tag } from "@phosphor-icons/react";
 
 export default function PageClient() {
   const workspaceId = useWorkspaceId();
@@ -40,17 +44,124 @@ export default function PageClient() {
     );
   }
 
+  // Mock data for quick stats - replace with real data from your API
+  const quickStats = [
+    {
+      title: "Total Posts",
+      value: "0",
+      description: "Published and draft",
+      icon: <FileText className="size-5" />,
+      accentColor: "hsl(var(--chart-1))",
+    },
+    {
+      title: "Authors",
+      value: "0",
+      description: "Active contributors",
+      icon: <Users className="size-5" />,
+      accentColor: "hsl(var(--chart-2))",
+    },
+    {
+      title: "Categories",
+      value: "0",
+      description: "Content categories",
+      icon: <FolderOpen className="size-5" />,
+      accentColor: "hsl(var(--chart-3))",
+    },
+    {
+      title: "Tags",
+      value: "0",
+      description: "Content tags",
+      icon: <Tag className="size-5" />,
+      accentColor: "hsl(var(--chart-4))",
+    },
+  ];
+
+  // Mock data for recent content - replace with real data
+  const recentContent: Array<{
+    id: string;
+    title: string;
+    description: string;
+    href: string;
+    thumbnail?: React.ReactNode;
+    status?: {
+      label: string;
+      variant?:
+        | "default"
+        | "secondary"
+        | "outline"
+        | "positive"
+        | "negative"
+        | "pending";
+    };
+    editors?: Array<{
+      name: string;
+      imageUrl?: string;
+      email?: string;
+    }>;
+    metadata?: Array<{
+      label: string;
+      value: string;
+    }>;
+  }> = [];
+
   return (
     <WorkspacePageWrapper
       className="flex flex-col gap-8 pt-10 pb-16"
       size="compact"
     >
-      <div className="grid gap-x-10 gap-y-8">
-        <ApiUsageCard data={data?.api} isLoading={isPending} />
-        <div className="grid gap-8 lg:grid-cols-2">
-          <WebhookUsageCard data={data?.webhooks} isLoading={isPending} />
-          <MediaUsageCard data={data?.media} isLoading={isPending} />
+      <div className="space-y-8">
+        {/* Welcome Section */}
+        <div className="space-y-2">
+          <h1 className="font-semibold text-3xl tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Welcome back! Here's what's happening with your workspace.
+          </p>
         </div>
+
+        {/* Quick Stats */}
+        <div>
+          <h2 className="mb-4 font-medium text-sm text-muted-foreground">
+            Quick Overview
+          </h2>
+          <DashboardGrid columns={2}>
+            {quickStats.map((stat) => (
+              <DashboardStatCard
+                key={stat.title}
+                title={stat.title}
+                value={stat.value}
+                description={stat.description}
+                icon={stat.icon}
+                accentColor={stat.accentColor}
+              />
+            ))}
+          </DashboardGrid>
+        </div>
+
+        {/* Usage Metrics */}
+        <div>
+          <h2 className="mb-4 font-medium text-sm text-muted-foreground">
+            Usage & Activity
+          </h2>
+          <div className="space-y-8">
+            <ApiUsageCard data={data?.api} isLoading={isPending} />
+            <div className="grid gap-8 lg:grid-cols-2">
+              <WebhookUsageCard data={data?.webhooks} isLoading={isPending} />
+              <MediaUsageCard data={data?.media} isLoading={isPending} />
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Content */}
+        {recentContent.length > 0 && (
+          <div>
+            <ContentWorkspaceCard
+              title="Recent Content"
+              count={recentContent.length}
+              items={recentContent}
+              emptyMessage="No recent content"
+            />
+          </div>
+        )}
       </div>
     </WorkspacePageWrapper>
   );

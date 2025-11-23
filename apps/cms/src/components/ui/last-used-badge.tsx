@@ -1,7 +1,9 @@
+"use client";
+
 import { Badge, type badgeVariants } from "@astra/ui/components/badge";
 import { cn } from "@astra/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import { useEffect, useState, type HTMLAttributes } from "react";
 
 const lastUsedBadgePositions = cva("absolute", {
   variants: {
@@ -31,7 +33,13 @@ export function LastUsedBadge({
   text,
   ...props
 }: LastUsedBadgeProps) {
-  if (!show) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !show) {
     return null;
   }
 
@@ -40,7 +48,7 @@ export function LastUsedBadge({
       className={cn(
         lastUsedBadgePositions({ position }),
         "px-1.5 py-0 text-[11px] backdrop-blur-sm",
-        className
+        className,
       )}
       variant={variant}
       {...props}

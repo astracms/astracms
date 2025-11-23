@@ -58,6 +58,7 @@ model Organization {
   editorPreferences EditorPreferences?
   ShareLink         ShareLink[]
   usageEvents       UsageEvent[]
+  apiKeys           ApiKey[]
 
   @@map("workspace")
 }
@@ -203,6 +204,30 @@ model Webhook {
   @@map("webhook")
 }
 
+model ApiKey {
+  id          String       @id @default(cuid())
+  name        String
+  key         String       @unique
+  keyPrefix   String
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  enabled     Boolean      @default(true)
+  scopes      String[]
+  workspaceId String
+  createdBy   String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  creator     User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  usageEvents UsageEvent[]
+
+  @@index([workspaceId])
+  @@index([key])
+  @@index([keyPrefix])
+  @@index([workspaceId, enabled])
+  @@map("api_key")
+}
+
 model User {
   id            String         @id @default(cuid())
   name          String
@@ -217,6 +242,7 @@ model User {
   members       Member[]
   sessions      Session[]
   subscriptions Subscription[]
+  apiKeys       ApiKey[]
 
   @@map("user")
 }
@@ -351,11 +377,14 @@ model UsageEvent {
   workspaceId String
   endpoint    String?
   size        Int?
+  apiKeyId    String?
   createdAt   DateTime       @default(now())
   workspace   Organization   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  apiKey      ApiKey?        @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId, type, createdAt])
   @@index([workspaceId, createdAt])
+  @@index([apiKeyId])
   @@map("usage_event")
 }
 

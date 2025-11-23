@@ -6,6 +6,7 @@ import { RegisterForm } from "@/components/auth/register-form";
 import AstraIcon from "@/components/icons/astra";
 import Credits from "@/components/util/credits";
 import { SITE_CONFIG } from "@/utils/site";
+import SignupFeaturesCard from "@/components/auth/signup-features-card";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
@@ -26,35 +27,7 @@ export default async function RegisterPage(props: PageProps) {
 
   return (
     <div className="h-screen w-full md:grid md:grid-cols-2">
-      <section className="relative hidden flex-col justify-between overflow-hidden p-10 md:flex">
-        <Image
-          alt="Light astra texture background"
-          className="object-cover object-center dark:hidden"
-          fill
-          loading="lazy"
-          quality={100}
-          src="/textures/astra-light.avif"
-          unoptimized
-        />
-        <Image
-          alt="Dark astra texture background"
-          className="hidden object-cover object-center dark:block"
-          fill
-          loading="lazy"
-          quality={100}
-          src="/textures/astra-dark.avif"
-          unoptimized
-        />
-        <div className="relative z-10">
-          <AstraIcon />
-        </div>
-        <div className="relative z-10 flex items-center justify-between gap-4">
-          <p className="font-medium text-lg">
-            The easiest way to manage your blog.
-          </p>
-          <Credits />
-        </div>
-      </section>
+      <SignupFeaturesCard />
       <section className="flex h-full flex-col items-center justify-between p-4">
         <div className="self-start">
           <h1 className="sr-only font-semibold uppercase">Astra</h1>

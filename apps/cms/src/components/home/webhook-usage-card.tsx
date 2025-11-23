@@ -69,17 +69,20 @@ export function WebhookUsageCard({ data, isLoading }: WebhookUsageCardProps) {
     : null;
 
   return (
-    <Card className="gap-4 rounded-[20px] border-none bg-sidebar p-2.5">
+    <Card className="gap-4 rounded-[20px] border-none bg-sidebar p-2.5 transition-all hover:shadow-md">
       <CardHeader className="gap-0 px-4 pt-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             <CardTitle className="text-xl">Webhook Deliveries</CardTitle>
-            <p className="font-medium text-muted-foreground text-xl leading-none tracking-tight">
-              {numberFormatter.format(data?.total ?? 0)}
-            </p>
+            <div className="flex items-baseline gap-2">
+              <p className="font-semibold text-2xl leading-none tracking-tight">
+                {numberFormatter.format(data?.total ?? 0)}
+              </p>
+              <span className="text-muted-foreground text-sm">deliveries</span>
+            </div>
           </div>
           <div className="text-right">
-            <p className="rounded-full px-3 py-1 text-muted-foreground text-xs">
+            <p className="rounded-full bg-background/50 px-3 py-1.5 text-muted-foreground text-xs font-medium">
               {startDate && endDate
                 ? `${startDate} - ${endDate}`
                 : "Last 30 Days"}
@@ -116,7 +119,7 @@ export function WebhookUsageCard({ data, isLoading }: WebhookUsageCardProps) {
                   <ChartTooltipContent
                     labelFormatter={(value) =>
                       formatTooltipLabel(
-                        chartData.find((item) => item.label === value)?.date
+                        chartData.find((item) => item.label === value)?.date,
                       )
                     }
                     nameKey="deliveries"
