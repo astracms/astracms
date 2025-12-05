@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: IDs are unique within their respective modals */
 "use client";
 
 import {
