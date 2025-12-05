@@ -1,6 +1,5 @@
 import { createClient } from "@astra/db";
 import type { Context, MiddlewareHandler, Next } from "hono";
-import { createPolarClient } from "../lib/polar";
 
 export const analytics =
   (): MiddlewareHandler => async (c: Context, next: Next) => {

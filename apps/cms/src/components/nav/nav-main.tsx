@@ -26,6 +26,7 @@ import {
   PackageIcon,
   TagIcon,
   UsersThreeIcon,
+  RobotIcon,
 } from "@phosphor-icons/react";
 
 import Link from "next/link";
@@ -56,6 +57,11 @@ const items = [
     name: "Authors",
     url: "authors",
     icon: UsersThreeIcon,
+  },
+  {
+    name: "AI Agents",
+    url: "agent",
+    icon: RobotIcon,
   },
 ];
 

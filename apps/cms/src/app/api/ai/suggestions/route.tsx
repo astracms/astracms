@@ -8,6 +8,8 @@ import {
   aiReadabilityResponseSchema,
 } from "@/lib/validations/editor";
 import { systemPrompt } from "./prompt";
+import { streamObject } from 'ai';
+import { openrouter } from "@/lib/ai/model";
 
 export const maxDuration = 30;
 
@@ -55,10 +57,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const { streamObject } = await import("ai");
-
   const result = streamObject({
-    model: "openai/gpt-5.1-instant",
+    model: openrouter.chat("openai/gpt-4o-mini"),
     messages: [
       {
         role: "system",
