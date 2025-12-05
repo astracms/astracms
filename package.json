@@ -23,6 +23,7 @@
     "docs:dev": "turbo dev --filter=docs",
     "cms:build": "turbo build --filter=cms",
     "web:build": "turbo build --filter=web",
+    "docs:build": "turbo build --filter=docs",
     "test": "turbo test"
   },
   "devDependencies": {

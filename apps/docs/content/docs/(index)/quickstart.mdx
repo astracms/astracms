@@ -1,0 +1,128 @@
+---
+title: Quickstart
+description: Get started with the AstraCMS API in minutes
+icon: Play
+---
+
+## Prerequisites
+
+- An AstraCMS account with a workspace
+- An API key from your workspace settings
+
+## Installation
+
+Install the AstraCMS client library for your preferred language:
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astra-cms/client
+  ```
+
+```bash tab="pnpm"
+pnpm add @astra-cms/client
+```
+
+```bash tab="yarn"
+yarn add @astra-cms/client
+```
+
+```bash tab="bun"
+bun add @astra-cms/client
+```
+
+</Tabs>
+
+## Basic Usage
+
+### Using the SDK
+
+```typescript title="app.ts"
+import { AstraClient } from '@astra-cms/client'
+
+const client = new AstraClient({
+  apiKey: process.env.ASTRA_API_KEY,
+})
+
+// Fetch all posts
+const { posts, pagination } = await client.posts.list({
+  limit: 10,
+  page: 1,
+})
+
+// Fetch a single post by slug
+const post = await client.posts.get('my-first-post')
+
+console.log(post.title, post.content)
+```
+
+### Using the REST API
+
+If you prefer to use the API directly:
+
+```bash title="List posts"
+curl -X GET "https://api.astracms.com/v2/posts" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```bash title="Get a single post"
+curl -X GET "https://api.astracms.com/v2/posts/my-first-post" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+## Common Use Cases
+
+### Fetch posts by category
+
+```typescript
+const techPosts = await client.posts.list({
+  categories: 'technology',
+  limit: 5,
+})
+```
+
+### Fetch posts by tag
+
+```typescript
+const jsPosts = await client.posts.list({
+  tags: 'javascript,typescript',
+})
+```
+
+### Search posts
+
+```typescript
+const results = await client.posts.list({
+  query: 'getting started',
+})
+```
+
+### Get content as Markdown
+
+```typescript
+const post = await client.posts.get('my-post', {
+  format: 'markdown',
+})
+```
+
+## Next Steps
+
+<Cards>
+
+<Card
+  title="API Reference"
+  icon={<WebhookIcon />}
+  href="/api-reference"
+>
+  Explore all available endpoints and parameters.
+</Card>
+
+<Card
+  title="Posts API"
+  icon={<FileTextIcon />}
+  href="/api-reference/posts"
+>
+  Learn about filtering, pagination, and content formats.
+</Card>
+
+</Cards>

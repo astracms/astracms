@@ -1,0 +1,73 @@
+---
+title: Introduction
+description: AstraCMS Content Delivery API Reference
+icon: Book
+---
+
+Welcome to the **AstraCMS API** documentation. This API provides read-only access to your content, enabling you to build powerful front-end applications with your CMS data.
+
+## Base URL
+
+```
+https://api.astracms.com
+```
+
+## API Versions
+
+We provide two API versions:
+
+- **v1** - Workspace-scoped endpoints (`/v1/{workspaceId}/...`)
+- **v2** - API key-scoped endpoints (`/v2/...`) - Recommended
+
+## Available Endpoints
+
+<Cards cols={2}>
+  <Card title="Posts" icon={<FileTextIcon />} href="/api-reference/posts">
+    Retrieve blog posts with full content, authors, tags, and categories.
+  </Card>
+  <Card title="Categories" icon={<FolderIcon />} href="/api-reference/categories">
+    List and retrieve content categories with post counts.
+  </Card>
+  <Card title="Tags" icon={<TagIcon />} href="/api-reference/tags">
+    List and retrieve tags with associated post counts.
+  </Card>
+  <Card title="Authors" icon={<UsersIcon />} href="/api-reference/authors">
+    Retrieve author profiles with bios and social links.
+  </Card>
+</Cards>
+
+## Quick Example
+
+```bash title="Fetch all posts"
+curl -X GET "https://api.astracms.com/v2/posts" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```json title="Response"
+{
+  "posts": [
+    {
+      "id": "cm1post123",
+      "title": "Getting Started with AstraCMS",
+      "slug": "getting-started",
+      "content": "<p>Your content here...</p>",
+      "publishedAt": "2024-01-01T12:00:00Z",
+      "authors": [...],
+      "category": {...},
+      "tags": [...]
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "totalItems": 48
+  }
+}
+```
+
+## Features
+
+- **Pagination** - All list endpoints support `limit` and `page` parameters
+- **Filtering** - Filter posts by categories, tags, or search query
+- **Content Format** - Request content as HTML or Markdown
+- **Includes** - Optionally include related resources (e.g., posts with tags)

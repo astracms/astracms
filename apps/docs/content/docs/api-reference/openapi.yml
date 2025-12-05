@@ -1,0 +1,2678 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Astra CMS API",
+    "description": "API for Astra CMS content management system"
+  },
+  "components": {
+    "schemas": {
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1tag123"
+          },
+          "name": {
+            "type": "string",
+            "example": "JavaScript"
+          },
+          "slug": {
+            "type": "string",
+            "example": "javascript"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "JavaScript programming"
+          },
+          "count": {
+            "type": "object",
+            "properties": {
+              "posts": {
+                "type": "number",
+                "example": 42
+              }
+            },
+            "required": [
+              "posts"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "count"
+        ]
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "number",
+            "example": 10
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          },
+          "nextPage": {
+            "type": "number",
+            "nullable": true,
+            "example": 2
+          },
+          "previousPage": {
+            "type": "number",
+            "nullable": true,
+            "example": null
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 5
+          },
+          "totalItems": {
+            "type": "number",
+            "example": 48
+          }
+        },
+        "required": [
+          "limit",
+          "currentPage",
+          "nextPage",
+          "previousPage",
+          "totalPages",
+          "totalItems"
+        ]
+      },
+      "TagsListResponse": {
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "required": [
+          "tags",
+          "pagination"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "nullable": true
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "PostSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1post123"
+          },
+          "title": {
+            "type": "string",
+            "example": "Getting Started with JavaScript"
+          },
+          "slug": {
+            "type": "string",
+            "example": "getting-started-with-javascript"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Learn the basics of JavaScript"
+          },
+          "coverImage": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/cover.jpg"
+          },
+          "publishedAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "example": "2024-01-01T12:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "slug",
+          "description",
+          "coverImage",
+          "publishedAt"
+        ]
+      },
+      "TagWithPosts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1tag123"
+          },
+          "name": {
+            "type": "string",
+            "example": "JavaScript"
+          },
+          "slug": {
+            "type": "string",
+            "example": "javascript"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "JavaScript programming"
+          },
+          "count": {
+            "type": "object",
+            "properties": {
+              "posts": {
+                "type": "number",
+                "example": 42
+              }
+            },
+            "required": [
+              "posts"
+            ]
+          },
+          "posts": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostSummary"
+                }
+              },
+              "pagination": {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            },
+            "required": [
+              "data",
+              "pagination"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "count",
+          "posts"
+        ]
+      },
+      "TagResponse": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Tag"
+          },
+          {
+            "$ref": "#/components/schemas/TagWithPosts"
+          }
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1cat123"
+          },
+          "name": {
+            "type": "string",
+            "example": "Technology"
+          },
+          "slug": {
+            "type": "string",
+            "example": "technology"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tech articles and news"
+          },
+          "count": {
+            "type": "object",
+            "properties": {
+              "posts": {
+                "type": "number",
+                "example": 42
+              }
+            },
+            "required": [
+              "posts"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "count"
+        ]
+      },
+      "CategoriesListResponse": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "required": [
+          "categories",
+          "pagination"
+        ]
+      },
+      "PostWithCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1post123"
+          },
+          "title": {
+            "type": "string",
+            "example": "Getting Started with JavaScript"
+          },
+          "slug": {
+            "type": "string",
+            "example": "getting-started-with-javascript"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Learn the basics of JavaScript"
+          },
+          "coverImage": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/cover.jpg"
+          },
+          "publishedAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "example": "2024-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-02T12:00:00Z"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "example": "\u003Cp\u003EPost content...\u003C/p\u003E"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "cm1author123"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "image": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "https://example.com/avatar.jpg"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "image"
+              ]
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "cm1tag123"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "JavaScript"
+                },
+                "slug": {
+                  "type": "string",
+                  "example": "javascript"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug"
+              ]
+            }
+          },
+          "category": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "cm1cat123"
+              },
+              "name": {
+                "type": "string",
+                "example": "Technology"
+              },
+              "slug": {
+                "type": "string",
+                "example": "technology"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "slug"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "slug",
+          "description",
+          "coverImage",
+          "publishedAt",
+          "updatedAt",
+          "content",
+          "authors",
+          "tags",
+          "category"
+        ]
+      },
+      "CategoryWithPosts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1cat123"
+          },
+          "name": {
+            "type": "string",
+            "example": "Technology"
+          },
+          "slug": {
+            "type": "string",
+            "example": "technology"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tech articles and news"
+          },
+          "count": {
+            "type": "object",
+            "properties": {
+              "posts": {
+                "type": "number",
+                "example": 42
+              }
+            },
+            "required": [
+              "posts"
+            ]
+          },
+          "posts": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostWithCategory"
+                }
+              },
+              "pagination": {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            },
+            "required": [
+              "data",
+              "pagination"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "description",
+          "count",
+          "posts"
+        ]
+      },
+      "CategoryResponse": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Category"
+          },
+          {
+            "$ref": "#/components/schemas/CategoryWithPosts"
+          }
+        ]
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1post123"
+          },
+          "slug": {
+            "type": "string",
+            "example": "my-first-post"
+          },
+          "title": {
+            "type": "string",
+            "example": "My First Blog Post"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "example": "\u003Cp\u003EThis is the content of my first blog post.\u003C/p\u003E",
+            "description": "HTML or Markdown content depending on format parameter"
+          },
+          "featured": {
+            "type": "boolean",
+            "example": true
+          },
+          "coverImage": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/cover.jpg"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "A brief description of the post"
+          },
+          "publishedAt": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time",
+            "example": "2024-01-01T12:00:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-02T12:00:00Z"
+          },
+          "attribution": {
+            "type": "string",
+            "nullable": true,
+            "example": "Originally published on Medium"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "cm1abc123"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "image": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "https://example.com/avatar.jpg"
+                },
+                "bio": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "Tech writer and developer"
+                },
+                "role": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "Senior Developer"
+                },
+                "slug": {
+                  "type": "string",
+                  "example": "john-doe"
+                },
+                "socials": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "example": "https://twitter.com/johndoe"
+                      },
+                      "platform": {
+                        "type": "string",
+                        "example": "twitter"
+                      }
+                    },
+                    "required": [
+                      "url",
+                      "platform"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "image",
+                "bio",
+                "role",
+                "slug",
+                "socials"
+              ]
+            }
+          },
+          "category": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "cm1cat123"
+              },
+              "name": {
+                "type": "string",
+                "example": "Technology"
+              },
+              "slug": {
+                "type": "string",
+                "example": "technology"
+              },
+              "description": {
+                "type": "string",
+                "nullable": true,
+                "example": "Tech articles and news"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "slug",
+              "description"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "cm1tag123"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "JavaScript"
+                },
+                "slug": {
+                  "type": "string",
+                  "example": "javascript"
+                },
+                "description": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "JavaScript programming"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "description"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "content",
+          "featured",
+          "coverImage",
+          "description",
+          "publishedAt",
+          "updatedAt",
+          "attribution",
+          "authors",
+          "category",
+          "tags"
+        ]
+      },
+      "PostsListResponse": {
+        "type": "object",
+        "properties": {
+          "posts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Post"
+            }
+          },
+          "pagination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Pagination"
+              },
+              {
+                "properties": {
+                  "limit": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "all"
+                        ]
+                      }
+                    ],
+                    "example": 10
+                  },
+                  "currentPage": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nextPage": {
+                    "type": "number",
+                    "nullable": true,
+                    "example": 2
+                  },
+                  "previousPage": {
+                    "type": "number",
+                    "nullable": true,
+                    "example": null
+                  },
+                  "totalPages": {
+                    "type": "number",
+                    "example": 5
+                  },
+                  "totalItems": {
+                    "type": "number",
+                    "example": 48
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "posts",
+          "pagination"
+        ]
+      },
+      "PostResponse": {
+        "type": "object",
+        "properties": {
+          "post": {
+            "$ref": "#/components/schemas/Post"
+          }
+        },
+        "required": [
+          "post"
+        ]
+      },
+      "Social": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "example": "https://twitter.com/johndoe"
+          },
+          "platform": {
+            "type": "string",
+            "example": "twitter"
+          }
+        },
+        "required": [
+          "url",
+          "platform"
+        ]
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1author123"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/avatar.jpg"
+          },
+          "slug": {
+            "type": "string",
+            "example": "john-doe"
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tech writer and developer"
+          },
+          "role": {
+            "type": "string",
+            "nullable": true,
+            "example": "Senior Developer"
+          },
+          "socials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Social"
+            }
+          },
+          "count": {
+            "type": "object",
+            "properties": {
+              "posts": {
+                "type": "number",
+                "example": 25
+              }
+            },
+            "required": [
+              "posts"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "image",
+          "slug",
+          "bio",
+          "role",
+          "socials",
+          "count"
+        ]
+      },
+      "AuthorsListResponse": {
+        "type": "object",
+        "properties": {
+          "authors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Author"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "required": [
+          "authors",
+          "pagination"
+        ]
+      },
+      "AuthorWithPosts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1author123"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/avatar.jpg"
+          },
+          "slug": {
+            "type": "string",
+            "example": "john-doe"
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tech writer and developer"
+          },
+          "role": {
+            "type": "string",
+            "nullable": true,
+            "example": "Senior Developer"
+          },
+          "socials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Social"
+            }
+          },
+          "posts": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PostSummary"
+                }
+              },
+              "pagination": {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            },
+            "required": [
+              "data",
+              "pagination"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "image",
+          "slug",
+          "bio",
+          "role",
+          "socials",
+          "posts"
+        ]
+      },
+      "AuthorWithoutCount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cm1author123"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "image": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://example.com/avatar.jpg"
+          },
+          "slug": {
+            "type": "string",
+            "example": "john-doe"
+          },
+          "bio": {
+            "type": "string",
+            "nullable": true,
+            "example": "Tech writer and developer"
+          },
+          "role": {
+            "type": "string",
+            "nullable": true,
+            "example": "Senior Developer"
+          },
+          "socials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Social"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "image",
+          "slug",
+          "bio",
+          "role",
+          "socials"
+        ]
+      },
+      "AuthorSingleResponse": {
+        "type": "object",
+        "properties": {
+          "author": {
+            "$ref": "#/components/schemas/AuthorWithoutCount"
+          }
+        },
+        "required": [
+          "author"
+        ]
+      },
+      "AuthorResponse": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/AuthorWithPosts"
+          },
+          {
+            "$ref": "#/components/schemas/AuthorSingleResponse"
+          }
+        ]
+      }
+    },
+    "parameters": {
+
+    }
+  },
+  "paths": {
+    "/v1/{workspaceId}/tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "List tags",
+        "description": "Get a paginated list of tags with post counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of tags per page"
+            },
+            "required": false,
+            "description": "Number of tags per page",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/tags/{identifier}": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Get a single tag",
+        "description": "Get a single tag by slug or ID, optionally including related posts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "javascript",
+              "description": "Tag slug or ID"
+            },
+            "required": true,
+            "description": "Tag slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page when including posts"
+            },
+            "required": false,
+            "description": "Number of posts per page when including posts",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination when including posts"
+            },
+            "required": false,
+            "description": "Page number for pagination when including posts",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved tag",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tag not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "List categories",
+        "description": "Get a paginated list of categories with post counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of categories per page"
+            },
+            "required": false,
+            "description": "Number of categories per page",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriesListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/categories/{identifier}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get a single category",
+        "description": "Get a single category by slug or ID, optionally including related posts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "technology",
+              "description": "Category slug or ID"
+            },
+            "required": true,
+            "description": "Category slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page when including posts"
+            },
+            "required": false,
+            "description": "Number of posts per page when including posts",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination when including posts"
+            },
+            "required": false,
+            "description": "Page number for pagination when including posts",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/posts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "List posts",
+        "description": "Get a paginated list of published posts with filtering and search capabilities",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page or 'all' for no pagination"
+            },
+            "required": false,
+            "description": "Number of posts per page or 'all' for no pagination",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc",
+              "example": "desc",
+              "description": "Sort order by published date"
+            },
+            "required": false,
+            "description": "Sort order by published date",
+            "name": "order",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "technology,science",
+              "description": "Comma-separated category slugs to filter by"
+            },
+            "required": false,
+            "description": "Comma-separated category slugs to filter by",
+            "name": "categories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "politics,sports",
+              "description": "Comma-separated category slugs to exclude"
+            },
+            "required": false,
+            "description": "Comma-separated category slugs to exclude",
+            "name": "excludeCategories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "javascript,typescript",
+              "description": "Comma-separated tag slugs to filter by"
+            },
+            "required": false,
+            "description": "Comma-separated tag slugs to filter by",
+            "name": "tags",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "deprecated,archived",
+              "description": "Comma-separated tag slugs to exclude"
+            },
+            "required": false,
+            "description": "Comma-separated tag slugs to exclude",
+            "name": "excludeTags",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "search term",
+              "description": "Search query to filter posts by title or content"
+            },
+            "required": false,
+            "description": "Search query to filter posts by title or content",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "html",
+                "markdown"
+              ],
+              "example": "html",
+              "description": "Content format (html or markdown)"
+            },
+            "required": false,
+            "description": "Content format (html or markdown)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/posts/{identifier}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Get a single post",
+        "description": "Get a single post by slug or ID",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-first-post",
+              "description": "Post slug or ID"
+            },
+            "required": true,
+            "description": "Post slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "html",
+                "markdown"
+              ],
+              "example": "html",
+              "description": "Content format (html or markdown)"
+            },
+            "required": false,
+            "description": "Content format (html or markdown)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/authors": {
+      "get": {
+        "tags": [
+          "Authors"
+        ],
+        "summary": "List authors",
+        "description": "Get a paginated list of authors with post counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of authors per page"
+            },
+            "required": false,
+            "description": "Number of authors per page",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved authors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{workspaceId}/authors/{identifier}": {
+      "get": {
+        "tags": [
+          "Authors"
+        ],
+        "summary": "Get a single author",
+        "description": "Get a single author by slug or ID, optionally including related posts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "john-doe",
+              "description": "Author slug or ID"
+            },
+            "required": true,
+            "description": "Author slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page when including posts"
+            },
+            "required": false,
+            "description": "Number of posts per page when including posts",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination when including posts"
+            },
+            "required": false,
+            "description": "Page number for pagination when including posts",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved author",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "List tags",
+        "description": "Get a paginated list of tags with post counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of tags per page"
+            },
+            "required": false,
+            "description": "Number of tags per page",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/tags/{identifier}": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Get a single tag",
+        "description": "Get a single tag by slug or ID, optionally including related posts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "javascript",
+              "description": "Tag slug or ID"
+            },
+            "required": true,
+            "description": "Tag slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page when including posts"
+            },
+            "required": false,
+            "description": "Number of posts per page when including posts",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination when including posts"
+            },
+            "required": false,
+            "description": "Page number for pagination when including posts",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved tag",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tag not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "List categories",
+        "description": "Get a paginated list of categories with post counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of categories per page"
+            },
+            "required": false,
+            "description": "Number of categories per page",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriesListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/categories/{identifier}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get a single category",
+        "description": "Get a single category by slug or ID, optionally including related posts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "technology",
+              "description": "Category slug or ID"
+            },
+            "required": true,
+            "description": "Category slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page when including posts"
+            },
+            "required": false,
+            "description": "Number of posts per page when including posts",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination when including posts"
+            },
+            "required": false,
+            "description": "Page number for pagination when including posts",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/posts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "List posts",
+        "description": "Get a paginated list of published posts with filtering and search capabilities",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page or 'all' for no pagination"
+            },
+            "required": false,
+            "description": "Number of posts per page or 'all' for no pagination",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc",
+              "example": "desc",
+              "description": "Sort order by published date"
+            },
+            "required": false,
+            "description": "Sort order by published date",
+            "name": "order",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "technology,science",
+              "description": "Comma-separated category slugs to filter by"
+            },
+            "required": false,
+            "description": "Comma-separated category slugs to filter by",
+            "name": "categories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "politics,sports",
+              "description": "Comma-separated category slugs to exclude"
+            },
+            "required": false,
+            "description": "Comma-separated category slugs to exclude",
+            "name": "excludeCategories",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "javascript,typescript",
+              "description": "Comma-separated tag slugs to filter by"
+            },
+            "required": false,
+            "description": "Comma-separated tag slugs to filter by",
+            "name": "tags",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "deprecated,archived",
+              "description": "Comma-separated tag slugs to exclude"
+            },
+            "required": false,
+            "description": "Comma-separated tag slugs to exclude",
+            "name": "excludeTags",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "search term",
+              "description": "Search query to filter posts by title or content"
+            },
+            "required": false,
+            "description": "Search query to filter posts by title or content",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "html",
+                "markdown"
+              ],
+              "example": "html",
+              "description": "Content format (html or markdown)"
+            },
+            "required": false,
+            "description": "Content format (html or markdown)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/posts/{identifier}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Get a single post",
+        "description": "Get a single post by slug or ID",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-first-post",
+              "description": "Post slug or ID"
+            },
+            "required": true,
+            "description": "Post slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "html",
+                "markdown"
+              ],
+              "example": "html",
+              "description": "Content format (html or markdown)"
+            },
+            "required": false,
+            "description": "Content format (html or markdown)",
+            "name": "format",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved post",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Post not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/authors": {
+      "get": {
+        "tags": [
+          "Authors"
+        ],
+        "summary": "List authors",
+        "description": "Get a paginated list of authors with post counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of authors per page"
+            },
+            "required": false,
+            "description": "Number of authors per page",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination"
+            },
+            "required": false,
+            "description": "Page number for pagination",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved authors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorsListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/authors/{identifier}": {
+      "get": {
+        "tags": [
+          "Authors"
+        ],
+        "summary": "Get a single author",
+        "description": "Get a single author by slug or ID, optionally including related posts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "my-workspace",
+              "description": "Workspace identifier"
+            },
+            "required": true,
+            "description": "Workspace identifier",
+            "name": "workspaceId",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "john-doe",
+              "description": "Author slug or ID"
+            },
+            "required": true,
+            "description": "Author slug or ID",
+            "name": "identifier",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "10",
+              "example": "10",
+              "description": "Number of posts per page when including posts"
+            },
+            "required": false,
+            "description": "Number of posts per page when including posts",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1",
+              "description": "Page number for pagination when including posts"
+            },
+            "required": false,
+            "description": "Page number for pagination when including posts",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "posts",
+              "description": "Related resources to include (e.g., posts)"
+            },
+            "required": false,
+            "description": "Related resources to include (e.g., posts)",
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved author",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters or page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Author not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

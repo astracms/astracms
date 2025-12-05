@@ -1,0 +1,7 @@
+{
+  "title": "API Reference",
+  "description": "Astra CMS API Reference",
+  "root": true,
+  "icon": "Webhook",
+  "pages": ["---API Reference---", "index", "...(generated)"]
+}
