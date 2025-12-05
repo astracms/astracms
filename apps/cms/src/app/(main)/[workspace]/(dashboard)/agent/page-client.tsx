@@ -12,6 +12,7 @@ import {
   MessageToolbar,
   MessageAction,
 } from "@astra/ui/components/ai-elements/message";
+import { Suggestions, Suggestion } from "@astra/ui/components/ai-elements/suggestion";
 import {
   PromptInput,
   PromptInputProvider,
@@ -20,7 +21,7 @@ import {
 } from "@astra/ui/components/ai-elements/prompt-input";
 import { Button } from "@astra/ui/components/button";
 import { ScrollArea } from "@astra/ui/components/scroll-area";
-import { ArrowClockwiseIcon, ArrowUpIcon, CopyIcon, StopCircleIcon } from "@phosphor-icons/react";
+import { ArrowUpIcon } from "@phosphor-icons/react";
 import { AddCategoryView, AddTagView, CreatePostView, SearchView } from "@/components/agent/tool-views";
 
 export function PageClient() {
@@ -29,6 +30,11 @@ export function PageClient() {
       toast.error("Failed to send message: " + error.message);
     },
   });
+  const [input, setInput] = useState<string>("");
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion);
+  };
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +44,15 @@ export function PageClient() {
     }
   }, [messages]);
 
+  const suggestions: { key: string; value: string }[] = [
+    { key: "1", value: "Create a new blog post about AI" },
+    { key: "2", value: "Add a 'Technology' tag" },
+    { key: "3", value: "Search for published posts" },
+    { key: "4", value: "Create a 'Tutorials' category" },
+    { key: "5", value: "Draft a post about Next.js 15" },
+    { key: "6", value: "Find posts with 'Draft' status" },
+  ];
+
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-background">
       <div className="flex-1 overflow-hidden relative">
@@ -45,7 +60,7 @@ export function PageClient() {
           <div className="mx-auto max-w-3xl space-y-8 pb-32">
             <AnimatePresence initial={false}>
               {messages.length === 0 && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4"
@@ -99,24 +114,22 @@ export function PageClient() {
                       })}
                     </MessageContent>
                     {message.role === "assistant" && status !== "streaming" && (
-                       <MessageToolbar>
-                         <div className="flex items-center gap-1">
-                           <MessageAction 
-                             tooltip="Copy" 
-                             onClick={() => {
-                               // Extract text parts for copying
-                               const textContent = message.parts
-                                 .filter((part) => part.type === "text")
-                                 .map((part) => part.type === "text" ? part.text : "")
-                                 .join("\n\n");
-                               navigator.clipboard.writeText(textContent);
-                               toast.success("Copied to clipboard");
-                             }}
-                           >
-                             <CopyIcon className="size-4" />
-                           </MessageAction>
-                         </div>
-                       </MessageToolbar>
+                      <MessageToolbar>
+                        <div className="flex items-center gap-1">
+                          <MessageAction
+                            tooltip="Copy"
+                            onClick={() => {
+                              // Extract text parts for copying
+                              const textContent = message.parts
+                                .filter((part) => part.type === "text")
+                                .map((part) => part.type === "text" ? part.text : "")
+                                .join("\n\n");
+                              navigator.clipboard.writeText(textContent);
+                              toast.success("Copied to clipboard");
+                            }}
+                          />
+                        </div>
+                      </MessageToolbar>
                     )}
                   </Message>
                 </motion.div>
@@ -131,13 +144,24 @@ export function PageClient() {
         </ScrollArea>
 
         <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-background via-background to-transparent pt-10 pb-6">
-          <div className="mx-auto max-w-3xl px-4">
-             <PromptInputProvider>
-               <PromptInputForm 
-                 sendMessage={sendMessage} 
-                 isStreaming={status === "streaming"}
-               />
-             </PromptInputProvider>
+          <div className="mx-auto max-w-3xl px-4 space-y-3">
+            <Suggestions>
+              {suggestions.map((suggestion) => (
+                <Suggestion
+                  key={suggestion.key}
+                  onClick={handleSuggestionClick}
+                  suggestion={suggestion.value}
+                />
+              ))}
+            </Suggestions>
+            <PromptInputProvider>
+              <PromptInputForm
+                sendMessage={sendMessage}
+                isStreaming={status === "streaming"}
+                input={input}
+                setInput={setInput}
+              />
+            </PromptInputProvider>
           </div>
         </div>
       </div>
@@ -148,42 +172,42 @@ export function PageClient() {
 interface PromptInputFormProps {
   sendMessage: (message: { text: string; cancel?: boolean }) => void;
   isStreaming: boolean;
+  input: string;
+  setInput: (value: string) => void;
 }
 
-function PromptInputForm({ sendMessage, isStreaming }: PromptInputFormProps) {
-    const [input, setInput] = useState("");
+function PromptInputForm({ sendMessage, isStreaming, input, setInput }: PromptInputFormProps) {
+  return (
+    <PromptInput
+      onSubmit={(message, e) => {
+        e.preventDefault();
+        if (!input.trim() || isStreaming) return;
 
-    return (
-        <PromptInput
-            onSubmit={(message, e) => {
-                e.preventDefault();
-                if (!input.trim() || isStreaming) return;
-                
-                sendMessage({ text: input });
-                setInput("");
-            }}
-            className="relative overflow-hidden rounded-xl border bg-background shadow-lg transition-all focus-within:ring-2 focus-within:ring-primary/20"
+        sendMessage({ text: input });
+        setInput("");
+      }}
+      className="relative overflow-hidden rounded-xl border bg-background shadow-lg transition-all focus-within:ring-2 focus-within:ring-primary/20"
+    >
+      <PromptInputAttachments>
+        {(file) => <PromptInputAttachment data={file} />}
+      </PromptInputAttachments>
+      <div className="flex w-full items-center gap-2">
+        {/* <PromptInputActionAddAttachments /> */}
+        <input
+          className="flex-1 bg-transparent px-2 py-3 text-sm placeholder:text-muted-foreground focus:outline-none"
+          placeholder="Ask anything..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <Button
+          size="icon"
+          type="submit"
+          disabled={isStreaming || !input.trim()}
+          className="rounded-lg transition-all hover:scale-105 active:scale-95"
         >
-            <PromptInputAttachments>
-                {(file) => <PromptInputAttachment data={file} />}
-            </PromptInputAttachments>
-            <div className="flex w-full items-center gap-2">
-                {/* <PromptInputActionAddAttachments /> */}
-                <input
-                  className="flex-1 bg-transparent px-2 py-3 text-sm placeholder:text-muted-foreground focus:outline-none"
-                  placeholder="Ask anything..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
-                <Button 
-                    size="icon" 
-                    type="submit" 
-                    disabled={isStreaming || !input.trim()}
-                    className="rounded-lg transition-all hover:scale-105 active:scale-95"
-                >
-                    <ArrowUpIcon className="size-4" />
-                </Button>
-            </div>
-        </PromptInput>
-    )
+          <ArrowUpIcon className="size-4" />
+        </Button>
+      </div>
+    </PromptInput>
+  )
 }

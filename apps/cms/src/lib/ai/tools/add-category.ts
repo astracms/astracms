@@ -1,12 +1,17 @@
 import { tool, UIToolInvocation } from "ai";
+import { z } from "zod";
 import { db } from "@astra/db";
-import { categorySchema } from "@/lib/validations/workspace";
 
 export const createAddCategoryTool = (workspaceId: string) =>
 	tool({
 		description: "Create a new category",
-		inputSchema: categorySchema,
+		inputSchema: z.object({
+			name: z.string(),
+			slug: z.string(),
+			description: z.string().optional(),
+		}),
 		execute: async ({ name, slug, description }) => {
+
 			try {
 				const existing = await db.category.findFirst({
 					where: { slug, workspaceId },

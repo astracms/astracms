@@ -1,12 +1,17 @@
 import { tool, UIToolInvocation } from "ai";
+import { z } from "zod";
 import { db } from "@astra/db";
-import { tagSchema } from "@/lib/validations/workspace";
 
 export const createAddTagTool = (workspaceId: string) =>
 	tool({
 		description: "Create a new tag",
-		inputSchema: tagSchema,
+		inputSchema: z.object({
+			name: z.string(),
+			slug: z.string(),
+			description: z.string().optional(),
+		}),
 		execute: async ({ name, slug, description }) => {
+
 			try {
 				const existing = await db.tag.findFirst({
 					where: { slug, workspaceId },

@@ -3,13 +3,15 @@ import { z } from "zod";
 import { db } from "@astra/db";
 import { generateSlug } from "@/utils/string";
 import { nanoid } from "nanoid";
+import { markdownToHtml, markdownToTiptap } from "@astra/parser/tiptap";
+import { sanitizeHtml } from "@/utils/editor";
 
 export const createCreatePostTool = (workspaceId: string) =>
 	tool({
 		description: "Create a new post (draft)",
 		inputSchema: z.object({
 			title: z.string(),
-			content: z.string(),
+			content: z.string().describe("Markdown content of the post"),
 			description: z.string().describe("Short description of the post"),
 			categorySlug: z.string().describe("Slug of the category"),
 			tags: z.array(z.string()).optional(),
@@ -51,12 +53,16 @@ export const createCreatePostTool = (workspaceId: string) =>
 					};
 				}
 
+				const htmlContent = await markdownToHtml(content);
+				const cleanContent = sanitizeHtml(htmlContent);
+				const contentJson = markdownToTiptap(content);
+
 				const post = await db.post.create({
 					data: {
 						title,
 						slug,
-						content,
-						contentJson: JSON.stringify({ type: "doc", content: [] }),
+						content: cleanContent,
+						contentJson: contentJson as any, // Cast as any if TS complains, mirroring import logic
 						categoryId: category.id,
 						status: "draft",
 						workspaceId,
@@ -64,7 +70,7 @@ export const createCreatePostTool = (workspaceId: string) =>
 						authors: {
 							connect: [{ id: author.id }],
 						},
-						tags: tagConnect.length > 0 ? { connect: tagConnect } : undefined,
+						tags: tagNames && tagNames.length > 0 ? { connect: tagConnect } : undefined,
 						description,
 						publishedAt: new Date(),
 					},

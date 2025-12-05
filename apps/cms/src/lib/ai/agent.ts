@@ -6,6 +6,9 @@ import {
 	createAddCategoryTool,
 	createCreatePostTool,
 	createSearchTool,
+	createUpdatePostTool,
+	createGetAnalyticsTool,
+	createListResourcesTool,
 } from "@/lib/ai/tools";
 
 /**
@@ -25,6 +28,9 @@ export function createCMSAgent(context: SystemPromptParams) {
 			addCategory: createAddCategoryTool(workspaceId),
 			createPost: createCreatePostTool(workspaceId),
 			search: createSearchTool(workspaceId),
+			updatePost: createUpdatePostTool(workspaceId),
+			getAnalytics: createGetAnalyticsTool(workspaceId),
+			listResources: createListResourcesTool(workspaceId),
 		},
 	});
 }

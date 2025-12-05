@@ -6,6 +6,10 @@ export const tagSchema = z.object({
   name: z.string().trim().min(1, { message: "Name cannot be empty" }),
   slug: z.string().trim().min(1, { message: "Slug cannot be empty" }),
   description: z.string().trim().optional(),
+  confirm: z
+    .boolean()
+    .default(false)
+    .describe('Confirmation that the user wants to delete the file'),
 });
 export type CreateTagValues = z.infer<typeof tagSchema>;
 
@@ -14,6 +18,10 @@ export const categorySchema = z.object({
   name: z.string().trim().min(1, { message: "Name cannot be empty" }),
   slug: z.string().trim().min(1, { message: "Slug cannot be empty" }),
   description: z.string().trim().optional(),
+  confirm: z
+    .boolean()
+    .default(false)
+    .describe('Confirmation that the user wants to delete the file'),
 });
 export type CreateCategoryValues = z.infer<typeof categorySchema>;
 

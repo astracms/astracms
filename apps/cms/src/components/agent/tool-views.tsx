@@ -7,7 +7,19 @@ import type {
 	SearchUIToolInvocation,
 } from "@/lib/ai/tools";
 
-export function AddTagView({ invocation }: { invocation: AddTagUIToolInvocation }) {
+interface ToolViewProps<T> {
+	invocation: T;
+	respondToConfirmationRequest?: (params: {
+		approvalId: string;
+		approved: boolean;
+	}) => void;
+}
+
+export function AddTagView({
+	invocation,
+	respondToConfirmationRequest,
+}: ToolViewProps<AddTagUIToolInvocation>) {
+	// Handle normal execution states
 	switch (invocation.state) {
 		case "input-available":
 			return (
@@ -48,9 +60,9 @@ export function AddTagView({ invocation }: { invocation: AddTagUIToolInvocation 
 
 export function AddCategoryView({
 	invocation,
-}: {
-	invocation: AddCategoryUIToolInvocation;
-}) {
+	respondToConfirmationRequest,
+}: ToolViewProps<AddCategoryUIToolInvocation>) {
+	// Handle normal execution states
 	switch (invocation.state) {
 		case "input-available":
 			return (
@@ -91,9 +103,9 @@ export function AddCategoryView({
 
 export function CreatePostView({
 	invocation,
-}: {
-	invocation: CreatePostUIToolInvocation;
-}) {
+	respondToConfirmationRequest,
+}: ToolViewProps<CreatePostUIToolInvocation>) {
+	// Handle normal execution states
 	switch (invocation.state) {
 		case "input-available":
 			return (
