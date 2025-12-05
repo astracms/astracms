@@ -183,11 +183,7 @@ export function MediaGallery({
               ))}
               {isFetchingNextPage &&
                 Array.from({ length: 10 }).map((_, index) => (
-                  <li
-                    className="space-y-2"
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <>
-                    key={`skeleton-${index}`}
-                  >
+                  <li className="space-y-2" key={`skeleton-${index}`}>
                     <Skeleton className="h-40 w-full" />
                     <div className="flex items-center gap-2">
                       <Skeleton className="size-10 shrink-0 rounded-md" />

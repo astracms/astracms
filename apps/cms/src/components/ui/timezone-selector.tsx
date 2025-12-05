@@ -67,7 +67,6 @@ export function TimezoneSelector({
     }
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: We use the state to retrigger the effect
   const timezoneOptions = useMemo<TimezoneOption[]>(() => {
     try {
       const now = new Date();

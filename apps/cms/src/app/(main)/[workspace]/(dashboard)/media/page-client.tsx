@@ -70,7 +70,6 @@ function PageClient() {
   });
 
   const queryClient = useQueryClient();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <prevent multiple prefetches, only prefetch on workspaceId change>
   useEffect(() => {
     if (!workspaceId) {
       return;
@@ -125,7 +124,6 @@ function PageClient() {
 
   const { handleUploadComplete } = useMediaActions(mediaQueryKey);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     setSelectedItems(new Set());
   }, [type, sort]);

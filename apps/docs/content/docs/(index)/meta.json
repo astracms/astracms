@@ -3,10 +3,5 @@
   "description": "AstraCMS Documentation",
   "icon": "Book",
   "root": true,
-  "pages": [
-    "---Getting Started---",
-    "index",
-    "quickstart",
-    "..."
-  ]
+  "pages": ["---Getting Started---", "index", "quickstart", "..."]
 }

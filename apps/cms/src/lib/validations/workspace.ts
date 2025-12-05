@@ -13,7 +13,7 @@ export type CreateTagValues = z.infer<typeof tagSchema>;
 export const categorySchema = z.object({
   name: z.string().trim().min(1, { message: "Name cannot be empty" }),
   slug: z.string().trim().min(1, { message: "Slug cannot be empty" }),
-  description: z.string().trim().optional()
+  description: z.string().trim().optional(),
 });
 export type CreateCategoryValues = z.infer<typeof categorySchema>;
 

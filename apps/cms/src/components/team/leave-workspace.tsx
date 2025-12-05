@@ -15,7 +15,6 @@ import { organization, useListOrganizations } from "@/lib/auth/client";
 import { useWorkspace } from "@/providers/workspace";
 
 type ListOrganizationResponse = {
-  // biome-ignore lint/suspicious/noExplicitAny: <>
   metadata?: any;
   name: string;
   slug: string;

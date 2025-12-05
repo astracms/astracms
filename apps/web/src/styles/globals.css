@@ -138,7 +138,9 @@
 
 /* Premium transitions utility */
 @utility transition-premium {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke,
+    opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   transition-duration: 300ms;
 }

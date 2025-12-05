@@ -17,7 +17,7 @@ const formattedDate = new Date(entry.data.lastUpdated).toLocaleDateString(
     year: "numeric",
     month: "long",
     day: "numeric",
-  },
+  }
 );
 
 const { Content } = await render(entry);
@@ -40,7 +40,7 @@ const { Content } = await render(entry);
         </div>
 
         <Prose>
-          <Content />
+          <Content/>
         </Prose>
       </Container>
     </div>

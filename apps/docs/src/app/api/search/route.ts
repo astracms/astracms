@@ -1,14 +1,14 @@
-import { createSearchAPI } from 'fumadocs-core/search/server'
-import { source } from '@/lib/source'
+import { createSearchAPI } from "fumadocs-core/search/server";
+import { source } from "@/lib/source";
 
-export const { GET } = createSearchAPI('advanced', {
-  language: 'english',
+export const { GET } = createSearchAPI("advanced", {
+  language: "english",
   indexes: async () => {
-    const pages = source.getPages()
+    const pages = source.getPages();
 
     const indexes = await Promise.all(
       pages.map(async (page) => {
-        const { structuredData } = await page.data.load()
+        const { structuredData } = await page.data.load();
 
         return {
           title: page.data.title,
@@ -16,11 +16,11 @@ export const { GET } = createSearchAPI('advanced', {
           url: page.url,
           id: page.url,
           structuredData: structuredData ?? undefined,
-          tag: page.path.split('/')[0],
-        }
+          tag: page.path.split("/")[0],
+        };
       })
-    )
+    );
 
-    return indexes
+    return indexes;
   },
-})
+});

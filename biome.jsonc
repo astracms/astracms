@@ -8,19 +8,34 @@
     "ultracite/remix"
   ],
   "files": {
-    "includes": ["**", "!packages/ui/src", "!apps/cms/src/hooks/use-mobile.tsx"]
+    "includes": [
+      "**",
+      "!packages/ui/src",
+      "!apps/cms/src/hooks/use-mobile.tsx",
+      "!apps/docs"
+    ]
   },
   "linter": {
     "rules": {
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      },
       "suspicious": {
         "noConsole": "off",
         "useAwait": "off",
-        "noUnknownAtRules": "off"
+        "noUnknownAtRules": "off",
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "off",
+        "noGlobalAssign": "off",
+        "noShadowRestrictedNames": "off"
       },
       "style": {
         "noMagicNumbers": "off",
         "noNestedTernary": "off",
-        "useFilenamingConvention": "off"
+        "useFilenamingConvention": "off",
+        "useConsistentTypeDefinitions": "off",
+        "useBlockStatements": "off",
+        "useDefaultSwitchClause": "off"
       },
       "complexity": {
         "useSimplifiedLogicExpression": "off",
@@ -31,11 +46,14 @@
         "noUnnecessaryConditions": "off"
       },
       "performance": {
-        "useTopLevelRegex": "off"
+        "useTopLevelRegex": "off",
+        "noBarrelFile": "off"
       },
       "correctness": {
         "noUnusedImports": "off",
-        "noUnusedVariables": "off"
+        "noUnusedVariables": "off",
+        "noUnusedFunctionParameters": "off",
+        "useExhaustiveDependencies": "off"
       }
     }
   },

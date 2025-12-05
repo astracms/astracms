@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@astra/tsconfig": "workspace:*",
+    "@biomejs/biome": "^2.3.0",
     "prettier": "^3.7.4",
     "turbo": "^2.6.1",
     "typescript": "^5.7.2",
@@ -42,6 +43,7 @@
       "@types/react-dom": "19.0.2"
     },
     "onlyBuiltDependencies": [
+      "@biomejs/biome",
       "@prisma/client",
       "@prisma/engines",
       "@tailwindcss/oxide",

@@ -1,6 +1,8 @@
 import { db } from "@astra/db";
+import { streamObject } from "ai";
 import { NextResponse } from "next/server";
 import { NodeHtmlMarkdown } from "node-html-markdown";
+import { openrouter } from "@/lib/ai/model";
 import { getServerSession } from "@/lib/auth/session";
 import { aiSuggestionsRateLimiter, rateLimitHeaders } from "@/lib/ratelimit";
 import {
@@ -8,8 +10,6 @@ import {
   aiReadabilityResponseSchema,
 } from "@/lib/validations/editor";
 import { systemPrompt } from "./prompt";
-import { streamObject } from 'ai';
-import { openrouter } from "@/lib/ai/model";
 
 export const maxDuration = 30;
 

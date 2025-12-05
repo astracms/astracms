@@ -24,9 +24,9 @@ import {
   LayoutIcon,
   NoteIcon,
   PackageIcon,
+  RobotIcon,
   TagIcon,
   UsersThreeIcon,
-  RobotIcon,
 } from "@phosphor-icons/react";
 
 import Link from "next/link";

@@ -112,4 +112,3 @@ export const pageSchema = z.object({
   lastUpdated: z.date(),
 });
 export type Page = z.infer<typeof pageSchema>;
-

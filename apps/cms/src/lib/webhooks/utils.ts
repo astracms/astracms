@@ -72,7 +72,6 @@ export async function handleWebhookSlack({
   });
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: can literally be anything
 type DatabaseFields = Record<string, any>;
 
 export function getWebhooks(

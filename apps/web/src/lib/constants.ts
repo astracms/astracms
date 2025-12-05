@@ -43,42 +43,42 @@ export const FAQs: {
   question: string;
   answer: string;
 }[] = [
-    {
-      question: "What is Astra?",
-      answer:
-        "Astra is a headless CMS designed specifically for managing blogs, changelogs, and articles. It provides a simple interface for creating and organizing content, along with a powerful API to fetch and display it on your website or app.",
-    },
-    {
-      question: "Is Astra free?",
-      answer:
-        "Yes, Astra is free to use with generous limits on all core features. We also offer paid plans for teams needing higher limits and advanced features.",
-    },
-    {
-      question: "How does Astra work?",
-      answer:
-        "Astra is a headless CMS that provides content management through a simple API. You can create, edit and manage content through our dashboard, then fetch it via our API to display on your website or app.",
-    },
-    {
-      question: "Do I need technical knowledge to use Astra?",
-      answer:
-        "No technical knowledge is required to use our content management dashboard. However, to integrate the API with your website or app, basic development experience is helpful. We provide detailed documentation and templates to make integration easy.",
-    },
-    {
-      question: "What kind of content can I manage?",
-      answer:
-        "Astra is primarily focused on managing blog posts, changelogs, articles, and static pages. We support rich text, images, and videos to help you create engaging content for your blog or documentation site.",
-    },
-    {
-      question: "Is there a limit on API requests?",
-      answer:
-        "Free accounts include 10.000 API requests per month. We implement fair usage policies to prevent abuse but typical usage patterns are well within our limits.",
-    },
-    {
-      question: "Can I export my content?",
-      answer:
-        "Yes, you can export all your content at any time in common formats like JSON, HTML or Markdown. Your content always belongs to you and you are never locked in.",
-    },
-  ];
+  {
+    question: "What is Astra?",
+    answer:
+      "Astra is a headless CMS designed specifically for managing blogs, changelogs, and articles. It provides a simple interface for creating and organizing content, along with a powerful API to fetch and display it on your website or app.",
+  },
+  {
+    question: "Is Astra free?",
+    answer:
+      "Yes, Astra is free to use with generous limits on all core features. We also offer paid plans for teams needing higher limits and advanced features.",
+  },
+  {
+    question: "How does Astra work?",
+    answer:
+      "Astra is a headless CMS that provides content management through a simple API. You can create, edit and manage content through our dashboard, then fetch it via our API to display on your website or app.",
+  },
+  {
+    question: "Do I need technical knowledge to use Astra?",
+    answer:
+      "No technical knowledge is required to use our content management dashboard. However, to integrate the API with your website or app, basic development experience is helpful. We provide detailed documentation and templates to make integration easy.",
+  },
+  {
+    question: "What kind of content can I manage?",
+    answer:
+      "Astra is primarily focused on managing blog posts, changelogs, articles, and static pages. We support rich text, images, and videos to help you create engaging content for your blog or documentation site.",
+  },
+  {
+    question: "Is there a limit on API requests?",
+    answer:
+      "Free accounts include 10.000 API requests per month. We implement fair usage policies to prevent abuse but typical usage patterns are well within our limits.",
+  },
+  {
+    question: "Can I export my content?",
+    answer:
+      "Yes, you can export all your content at any time in common formats like JSON, HTML or Markdown. Your content always belongs to you and you are never locked in.",
+  },
+];
 
 export type Pricing = {
   title: string;
@@ -141,32 +141,32 @@ export const PRICING_FAQS: {
   question: string;
   answer: string;
 }[] = [
-    {
-      question: "How are plans billed?",
-      answer:
-        "Our plans are billed per workspace, not per user. This means you can invite as many team members as your plan allows to a workspace without any extra charges per member. Each workspace requires its own subscription if you wish to upgrade it.",
-    },
-    {
-      question: "How do I get a refund?",
-      answer:
-        "To request a refund, please contact us at <a href='mailto:support@astracms.dev'>support@astracms.dev</a> within 7 days of your purchase. We're also available on X at <a href='https://x.com/astracms'>astracms</a> and on our <a href='https://discord.gg/gU44Pmwqkx'>Discord</a> channel.",
-    },
-    {
-      question: "Can I change my plan later?",
-      answer:
-        "Yes, you can upgrade or downgrade your plan at any time from your workspace billing settings. Prorated charges or credits will be applied automatically.",
-    },
-    {
-      question: "What payment methods do you accept?",
-      answer:
-        "We accept all major credit cards, including Visa, Mastercard, and American Express. All payments are processed securely via <a href='https://polar.sh'>Polar</a>.",
-    },
-    {
-      question: "What happens when I downgrade my plan?",
-      answer:
-        "When you downgrade, you'll retain access to paid features until the end of your current billing cycle. Afterward, your workspace will be moved to the Free plan, and some features may become unavailable.",
-    },
-  ];
+  {
+    question: "How are plans billed?",
+    answer:
+      "Our plans are billed per workspace, not per user. This means you can invite as many team members as your plan allows to a workspace without any extra charges per member. Each workspace requires its own subscription if you wish to upgrade it.",
+  },
+  {
+    question: "How do I get a refund?",
+    answer:
+      "To request a refund, please contact us at <a href='mailto:support@astracms.dev'>support@astracms.dev</a> within 7 days of your purchase. We're also available on X at <a href='https://x.com/astracms'>astracms</a> and on our <a href='https://discord.gg/gU44Pmwqkx'>Discord</a> channel.",
+  },
+  {
+    question: "Can I change my plan later?",
+    answer:
+      "Yes, you can upgrade or downgrade your plan at any time from your workspace billing settings. Prorated charges or credits will be applied automatically.",
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer:
+      "We accept all major credit cards, including Visa, Mastercard, and American Express. All payments are processed securely via <a href='https://polar.sh'>Polar</a>.",
+  },
+  {
+    question: "What happens when I downgrade my plan?",
+    answer:
+      "When you downgrade, you'll retain access to paid features until the end of your current billing cycle. Afterward, your workspace will be moved to the Free plan, and some features may become unavailable.",
+  },
+];
 
 export const USERS = [
   {

@@ -1,28 +1,28 @@
-import { Feed } from 'feed'
-import { title } from '@/lib/layout.shared'
-import { source } from '@/lib/source'
-import { url } from './url'
+import { Feed } from "feed";
+import { title } from "@/lib/layout.shared";
+import { source } from "@/lib/source";
+import { url } from "./url";
 
 export async function getRSS() {
   const feed = new Feed({
     title,
-    id: url('/rss.xml'),
-    link: url('/rss.xml'),
-    language: 'en',
-    image: url('/banner.png'),
-    favicon: url('/icon.png'),
+    id: url("/rss.xml"),
+    link: url("/rss.xml"),
+    language: "en",
+    image: url("/banner.png"),
+    favicon: url("/icon.png"),
     copyright: `All rights reserved ${new Date().getFullYear()}, ${title}`,
-  })
+  });
 
   const pages = await Promise.all(
     source.getPages().map(async (page) => {
-      const { lastModified } = await page.data.load()
+      const { lastModified } = await page.data.load();
       return {
         page,
         lastModified,
-      }
+      };
     })
-  )
+  );
 
   for (const { page, lastModified } of pages) {
     feed.addItem({
@@ -36,8 +36,8 @@ export async function getRSS() {
           name: title,
         },
       ],
-    })
+    });
   }
 
-  return feed.rss2()
+  return feed.rss2();
 }

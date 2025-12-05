@@ -1,8 +1,8 @@
 import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
 import { highlightContent } from "./lib/highlight";
 import { fetchCategories, fetchPosts } from "./lib/queries";
 import { categorySchema, pageSchema, postSchema } from "./lib/schemas";
-import { glob } from "astro/loaders";
 
 const posts = defineCollection({
   loader: async () => {

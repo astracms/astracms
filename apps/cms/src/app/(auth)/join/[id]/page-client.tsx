@@ -120,7 +120,6 @@ function PageClient({ id, user }: PageClientProps) {
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     organization
       .getInvitation({
