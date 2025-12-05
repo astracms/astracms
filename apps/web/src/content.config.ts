@@ -1,7 +1,8 @@
 import { defineCollection } from "astro:content";
 import { highlightContent } from "./lib/highlight";
 import { fetchCategories, fetchPosts } from "./lib/queries";
-import { categorySchema, postSchema } from "./lib/schemas";
+import { categorySchema, pageSchema, postSchema } from "./lib/schemas";
+import { glob } from "astro/loaders";
 
 const posts = defineCollection({
   loader: async () => {
@@ -19,17 +20,18 @@ const posts = defineCollection({
 });
 
 const page = defineCollection({
-  loader: async () => {
-    const response = await fetchPosts("?categories=legal");
+  // loader: async () => {
+  //   const response = await fetchPosts("?categories=legal");
 
-    return response.posts.map((post) => ({
-      ...post,
-      // Astro uses the id as a key to get the entry
-      // We can't know the id of the post so we use the slug
-      id: post.slug,
-    }));
-  },
-  schema: postSchema,
+  //   return response.posts.map((post) => ({
+  //     ...post,
+  //     // Astro uses the id as a key to get the entry
+  //     // We can't know the id of the post so we use the slug
+  //     id: post.slug,
+  //   }));
+  // },
+  loader: glob({ pattern: "**/*.md", base: "./src/content/pages" }),
+  schema: pageSchema,
 });
 
 const changelog = defineCollection({

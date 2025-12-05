@@ -1,8 +1,9 @@
 ---
 title: Terms of Service
-published: 2024-12-12
+slug: terms
+published: 2020-01-01T06:15:00Z
 description: AstraCMS's Terms of Service.
-lastUpdated: 2025-09-18
+lastUpdated: 2020-01-01T06:15:00Z
 ---
 
 ## 1. Acceptance of Terms

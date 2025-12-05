@@ -103,3 +103,13 @@ export const categorySchema = z.object({
   }),
 });
 export type Category = z.infer<typeof categorySchema>;
+
+export const pageSchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+  published: z.date(),
+  description: z.string(),
+  lastUpdated: z.date(),
+});
+export type Page = z.infer<typeof pageSchema>;
+
