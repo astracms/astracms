@@ -1,4 +1,8 @@
-import { type InferAgentUIMessage, ToolLoopAgent } from "ai";
+import {
+  type InferAgentUIMessage,
+  type LanguageModel,
+  ToolLoopAgent,
+} from "ai";
 import { openrouter } from "@/lib/ai/model";
 import { type SystemPromptParams, systemPrompt } from "@/lib/ai/prompt";
 import {
@@ -19,7 +23,7 @@ export function createCMSAgent(context: SystemPromptParams) {
   const { userName, workspaceId } = context;
 
   return new ToolLoopAgent({
-    model: openrouter.chat("openai/gpt-oss-20b:free"),
+    model: openrouter("openai/gpt-oss-20b:free") as LanguageModel,
     instructions: systemPrompt(context),
     tools: {
       addTag: createAddTagTool(workspaceId),

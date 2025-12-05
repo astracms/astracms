@@ -1,5 +1,5 @@
 import { db } from "@astra/db";
-import { streamObject } from "ai";
+import { type LanguageModel, Output, streamText } from "ai";
 import { NextResponse } from "next/server";
 import { NodeHtmlMarkdown } from "node-html-markdown";
 import { openrouter } from "@/lib/ai/model";
@@ -57,8 +57,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = streamObject({
-    model: openrouter.chat("openai/gpt-4o-mini"),
+  const result = streamText({
+    model: openrouter("openai/gpt-4o-mini") as LanguageModel,
     messages: [
       {
         role: "system",
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
         `,
       },
     ],
-    schema: aiReadabilityResponseSchema,
+    experimental_output: Output.object({ schema: aiReadabilityResponseSchema }),
   });
 
   return result.toTextStreamResponse();

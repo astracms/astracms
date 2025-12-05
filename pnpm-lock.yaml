@@ -71,8 +71,8 @@ importers:
   apps/cms:
     dependencies:
       '@ai-sdk/react':
-        specifier: 3.0.0-beta.134
-        version: 3.0.0-beta.134(effect@3.18.4)(react@19.2.1)(zod@3.25.76)
+        specifier: 3.0.0-beta.135
+        version: 3.0.0-beta.135(effect@3.18.4)(react@19.2.1)(zod@3.25.76)
       '@astra/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -101,8 +101,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.2(react-hook-form@7.68.0(react@19.2.1))
       '@openrouter/ai-sdk-provider':
-        specifier: ^1.4.0
-        version: 1.4.0(ai@6.0.0-beta.133(effect@3.18.4)(zod@3.25.76))(zod@3.25.76)
+        specifier: 1.0.0-beta.7
+        version: 1.0.0-beta.7(ai@6.0.0-beta.134(effect@3.18.4)(zod@3.25.76))(zod@3.25.76)
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -188,8 +188,8 @@ importers:
         specifier: ^6.176.0
         version: 6.198.0
       ai:
-        specifier: 6.0.0-beta.133
-        version: 6.0.0-beta.133(effect@3.18.4)(zod@3.25.76)
+        specifier: 6.0.0-beta.134
+        version: 6.0.0-beta.134(effect@3.18.4)(zod@3.25.76)
       axios:
         specifier: ^1.12.0
         version: 1.13.2
@@ -913,8 +913,8 @@ packages:
       zod:
         optional: true
 
-  '@ai-sdk/react@3.0.0-beta.134':
-    resolution: {integrity: sha512-Zahgmv2XE4l3Mi9CUBc+Vv3UVVbv7/RyDkj3DL4t7Wus7qN3+yH0IW4EmHgzvs8PbqFILFLWe0apjVE3FVWn6A==}
+  '@ai-sdk/react@3.0.0-beta.135':
+    resolution: {integrity: sha512-DhagsVnHOyIFACvhSeu1G21hALnCSz0VB4ZIAAnM6E74FUzlkcPCVA2dry9S6l4APhdt16iI5tTsl+wly5btUw==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18 || ^19
@@ -2901,15 +2901,12 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@openrouter/ai-sdk-provider@1.4.0':
-    resolution: {integrity: sha512-stHEs7iw8Igvl3dJ7Pv0kuYhSLEKep6MENnUkRZl+eXubHyAhX2HMKYY6SGQ1CgjfZUSZlWwi82jBpK0rI85KQ==}
+  '@openrouter/ai-sdk-provider@1.0.0-beta.7':
+    resolution: {integrity: sha512-DDCaOBLHX52lxa0FhLT/CpREAt6sbq21n9HZHFRRs8r4G2/tH3bgfcUfy5Dq6IN3xsGtCJuA50i2hL25ffzsow==}
     engines: {node: '>=18'}
     peerDependencies:
-      ai: ^5.0.0
+      ai: ^5.0.0-beta.12
       zod: ^3.24.1 || ^v4
-
-  '@openrouter/sdk@0.1.27':
-    resolution: {integrity: sha512-RH//L10bSmc81q25zAZudiI4kNkLgxF2E+WU42vghp3N6TEvZ6F0jK7uT3tOxkEn91gzmMw9YVmDENy7SJsajQ==}
 
   '@opentelemetry/api@1.9.0':
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
@@ -5612,8 +5609,8 @@ packages:
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
 
-  ai@6.0.0-beta.133:
-    resolution: {integrity: sha512-OKsTA7JTTmBdeSYLM2tGVbeM4d0/+gP+klANOq9VMNR86BTHfNRwqeMISx81OFvUsQ/K/hppYDfTjgZ5NzV2Ag==}
+  ai@6.0.0-beta.134:
+    resolution: {integrity: sha512-AdPkCBuZld2bF77r/Oh5TqTffkJieEf7/SZB1++ZeTnqNnvLhbxBiu81HZfSwCVlpwSDwANZaEd6AKXgkRASbw==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -11072,10 +11069,10 @@ snapshots:
     optionalDependencies:
       zod: 4.1.13
 
-  '@ai-sdk/react@3.0.0-beta.134(effect@3.18.4)(react@19.2.1)(zod@3.25.76)':
+  '@ai-sdk/react@3.0.0-beta.135(effect@3.18.4)(react@19.2.1)(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider-utils': 4.0.0-beta.43(effect@3.18.4)(zod@3.25.76)
-      ai: 6.0.0-beta.133(effect@3.18.4)(zod@3.25.76)
+      ai: 6.0.0-beta.134(effect@3.18.4)(zod@3.25.76)
       react: 19.2.1
       swr: 2.3.7(react@19.2.1)
       throttleit: 2.1.0
@@ -13294,15 +13291,10 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@openrouter/ai-sdk-provider@1.4.0(ai@6.0.0-beta.133(effect@3.18.4)(zod@3.25.76))(zod@3.25.76)':
+  '@openrouter/ai-sdk-provider@1.0.0-beta.7(ai@6.0.0-beta.134(effect@3.18.4)(zod@3.25.76))(zod@3.25.76)':
     dependencies:
-      '@openrouter/sdk': 0.1.27
-      ai: 6.0.0-beta.133(effect@3.18.4)(zod@3.25.76)
+      ai: 6.0.0-beta.134(effect@3.18.4)(zod@3.25.76)
       zod: 3.25.76
-
-  '@openrouter/sdk@0.1.27':
-    dependencies:
-      zod: 4.1.13
 
   '@opentelemetry/api@1.9.0': {}
 
@@ -16162,7 +16154,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       zod: 4.1.13
 
-  ai@6.0.0-beta.133(effect@3.18.4)(zod@3.25.76):
+  ai@6.0.0-beta.134(effect@3.18.4)(zod@3.25.76):
     dependencies:
       '@ai-sdk/gateway': 2.0.0-beta.72(effect@3.18.4)(zod@3.25.76)
       '@ai-sdk/provider': 3.0.0-beta.24
