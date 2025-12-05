@@ -1,3 +1,3 @@
 # WEB
 
-Marketing site for marble.
+Marketing site for AstraCMS.

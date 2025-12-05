@@ -202,9 +202,6 @@ function PageClient() {
                 className="flex items-center gap-4 px-4 first:pl-0 last:pr-0"
                 key={item.name}
               >
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-background">
-                  <item.icon className="text-muted-foreground" size={20} />
-                </div>
                 <div className="flex-1 space-y-2">
                   <div className="flex items-baseline justify-between">
                     <p className="text-muted-foreground text-sm">{item.name}</p>

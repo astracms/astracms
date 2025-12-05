@@ -11,34 +11,30 @@ const { open, title, name, class: className } = Astro.props;
 
 <details
   data-accordion-item
-  class:list={['accordion-item group', className]}
+  class:list={["accordion-item group", className]}
   name={name}
   open={open}
 >
   <summary
-    class="group accordion-item-title py-4 flex items-center justify-between gap-3 cursor-pointer text-lg font-medium leading-normal list-none transition-colors duration-300 ease-in-out m-0"
+    class="accordion-item-title py-5 flex items-center justify-between gap-4 cursor-pointer text-base font-medium leading-normal list-none transition-colors duration-300 m-0 hover:text-muted-foreground"
   >
-    <span
-      class="group-hover:text-muted-foreground group-focus-visible:text-muted-foreground text-base font-medium transition-colors duration-300 ease-in-out"
-      >{title}</span
-    >
+    <span class="transition-colors duration-300">{title}</span>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      class="size-4 transition-transform duration-300 ease-in-out group-open:-rotate-45 shrink-0"
+      class="size-4 text-muted-foreground transition-transform duration-300 ease-premium group-open:rotate-45 shrink-0"
     >
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
-        d="M12 4.5v15m7.5-7.5h-15"
-      />
+        d="M12 4.5v15m7.5-7.5h-15"></path>
     </svg>
   </summary>
-  <div class="pb-4">
-    <slot/>
+  <div class="pb-5">
+    <slot />
   </div>
 </details>
 
@@ -52,7 +48,7 @@ const { open, title, name, class: className } = Astro.props;
     }
 
     &.accordion-item--animated {
-      transition: height 0.2s ease-out;
+      transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 
@@ -73,7 +69,7 @@ const { open, title, name, class: className } = Astro.props;
 
   document.addEventListener("astro:page-load", () => {
     const accordions = document.querySelectorAll<HTMLDetailsElement>(
-      "[data-accordion-item]"
+      "[data-accordion-item]",
     );
     setAccordionHeight(accordions);
 

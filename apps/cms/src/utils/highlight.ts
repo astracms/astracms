@@ -45,7 +45,7 @@ async function getHighlighter() {
 }
 
 /**
- * Transform content from Marble to add syntax highlighting to code blocks
+ * Transform content from AstraCMS to add syntax highlighting to code blocks
  */
 export async function highlightContent(
   htmlContent: string,
@@ -53,7 +53,7 @@ export async function highlightContent(
 ): Promise<string> {
   const highlighter = await getHighlighter();
 
-  // Marble returns the language as a class attribute on the <code> tag
+  // AstraCMS returns the language as a class attribute on the <code> tag
   // i.e <pre><code class="language-jsx">...</code></pre>
   // so we use a regex to find and pick the language from the classname
   const codeBlockRegex =

@@ -1,13 +1,13 @@
 ---
 title: Terms of Service
 published: 2024-12-12
-description: Marble's Terms of Service.
+description: AstraCMS's Terms of Service.
 lastUpdated: 2025-09-18
 ---
 
 ## 1. Acceptance of Terms
 
-By accessing or using Marble ("the Service"), you agree to these Terms of Service ("Terms"). If you do not agree, do not use the Service.
+By accessing or using AstraCMS ("the Service"), you agree to these Terms of Service ("Terms"). If you do not agree, do not use the Service.
 
 ## 2. Definitions
 
@@ -26,15 +26,15 @@ By accessing or using Marble ("the Service"), you agree to these Terms of Servic
 ## 4. Content Ownership & License
 
 - You retain ownership of all Content you create.
-- By using the Service, you grant Marble a non-exclusive, worldwide license to host, display, and process your Content as necessary to operate the Service.
+- By using the Service, you grant AstraCMS a non-exclusive, worldwide license to host, display, and process your Content as necessary to operate the Service.
 - You represent that you have the rights to any Content you upload.
-- Marble retains all rights, title, and interest in its software, trademarks, and intellectual property.
+- AstraCMS retains all rights, title, and interest in its software, trademarks, and intellectual property.
 
 ## 5. Payments & Subscriptions
 
 - Some features require a paid Subscription.
 - Subscriptions are billed in advance on a recurring basis (monthly or yearly, as selected).
-- Payments are processed through third-party providers (e.g., Polar). Marble does not store payment card details.
+- Payments are processed through third-party providers (e.g., Polar). AstraCMS does not store payment card details.
 - All fees are non-refundable except as required by law.
 - If a payment fails, we may suspend or downgrade your access until payment is resolved.
 - We reserve the right to change pricing with reasonable prior notice.
@@ -62,7 +62,7 @@ You agree not to:
 
 ## 9. Indemnification
 
-You agree to indemnify and hold harmless Marble, its affiliates, and its contributors from any claims, damages, liabilities, or expenses arising out of:
+You agree to indemnify and hold harmless AstraCMS, its affiliates, and its contributors from any claims, damages, liabilities, or expenses arising out of:
 
 - Your use of the Service,
 - Your Content, or
@@ -70,8 +70,8 @@ You agree to indemnify and hold harmless Marble, its affiliates, and its contrib
 
 ## 10. Limitation of Liability
 
-- To the maximum extent permitted by law, Marble shall not be liable for indirect, incidental, consequential, or punitive damages.
-- Marble’s total liability for any claim shall not exceed the amount you paid to us in the 12 months preceding the claim.
+- To the maximum extent permitted by law, AstraCMS shall not be liable for indirect, incidental, consequential, or punitive damages.
+- AstraCMS’s total liability for any claim shall not exceed the amount you paid to us in the 12 months preceding the claim.
 
 ## 11. Modifications to Terms
 

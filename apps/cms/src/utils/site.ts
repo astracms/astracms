@@ -1,5 +1,5 @@
 export const SITE_CONFIG = {
-  title: "Marble",
+  title: "AstraCMS",
   description:
     "A simple, collaborative CMS for publishing articles, changelogs, and product updates.",
   url: "https://app.astracms.dev",

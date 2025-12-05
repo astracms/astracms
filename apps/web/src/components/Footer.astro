@@ -4,76 +4,80 @@ import Container from "./Container.astro";
 import Logo from "./icons/Logo.astro";
 ---
 
-<footer>
-  <div class="lg:border-x border-dashed md:w-[calc(100%-140px)] mx-auto">
-    <Container class="py-12 sm:py-20 md:py-36">
-      <section
-        class="rounded-xl border bg-white p-10 lg:p-12 md:min-h-[420px] flex flex-col justify-between gap-5"
-      >
-        <div class="flex flex-col justify-between gap-10 md:flex-row">
-          <div class="sm:col-span-3">
-            <a
-              href="/"
-              class="mb-2 flex items-center gap-2 tracking-widest w-fit font-medium"
-            >
-              <Logo/>
-              <span class="sr-only">astracms</span>
-            </a>
-            <p class="mb-1 text-sm text-muted-foreground tracking-wider">
-              Content simplified.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 gap-8 md:grid-cols-4 lg:gap-14">
-            {FOOTER_SECTIONS.map((section) => (
-              <div class="flex flex-col gap-4 text-sm">
-                <p class="font-medium mb-2">{section.title}</p>
-                {section.links.map((link) => (
-                  <a
-                    href={link.href}
-                    target={link.target}
-                    rel={link.rel}
-                    class="text-muted-foreground underline-offset-2 hover:underline"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div
-          class="flex gap-6 flex-col items-center justify-center md:flex-row lg:items-end lg:justify-between mt-10 lg:mt-20"
-        >
-          <ul class="flex gap-6">
-            {FOOTER_SOCIAL_LINKS.map((link) => {
-              const IconComponent = link.icon;
-              return (
-                <li>
-                  <a
-                    href={link.href}
-                    target={link.target}
-                    rel={link.rel}
-                    aria-label={`${link.label} link to Marble`}
-                    class="text-muted-foreground hover:text-primary transition duration-300"
-                  >
-                    <span class="sr-only">{link.label}</span>
-                    {IconComponent && <IconComponent />}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-          <p class="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()}all rights reserved
+<footer class="border-t border-border/50 bg-background">
+  <Container>
+    <div class="py-16 lg:py-20">
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+        <!-- Brand Section -->
+        <div class="lg:col-span-4 flex flex-col gap-5">
+          <a
+            href="/"
+            class="flex items-center gap-2.5 transition-opacity duration-300 hover:opacity-70"
+          >
+            <Logo />
+            <span class="text-lg font-semibold tracking-tight">AstraCMS</span>
+          </a>
+          <p class="text-muted-foreground max-w-xs text-sm leading-relaxed">
+            Simple content management for modern apps. Built for developers who
+            care about design and performance.
           </p>
         </div>
-      </section>
-    </Container>
-  </div>
-  <div aria-hidden={true} class="h-16 border-t border-dashed">
+
+        <!-- Links Sections -->
+        <div class="lg:col-span-8 grid grid-cols-2 gap-8 sm:grid-cols-4">
+          {
+            FOOTER_SECTIONS.map((section) => (
+              <div class="flex flex-col gap-4">
+                <h3 class="text-sm font-medium text-foreground">
+                  {section.title}
+                </h3>
+                <ul class="flex flex-col gap-3">
+                  {section.links.map((link) => (
+                    <li>
+                      <a
+                        href={link.href}
+                        target={link.target}
+                        rel={link.rel}
+                        class="text-sm text-muted-foreground transition-colors duration-300 hover:text-foreground"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
     <div
-      class="mx-auto sm:w-[calc(100%-140px)] px-8 md:px-12 lg:px-16 lg:border-x border-dashed h-full"
-    ></div>
-  </div>
+      class="border-t border-border/50 py-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-between"
+    >
+      <p class="text-xs text-muted-foreground">
+        &copy; {new Date().getFullYear()} Astra CMS. All rights reserved.
+      </p>
+
+      <div class="flex items-center gap-5">
+        {
+          FOOTER_SOCIAL_LINKS.map((link) => {
+            const IconComponent = link.icon;
+            return (
+              <a
+                href={link.href}
+                target={link.target}
+                rel={link.rel}
+                class="text-muted-foreground transition-colors duration-300 hover:text-foreground"
+                aria-label={link.label}
+              >
+                {IconComponent && <IconComponent class="size-5" />}
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </Container>
 </footer>

@@ -35,7 +35,7 @@ export async function sendInviteEmailAction({
     return sendDevEmail({
       from: "AstraCMS <emails@astracms.dev>",
       to: inviteeEmail,
-      subject: `Join ${workspaceName} on Marble`,
+      subject: `Join ${workspaceName} on AstraCMS`,
       text: "This is a mock invite email",
       _mockContext: {
         type: "invite",
@@ -68,7 +68,7 @@ export async function sendInviteEmailAction({
     const response = await resend.emails.send({
       from: "AstraCMS <emails@astracms.dev>",
       to: inviteeEmail,
-      subject: `Join ${workspaceName} on Marble`,
+      subject: `Join ${workspaceName} on AstraCMS`,
       react: InviteUserEmail({
         inviteeEmail,
         invitedByUsername: inviterName,
@@ -205,7 +205,7 @@ export async function sendWelcomeEmailAction({
       from: "AstraCMS <emails@astracms.dev>",
       to: userEmail,
       text: "This is a mock welcome email",
-      subject: "Welcome to Marble!",
+      subject: "Welcome to AstraCMS!",
       _mockContext: { type: "welcome", data: { userEmail } },
     });
   }
@@ -218,7 +218,7 @@ export async function sendWelcomeEmailAction({
     await resend.emails.send({
       from: "AstraCMS <emails@astracms.dev>",
       to: userEmail,
-      subject: "Welcome to Marble!",
+      subject: "Welcome to AstraCMS!",
       react: WelcomeEmail({
         userEmail,
       }),

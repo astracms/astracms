@@ -11,8 +11,8 @@ const { title, description, coverImage, publishedAt, authors, slug } =
   entry.data;
 
 const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
-  day: "2-digit",
-  month: "2-digit",
+  month: "short",
+  day: "numeric",
   year: "numeric",
 });
 ---
@@ -20,27 +20,34 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
 <li>
   <a
     href={`/blog/${slug}`}
-    class="space-y-1 p-4 border bg-white flex gap-4 flex-col rounded-2xl hover:shadow-xs transition-all duration-300 h-full"
+    class="group flex flex-col h-full rounded-xl bg-background border border-border/60 overflow-hidden transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-black/[0.03]"
   >
-    <div class="w-full border rounded-md overflow-hidden group">
+    <div class="aspect-[16/10] overflow-hidden bg-muted">
       <Image
         src={coverImage || "/og-blog.jpg"}
         alt={title}
         loading="eager"
         inferSize
-        class="w-full object-cover group-hover:scale-102 transition-all duration-500"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
       />
     </div>
-    <div class="flex flex-col gap-4 justify-between md:gap-6 flex-1">
-      <div class="space-y-2">
-        <h2 class="md:text-lg font-medium">{title}</h2>
-        <p class="text-muted-foreground text-sm line-clamp-2">{description}</p>
+    <div class="flex flex-col gap-3 p-5 flex-1">
+      <div class="flex-1 space-y-2">
+        <h2
+          class="text-base font-medium leading-snug transition-colors duration-300 group-hover:text-muted-foreground"
+        >
+          {title}
+        </h2>
+        <p class="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+          {description}
+        </p>
       </div>
-      <div class="flex items-center gap-2 justify-between">
-        <p class="text-muted-foreground text-sm">{authors[0].name}</p>
+      <div class="flex items-center gap-2 pt-2 border-t border-border/40">
+        <span class="text-muted-foreground text-xs">{authors[0].name}</span>
+        <span class="text-border">·</span>
         <time
           datetime={publishedAt.toISOString()}
-          class="text-muted-foreground text-sm"
+          class="text-muted-foreground text-xs"
         >
           {formattedDate}
         </time>

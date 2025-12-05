@@ -24,7 +24,7 @@ export function getDiscordEmbed(args: {
     .setDescription(event)
     .setColor(ASTRA_COLOR)
     .setAuthor({
-      name: "Marble",
+      name: "AstraCMS",
       iconURL: ASTRA_AVATAR_URL,
     })
     .setFooter({
@@ -49,7 +49,7 @@ export function getDiscordEmbed(args: {
 
   return {
     content: "title" in data ? data.title : undefined,
-    username: "Marble",
+    username: "AstraCMS",
     avatar_url: ASTRA_AVATAR_URL,
     embeds: [embed.toJSON()],
     allowed_mentions: { parse: [] },
@@ -91,7 +91,7 @@ export function getSlackMessage(args: {
       accessory: {
         type: "image",
         image_url: ASTRA_AVATAR_URL,
-        alt_text: "Marble",
+        alt_text: "AstraCMS",
       },
     },
     {

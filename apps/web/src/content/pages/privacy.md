@@ -1,11 +1,11 @@
 ---
 title: Privacy Policy
 published: 2024-12-12
-description: Marble's Privacy Policy. 
+description: AstraCMS's Privacy Policy. 
 lastUpdated: 2025-09-18
 ---
 
-Marble ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our service ("the Service").
+AstraCMS ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our service ("the Service").
 
 ## 1. Information We Collect
 
