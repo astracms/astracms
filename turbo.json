@@ -33,7 +33,9 @@
         "ASTRA_API_URL",
         "QSTASH_TOKEN",
         "REDIS_URL",
-        "REDIS_TOKEN"
+        "REDIS_TOKEN",
+        "OPENAI_API_KEY",
+        "OPENROUTER_API_KEY"
       ]
     },
     "lint": {
