@@ -1,0 +1,49 @@
+{
+  "name": "@astracms/astro-loader",
+  "version": "0.1.0",
+  "description": "Astro Content Collection loader for AstraCMS",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --external astro",
+    "dev": "tsup src/index.ts --format esm --dts --watch --external astro",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "astro",
+    "astro-loader",
+    "content-collections",
+    "cms",
+    "astracms",
+    "blog",
+    "headless-cms"
+  ],
+  "author": "AstraCMS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astracms/astracms",
+    "directory": "packages/astro-loader"
+  },
+  "peerDependencies": {
+    "astro": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "astro": "^5.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.2"
+  }
+}

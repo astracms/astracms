@@ -1,0 +1,342 @@
+---
+title: Astro Loader
+description: Use AstraCMS as a content source for Astro.js Content Collections
+icon: Rocket
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+The `@astracms/astro-loader` package provides Astro Content Collection loaders for seamlessly integrating AstraCMS content into your Astro.js projects.
+
+## Features
+
+- 🚀 **4 Content Loaders** - Posts, Categories, Tags, and Authors
+- 🔐 **Dual API Support** - Works with both v1 (workspaceId) and v2 (API key) authentication
+- 📝 **Markdown Rendering** - Full support for Astro's `<Content />` component
+- 🔄 **Incremental Builds** - Content digests for efficient rebuilds
+- 📘 **TypeScript** - Full type safety with Zod schema validation
+- 🎯 **Filtering** - Filter posts by categories, tags, and search queries
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/astro-loader
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/astro-loader
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/astro-loader
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/astro-loader
+  ```
+</Tabs>
+
+## Quick Start
+
+### 1. Configure Environment Variables
+
+Create a `.env` file in your Astro project:
+
+```bash title=".env"
+ASTRACMS_API_URL=https://api.astracms.com
+ASTRACMS_API_KEY=your_api_key_here
+```
+
+### 2. Set Up Content Collections
+
+Create or update your content configuration file:
+
+```typescript title="src/content.config.ts"
+import { defineCollection } from 'astro:content';
+import {
+  postsLoader,
+  categoriesLoader,
+  tagsLoader,
+  authorsLoader,
+} from '@astracms/astro-loader';
+
+const config = {
+  apiUrl: import.meta.env.ASTRACMS_API_URL,
+  apiKey: import.meta.env.ASTRACMS_API_KEY,
+};
+
+const posts = defineCollection({
+  loader: postsLoader({
+    ...config,
+    format: 'markdown', // or 'html'
+  }),
+});
+
+const categories = defineCollection({
+  loader: categoriesLoader(config),
+});
+
+const tags = defineCollection({
+  loader: tagsLoader(config),
+});
+
+const authors = defineCollection({
+  loader: authorsLoader(config),
+});
+
+export const collections = { posts, categories, tags, authors };
+```
+
+### 3. Use Content in Your Pages
+
+```astro title="src/pages/blog/[slug].astro"
+---
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<article>
+  <h1>{post.data.title}</h1>
+  <p>{post.data.description}</p>
+  
+  {post.data.coverImage && (
+    <img src={post.data.coverImage} alt={post.data.title} />
+  )}
+  
+  <div class="meta">
+    <span>Category: {post.data.category.name}</span>
+    <span>Published: {post.data.publishedAt.toLocaleDateString()}</span>
+  </div>
+  
+  <div class="tags">
+    {post.data.tags.map((tag) => (
+      <a href={`/tags/${tag.slug}`}>{tag.name}</a>
+    ))}
+  </div>
+  
+  <Content />
+  
+  <div class="authors">
+    {post.data.authors.map((author) => (
+      <div class="author">
+        {author.image && <img src={author.image} alt={author.name} />}
+        <span>{author.name}</span>
+        {author.role && <span>{author.role}</span>}
+      </div>
+    ))}
+  </div>
+</article>
+```
+
+## Loaders Reference
+
+### postsLoader
+
+Loads blog posts from AstraCMS with full support for content rendering.
+
+```typescript
+postsLoader({
+  apiUrl: string,           // Required: AstraCMS API base URL
+  apiKey?: string,          // API key (recommended for v2 API)
+  workspaceId?: string,     // Workspace ID (required for v1 API)
+  format?: 'html' | 'markdown', // Content format (default: 'markdown')
+  categories?: string[],    // Filter by category slugs
+  excludeCategories?: string[], // Exclude category slugs
+  tags?: string[],          // Filter by tag slugs
+  excludeTags?: string[],   // Exclude tag slugs
+  query?: string,           // Search query
+})
+```
+
+**Post Data Schema:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | `string` | Post title |
+| `description` | `string` | Post description/excerpt |
+| `slug` | `string` | URL slug |
+| `coverImage` | `string \| null` | Cover image URL |
+| `featured` | `boolean` | Featured post flag |
+| `publishedAt` | `Date` | Publication date |
+| `updatedAt` | `Date` | Last update date |
+| `category` | `Category` | Post category |
+| `tags` | `Tag[]` | Post tags |
+| `authors` | `Author[]` | Post authors |
+| `attribution` | `string \| null` | Content attribution |
+
+### categoriesLoader
+
+Loads categories from AstraCMS.
+
+```typescript
+categoriesLoader({
+  apiUrl: string,
+  apiKey?: string,
+  workspaceId?: string,
+  query?: string,  // Search query
+})
+```
+
+**Category Data Schema:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | `string` | Category name |
+| `slug` | `string` | URL slug |
+| `description` | `string \| null` | Category description |
+
+### tagsLoader
+
+Loads tags from AstraCMS.
+
+```typescript
+tagsLoader({
+  apiUrl: string,
+  apiKey?: string,
+  workspaceId?: string,
+  query?: string,  // Search query
+})
+```
+
+**Tag Data Schema:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | `string` | Tag name |
+| `slug` | `string` | URL slug |
+| `description` | `string \| null` | Tag description |
+
+### authorsLoader
+
+Loads author profiles from AstraCMS.
+
+```typescript
+authorsLoader({
+  apiUrl: string,
+  apiKey?: string,
+  workspaceId?: string,
+  query?: string,  // Search query
+})
+```
+
+**Author Data Schema:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | `string` | Author name |
+| `slug` | `string` | URL slug |
+| `bio` | `string \| null` | Author biography |
+| `image` | `string \| null` | Profile image URL |
+| `role` | `string \| null` | Author role/title |
+| `socials` | `AuthorSocial[]` | Social media links |
+
+## Authentication
+
+The loader supports two authentication methods:
+
+### API Key (v2 API) - Recommended
+
+```typescript
+postsLoader({
+  apiUrl: 'https://api.astracms.com',
+  apiKey: import.meta.env.ASTRACMS_API_KEY,
+})
+```
+
+### Workspace ID (v1 API)
+
+```typescript
+postsLoader({
+  apiUrl: 'https://api.astracms.com',
+  workspaceId: 'your-workspace-id',
+})
+```
+
+<Callout type="info">
+We recommend using API key authentication (v2 API) as it provides better security and doesn't expose your workspace ID in the URL.
+</Callout>
+
+## Advanced Usage
+
+### Filter Posts by Category
+
+```typescript
+const posts = defineCollection({
+  loader: postsLoader({
+    ...config,
+    categories: ['technology', 'tutorials'],
+  }),
+});
+```
+
+### Exclude Certain Tags
+
+```typescript
+const posts = defineCollection({
+  loader: postsLoader({
+    ...config,
+    excludeTags: ['internal', 'draft'],
+  }),
+});
+```
+
+### Use HTML Format
+
+If you prefer to use pre-rendered HTML instead of markdown:
+
+```typescript
+const posts = defineCollection({
+  loader: postsLoader({
+    ...config,
+    format: 'html',
+  }),
+});
+```
+
+### Extend Schemas
+
+You can import and extend the default schemas:
+
+```typescript
+import { z } from 'astro:content';
+import { postSchema } from '@astracms/astro-loader';
+
+const extendedPostSchema = postSchema.extend({
+  customField: z.string().optional(),
+});
+```
+
+## Requirements
+
+- Astro 5.0 or later
+- AstraCMS account with API access
+
+## Next Steps
+
+<Cards>
+  <Card
+    title="API Reference"
+    icon={<WebhookIcon />}
+    href="/api-reference"
+  >
+    Explore all available API endpoints.
+  </Card>
+  <Card
+    title="Posts API"
+    icon={<FileTextIcon />}
+    href="/api-reference/posts"
+  >
+    Learn about post filtering and pagination.
+  </Card>
+</Cards>
