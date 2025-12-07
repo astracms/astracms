@@ -2,6 +2,7 @@
   "name": "astracms",
   "private": true,
   "scripts": {
+    "prepare": "husky",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:clean": "docker compose down -v",
@@ -30,11 +31,15 @@
     "version-packages": "changeset version",
     "publish-packages": "turbo build --filter='@astracms/*' && changeset publish"
   },
-
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": "pnpx ultracite@latest fix"
+  },
   "devDependencies": {
     "@astra/tsconfig": "workspace:*",
     "@biomejs/biome": "^2.3.0",
     "@changesets/cli": "^2.27.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
     "turbo": "^2.6.1",
     "typescript": "^5.7.2",
