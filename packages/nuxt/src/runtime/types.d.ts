@@ -11,4 +11,3 @@ declare module "nuxt/schema" {
     astracms: Partial<AstraCMSConfig>;
   }
 }
-
