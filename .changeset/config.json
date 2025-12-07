@@ -22,7 +22,6 @@
     "@astra/ui",
     "@astra/parser",
     "@astra/tsconfig",
-    "astracms",
     "cms",
     "web",
     "api",
