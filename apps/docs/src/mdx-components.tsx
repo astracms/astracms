@@ -1,51 +1,53 @@
-import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
-import { Banner } from "fumadocs-ui/components/banner";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import { Callout } from "fumadocs-ui/components/callout";
-// biome-ignore lint/performance/noNamespaceImport: Required for re-exporting all fumadocs components
-import * as FilesComponents from "fumadocs-ui/components/files";
-// biome-ignore lint/performance/noNamespaceImport: Required for re-exporting all fumadocs components
-import * as TabsComponents from "fumadocs-ui/components/tabs";
-import { TypeTable } from "fumadocs-ui/components/type-table";
+import { Card, Cards } from "fumadocs-ui/components/card";
 import defaultMdxComponents from "fumadocs-ui/mdx";
-// biome-ignore lint/performance/noNamespaceImport: Required for dynamic icon usage in MDX
-import * as icons from "lucide-react";
+import {
+    FileTextIcon,
+    FolderIcon,
+    TagIcon,
+    WebhookIcon,
+    UsersIcon,
+    BoxIcon,
+    CodeIcon,
+    ComponentIcon,
+    RocketIcon,
+    LayoutIcon,
+    SparklesIcon,
+    StarIcon,
+} from "lucide-react";
 import type { MDXComponents } from "mdx/types";
-import type { ComponentProps, FC } from "react";
-import { APIPage } from "@/components/api-page";
-import { Update, Updates } from "@/components/fumadocs/updates";
-import { Mermaid } from "@/components/mdx/mermaid";
+import { ReactIcon, NextjsIcon, Logo, VueIcon, NuxtIcon, SvelteIcon, AstroIcon } from "./components/icons";
+import { APIPage } from "./components/api-page";
 
-export function getMDXComponents(components?: MDXComponents) {
-  return {
-    ...(icons as unknown as MDXComponents),
-    ...defaultMdxComponents,
-    ...TabsComponents,
-    ...FilesComponents,
-    Accordion,
-    Accordions,
-    Updates,
-    Update,
-    Mermaid,
-    TypeTable,
-    Callout,
-    blockquote: Callout as unknown as FC<ComponentProps<"blockquote">>,
-    APIPage,
-    Banner,
-    ...components,
-  } satisfies MDXComponents;
-}
-
-declare module "mdx/types.js" {
-  // Augment the MDX types to make it understand React.
-  // biome-ignore lint/style/noNamespace: Required for MDX types augmentation
-  namespace JSX {
-    type Element = React.JSX.Element;
-    type ElementClass = React.JSX.ElementClass;
-    type ElementType = React.JSX.ElementType;
-    type IntrinsicElements = React.JSX.IntrinsicElements;
-  }
-}
-
-declare global {
-  type MDXProvidedComponents = ReturnType<typeof getMDXComponents>;
+export function getMDXComponents(components?: MDXComponents): MDXComponents {
+    return {
+        ...defaultMdxComponents,
+        Tab,
+        Tabs,
+        Callout,
+        Card,
+        Cards,
+        FileTextIcon,
+        FolderIcon,
+        TagIcon,
+        WebhookIcon,
+        UsersIcon,
+        BoxIcon,
+        CodeIcon,
+        ComponentIcon,
+        RocketIcon,
+        LayoutIcon,
+        SparklesIcon,
+        StarIcon,
+        ReactIcon,
+        NextjsIcon,
+        Logo,
+        VueIcon,
+        NuxtIcon,
+        SvelteIcon,
+        AstroIcon,
+        APIPage,
+        ...components,
+    };
 }

@@ -117,6 +117,10 @@
   background-color: var(--color-background);
 }
 
+.logo {
+  color: var(--color-foreground);
+}
+
 /* header &[data-search-full] {
   @apply rounded-xl;
 } */

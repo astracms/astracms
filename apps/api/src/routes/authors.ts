@@ -17,6 +17,7 @@ const authors = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 const listAuthorsRoute = createRoute({
   method: "get",
   path: "/",
+  operationId: "listAuthors",
   tags: ["Authors"],
   summary: "List authors",
   description: "Get a paginated list of authors with post counts",
@@ -160,6 +161,7 @@ authors.openapi(listAuthorsRoute, async (c) => {
 const getAuthorRoute = createRoute({
   method: "get",
   path: "/{identifier}",
+  operationId: "getAuthor",
   tags: ["Authors"],
   summary: "Get a single author",
   description:
@@ -214,9 +216,9 @@ authors.openapi(getAuthorRoute, async (c) => {
   const page = Number.parseInt(queryParams.page, 10) || 1;
   const include = queryParams.include
     ? queryParams.include
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
     : [];
   const db = createClient(url);
 

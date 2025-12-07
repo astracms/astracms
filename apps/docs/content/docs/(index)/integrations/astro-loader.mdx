@@ -1,21 +1,13 @@
 ---
 title: Astro Loader
 description: Use AstraCMS as a content source for Astro.js Content Collections
-icon: Rocket
+icon: AstroIcon
 ---
 
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 The `@astracms/astro-loader` package provides Astro Content Collection loaders for seamlessly integrating AstraCMS content into your Astro.js projects.
 
-## Features
-
-- 🚀 **4 Content Loaders** - Posts, Categories, Tags, and Authors
-- 🔐 **Dual API Support** - Works with both v1 (workspaceId) and v2 (API key) authentication
-- 📝 **Markdown Rendering** - Full support for Astro's `<Content />` component
-- 🔄 **Incremental Builds** - Content digests for efficient rebuilds
-- 📘 **TypeScript** - Full type safety with Zod schema validation
-- 🎯 **Filtering** - Filter posts by categories, tags, and search queries
 
 ## Installation
 
@@ -44,7 +36,6 @@ The `@astracms/astro-loader` package provides Astro Content Collection loaders f
 Create a `.env` file in your Astro project:
 
 ```bash title=".env"
-ASTRACMS_API_URL=https://api.astracms.com
 ASTRACMS_API_KEY=your_api_key_here
 ```
 
@@ -61,10 +52,16 @@ import {
   authorsLoader,
 } from '@astracms/astro-loader';
 
+// v2 config (recommended) - just needs apiKey
 const config = {
-  apiUrl: import.meta.env.ASTRACMS_API_URL,
   apiKey: import.meta.env.ASTRACMS_API_KEY,
 };
+
+// Or for v1 (legacy):
+// const config = {
+//   apiVersion: 'v1' as const,
+//   workspaceId: import.meta.env.ASTRACMS_WORKSPACE_ID,
+// };
 
 const posts = defineCollection({
   loader: postsLoader({
@@ -146,16 +143,23 @@ const { Content } = await render(post);
 Loads blog posts from AstraCMS with full support for content rendering.
 
 ```typescript
+// v2 (recommended) - just apiKey
 postsLoader({
-  apiUrl: string,           // Required: AstraCMS API base URL
-  apiKey?: string,          // API key (recommended for v2 API)
-  workspaceId?: string,     // Workspace ID (required for v1 API)
+  apiKey: string,             // Required for v2
   format?: 'html' | 'markdown', // Content format (default: 'markdown')
-  categories?: string[],    // Filter by category slugs
+  categories?: string[],      // Filter by category slugs
   excludeCategories?: string[], // Exclude category slugs
-  tags?: string[],          // Filter by tag slugs
-  excludeTags?: string[],   // Exclude tag slugs
-  query?: string,           // Search query
+  tags?: string[],            // Filter by tag slugs
+  excludeTags?: string[],     // Exclude tag slugs
+  query?: string,             // Search query
+})
+
+// v1 (legacy) - requires apiVersion + workspaceId
+postsLoader({
+  apiVersion: 'v1',
+  workspaceId: string,        // Required for v1
+  format?: 'html' | 'markdown',
+  // ... same filter options
 })
 ```
 
@@ -180,11 +184,17 @@ postsLoader({
 Loads categories from AstraCMS.
 
 ```typescript
+// v2 (recommended)
 categoriesLoader({
-  apiUrl: string,
-  apiKey?: string,
-  workspaceId?: string,
-  query?: string,  // Search query
+  apiKey: string,
+  query?: string,
+})
+
+// v1 (legacy)
+categoriesLoader({
+  apiVersion: 'v1',
+  workspaceId: string,
+  query?: string,
 })
 ```
 
@@ -201,11 +211,17 @@ categoriesLoader({
 Loads tags from AstraCMS.
 
 ```typescript
+// v2 (recommended)
 tagsLoader({
-  apiUrl: string,
-  apiKey?: string,
-  workspaceId?: string,
-  query?: string,  // Search query
+  apiKey: string,
+  query?: string,
+})
+
+// v1 (legacy)
+tagsLoader({
+  apiVersion: 'v1',
+  workspaceId: string,
+  query?: string,
 })
 ```
 
@@ -222,11 +238,17 @@ tagsLoader({
 Loads author profiles from AstraCMS.
 
 ```typescript
+// v2 (recommended)
 authorsLoader({
-  apiUrl: string,
-  apiKey?: string,
-  workspaceId?: string,
-  query?: string,  // Search query
+  apiKey: string,
+  query?: string,
+})
+
+// v1 (legacy)
+authorsLoader({
+  apiVersion: 'v1',
+  workspaceId: string,
+  query?: string,
 })
 ```
 
@@ -247,18 +269,21 @@ The loader supports two authentication methods:
 
 ### API Key (v2 API) - Recommended
 
+The v2 API is the default. Just pass your API key:
+
 ```typescript
 postsLoader({
-  apiUrl: 'https://api.astracms.com',
   apiKey: import.meta.env.ASTRACMS_API_KEY,
 })
 ```
 
 ### Workspace ID (v1 API)
 
+For the legacy v1 API, you must specify `apiVersion: 'v1'`:
+
 ```typescript
 postsLoader({
-  apiUrl: 'https://api.astracms.com',
+  apiVersion: 'v1',
   workspaceId: 'your-workspace-id',
 })
 ```

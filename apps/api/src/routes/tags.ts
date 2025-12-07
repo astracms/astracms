@@ -17,6 +17,7 @@ const tags = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 const listTagsRoute = createRoute({
   method: "get",
   path: "/",
+  operationId: "listTags",
   tags: ["Tags"],
   summary: "List tags",
   description: "Get a paginated list of tags with post counts",
@@ -139,6 +140,7 @@ tags.openapi(listTagsRoute, async (c) => {
 const getTagRoute = createRoute({
   method: "get",
   path: "/{identifier}",
+  operationId: "getTag",
   tags: ["Tags"],
   summary: "Get a single tag",
   description:
@@ -194,9 +196,9 @@ tags.openapi(getTagRoute, async (c) => {
     const page = Number.parseInt(queryParams.page, 10) || 1;
     const include = queryParams.include
       ? queryParams.include
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
       : [];
 
     // First get the tag

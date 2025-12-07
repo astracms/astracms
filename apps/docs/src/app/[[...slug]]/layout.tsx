@@ -1,8 +1,9 @@
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
-import { baseOptions, linkItems, logo } from "@/lib/layout.shared";
+import { baseOptions, linkItems } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 import "katex/dist/katex.min.css";
 import type { CSSProperties, ReactNode } from "react";
+import { Logo } from "@/components/icons";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const base = baseOptions();
@@ -15,8 +16,8 @@ export default function Layout({ children }: { children: ReactNode }) {
         ...base.nav,
         title: (
           <>
-            {logo}
-            <span className="font-medium max-md:hidden">AstraCMS</span>
+            <Logo />
+            <span className="font-medium max-md:hidden">Astra CMS</span>
           </>
         ),
       }}

@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../../.source/json-schema/docs.meta.json",
+  "pages": [
+    "core",
+    "react",
+    "next",
+    "vue",
+    "nuxt",
+    "svelte",
+    "astro-loader"
+  ]
+}

@@ -9,53 +9,78 @@ icon: Play
 - An AstraCMS account with a workspace
 - An API key from your workspace settings
 
-## Installation
+## Choose Your Framework
 
-Install the AstraCMS client library for your preferred language:
+AstraCMS provides official SDK packages for popular frameworks:
+
+<Cards cols={3}>
+  <Card title="Core Package" icon={<CodeIcon />} href="/integrations/core">
+    Universal TypeScript client
+  </Card>
+  <Card title="React" icon={<ReactIcon />} href="/integrations/react">
+    React hooks for data fetching
+  </Card>
+  <Card title="Next.js" icon={<NextjsIcon />} href="/integrations/next">
+    RSC support with caching
+  </Card>
+  <Card title="Vue" icon={<VueIcon />} href="/integrations/vue">
+    Vue 3 composables
+  </Card>
+  <Card title="Nuxt" icon={<NuxtIcon />} href="/integrations/nuxt">
+    Nuxt 3 module with auto-imports
+  </Card>
+  <Card title="Svelte" icon={<SvelteIcon />} href="/integrations/svelte">
+    Svelte stores & SvelteKit
+  </Card>
+  <Card title="Astro" icon={<AstroIcon />} href="/integrations/astro-loader">
+    Content Collection loaders
+  </Card>
+</Cards>
+
+## Quick Example with Core Package
+
+Install the core package:
 
 <Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
   ```bash tab="npm"
-  npm install @astra-cms/client
+  npm install @astracms/core
   ```
 
-```bash tab="pnpm"
-pnpm add @astra-cms/client
-```
+  ```bash tab="pnpm"
+  pnpm add @astracms/core
+  ```
 
-```bash tab="yarn"
-yarn add @astra-cms/client
-```
+  ```bash tab="yarn"
+  yarn add @astracms/core
+  ```
 
-```bash tab="bun"
-bun add @astra-cms/client
-```
-
+  ```bash tab="bun"
+  bun add @astracms/core
+  ```
 </Tabs>
 
-## Basic Usage
-
-### Using the SDK
+### Basic Usage
 
 ```typescript title="app.ts"
-import { AstraClient } from '@astra-cms/client'
+import { createAstraCMSClient } from '@astracms/core'
 
-const client = new AstraClient({
-  apiKey: process.env.ASTRA_API_KEY,
+const client = createAstraCMSClient({
+  apiKey: process.env.ASTRACMS_API_KEY,
 })
 
 // Fetch all posts
-const { posts, pagination } = await client.posts.list({
+const posts = await client.getPosts({
   limit: 10,
   page: 1,
 })
 
 // Fetch a single post by slug
-const post = await client.posts.get('my-first-post')
+const post = await client.getPost('my-first-post')
 
-console.log(post.title, post.content)
+console.log(post?.title, post?.content)
 ```
 
-### Using the REST API
+### Using the REST API Directly
 
 If you prefer to use the API directly:
 
@@ -75,8 +100,8 @@ curl -X GET "https://api.astracms.com/v2/posts/my-first-post" \
 ### Fetch posts by category
 
 ```typescript
-const techPosts = await client.posts.list({
-  categories: 'technology',
+const techPosts = await client.getPosts({
+  categories: ['technology'],
   limit: 5,
 })
 ```
@@ -84,15 +109,15 @@ const techPosts = await client.posts.list({
 ### Fetch posts by tag
 
 ```typescript
-const jsPosts = await client.posts.list({
-  tags: 'javascript,typescript',
+const jsPosts = await client.getPosts({
+  tags: ['javascript', 'typescript'],
 })
 ```
 
 ### Search posts
 
 ```typescript
-const results = await client.posts.list({
+const results = await client.getPosts({
   query: 'getting started',
 })
 ```
@@ -100,7 +125,7 @@ const results = await client.posts.list({
 ### Get content as Markdown
 
 ```typescript
-const post = await client.posts.get('my-post', {
+const post = await client.getPost('my-post', {
   format: 'markdown',
 })
 ```
@@ -108,30 +133,27 @@ const post = await client.posts.get('my-post', {
 ## Next Steps
 
 <Cards>
+  <Card
+    title="Core Package"
+    icon={<CodeIcon />}
+    href="/integrations/core"
+  >
+    Learn all available client methods and types.
+  </Card>
 
-<Card
-  title="Astro Integration"
-  icon={<RocketIcon />}
-  href="/integrations/astro-loader"
->
-  Use AstraCMS with Astro.js Content Collections.
-</Card>
+  <Card
+    title="API Reference"
+    icon={<WebhookIcon />}
+    href="/api-reference"
+  >
+    Explore all available endpoints and parameters.
+  </Card>
 
-<Card
-  title="API Reference"
-  icon={<WebhookIcon />}
-  href="/api-reference"
->
-  Explore all available endpoints and parameters.
-</Card>
-
-<Card
-  title="Posts API"
-  icon={<FileTextIcon />}
-  href="/api-reference/posts"
->
-  Learn about filtering, pagination, and content formats.
-</Card>
-
+  <Card
+    title="Posts API"
+    icon={<FileTextIcon />}
+    href="/api-reference/posts"
+  >
+    Learn about filtering, pagination, and content formats.
+  </Card>
 </Cards>
-

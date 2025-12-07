@@ -42,22 +42,27 @@ function getClient(): AstraCMSClient {
     }
 
     // Try to create from environment variables
-    const apiUrl =
-        process.env.ASTRACMS_API_URL ?? process.env.NEXT_PUBLIC_ASTRACMS_API_URL;
     const apiKey =
         process.env.ASTRACMS_API_KEY ?? process.env.NEXT_PUBLIC_ASTRACMS_API_KEY;
     const workspaceId =
         process.env.ASTRACMS_WORKSPACE_ID ??
         process.env.NEXT_PUBLIC_ASTRACMS_WORKSPACE_ID;
 
-    if (!apiUrl) {
-        throw new Error(
-            "AstraCMS: No configuration found. Either call configureAstraCMS() or set ASTRACMS_API_URL environment variable."
-        );
+    // V2 API (recommended): Use API key authentication
+    if (apiKey) {
+        defaultClient = createAstraCMSClient({ apiKey });
+        return defaultClient;
     }
 
-    defaultClient = createAstraCMSClient({ apiUrl, apiKey, workspaceId });
-    return defaultClient;
+    // V1 API (legacy): Use workspace ID authentication
+    if (workspaceId) {
+        defaultClient = createAstraCMSClient({ apiVersion: "v1", workspaceId });
+        return defaultClient;
+    }
+
+    throw new Error(
+        "AstraCMS: No configuration found. Either call configureAstraCMS() or set ASTRACMS_API_KEY (recommended) or ASTRACMS_WORKSPACE_ID environment variable."
+    );
 }
 
 /**

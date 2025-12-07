@@ -1,0 +1,131 @@
+---
+title: Vue
+description: AstraCMS integration for Vue 3
+icon: VueIcon
+---
+
+The `@astracms/vue` package provides Vue 3 composables for fetching data from AstraCMS.
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/vue
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/vue
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/vue
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/vue
+  ```
+</Tabs>
+
+## Setup
+
+Install the plugin in your Vue app:
+
+```typescript title="main.ts"
+import { createApp } from 'vue'
+import { createAstraCMSPlugin } from '@astracms/vue'
+import App from './App.vue'
+
+const app = createApp(App)
+
+app.use(createAstraCMSPlugin({
+  apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
+}))
+
+app.mount('#app')
+```
+
+## Composables
+
+### usePosts
+
+Fetch all posts:
+
+```vue
+<script setup>
+import { usePosts } from '@astracms/vue'
+
+const { posts, loading, error } = usePosts()
+</script>
+
+<template>
+  <div v-if="loading">Loading...</div>
+  <div v-else-if="error">Error: {{ error.message }}</div>
+  <ul v-else>
+    <li v-for="post in posts" :key="post.id">
+      {{ post.title }}
+    </li>
+  </ul>
+</template>
+```
+
+### usePost
+
+Fetch a single post:
+
+```vue
+<script setup>
+import { usePost } from '@astracms/vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const { post, loading, error } = usePost(route.params.slug)
+</script>
+
+<template>
+  <div v-if="loading">Loading...</div>
+  <article v-else-if="post">
+    <h1>{{ post.title }}</h1>
+    <div v-html="post.content" />
+  </article>
+</template>
+```
+
+### useCategories
+
+Fetch all categories:
+
+```vue
+<script setup>
+import { useCategories } from '@astracms/vue'
+
+const { categories } = useCategories()
+</script>
+
+<template>
+  <ul>
+    <li v-for="category in categories" :key="category.id">
+      {{ category.name }}
+    </li>
+  </ul>
+</template>
+```
+
+### useTags
+
+Fetch all tags:
+
+```vue
+<script setup>
+import { useTags } from '@astracms/vue'
+
+const { tags } = useTags()
+</script>
+
+<template>
+  <div class="tag-cloud">
+    <span v-for="tag in tags" :key="tag.id">
+      {{ tag.name }}
+    </span>
+  </div>
+</template>
+```

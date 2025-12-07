@@ -6,17 +6,17 @@ import { fetchAllPages } from "../utils/api";
 /**
  * Options for the authors loader
  */
-export interface AuthorsLoaderOptions extends AstraCMSConfig {
-    /**
-     * Search query to filter authors by name
-     */
-    query?: string;
-}
+export type AuthorsLoaderOptions = AstraCMSConfig & {
+  /**
+   * Search query to filter authors by name
+   */
+  query?: string;
+};
 
 /**
  * Astro Content Collection loader for AstraCMS authors
  *
- * @example
+ * @example v2 (recommended)
  * ```ts
  * // src/content.config.ts
  * import { defineCollection } from 'astro:content';
@@ -24,7 +24,6 @@ export interface AuthorsLoaderOptions extends AstraCMSConfig {
  *
  * const authors = defineCollection({
  *   loader: authorsLoader({
- *     apiUrl: 'https://api.astracms.dev',
  *     apiKey: import.meta.env.ASTRACMS_API_KEY,
  *   }),
  * });
@@ -33,57 +32,55 @@ export interface AuthorsLoaderOptions extends AstraCMSConfig {
  * ```
  */
 export function authorsLoader(options: AuthorsLoaderOptions): Loader {
-    const { apiUrl, workspaceId, apiKey, query } = options;
+  const { query, ...config } = options;
 
-    return {
-        name: "astracms-authors-loader",
+  return {
+    name: "astracms-authors-loader",
 
-        async load({ store, logger, parseData, generateDigest }) {
-            logger.info("Loading authors from AstraCMS...");
+    async load({ store, logger, parseData, generateDigest }) {
+      logger.info("Loading authors from AstraCMS...");
 
-            try {
-                const authors = await fetchAllPages<"authors">({
-                    endpoint: "authors",
-                    apiUrl,
-                    workspaceId,
-                    apiKey,
-                    params: {
-                        query,
-                    },
-                });
+      try {
+        const authors = await fetchAllPages<"authors">({
+          ...config,
+          endpoint: "authors",
+          params: {
+            query,
+          },
+        });
 
-                store.clear();
+        store.clear();
 
-                for (const author of authors as Author[]) {
-                    const data = await parseData({
-                        id: author.slug,
-                        data: {
-                            name: author.name,
-                            slug: author.slug,
-                            bio: author.bio,
-                            image: author.image,
-                            role: author.role,
-                            socials: author.socials,
-                        },
-                    });
+        for (const author of authors as Author[]) {
+          const data = await parseData({
+            id: author.slug,
+            data: {
+              name: author.name,
+              slug: author.slug,
+              bio: author.bio,
+              image: author.image,
+              role: author.role,
+              socials: author.socials,
+            },
+          });
 
-                    const digest = generateDigest(data);
+          const digest = generateDigest(data);
 
-                    store.set({
-                        id: author.slug,
-                        data,
-                        digest,
-                    });
-                }
+          store.set({
+            id: author.slug,
+            data,
+            digest,
+          });
+        }
 
-                logger.info(`Loaded ${authors.length} authors from AstraCMS`);
-            } catch (error) {
-                const message = error instanceof Error ? error.message : String(error);
-                logger.error(`Failed to load authors: ${message}`);
-                throw error;
-            }
-        },
+        logger.info(`Loaded ${authors.length} authors from AstraCMS`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error(`Failed to load authors: ${message}`);
+        throw error;
+      }
+    },
 
-        schema: authorEntrySchema,
-    };
+    schema: authorEntrySchema,
+  };
 }

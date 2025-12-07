@@ -1,0 +1,117 @@
+---
+title: Svelte
+description: AstraCMS integration for Svelte and SvelteKit
+icon: SvelteIcon
+---
+
+The `@astracms/svelte` package provides Svelte stores and SvelteKit utilities for AstraCMS.
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/svelte
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/svelte
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/svelte
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/svelte
+  ```
+</Tabs>
+
+## Configuration
+
+Create a client instance:
+
+```typescript title="src/lib/astracms.ts"
+import { createAstraCMSClient } from '@astracms/svelte'
+
+export const astracms = createAstraCMSClient({
+  apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
+})
+```
+
+## SvelteKit Usage
+
+### Server-Side Loading
+
+```typescript title="src/routes/blog/+page.server.ts"
+import { astracms } from '$lib/astracms'
+
+export async function load() {
+  const posts = await astracms.getPosts()
+  return { posts }
+}
+```
+
+```svelte title="src/routes/blog/+page.svelte"
+<script>
+  export let data
+</script>
+
+<ul>
+  {#each data.posts as post}
+    <li>{post.title}</li>
+  {/each}
+</ul>
+```
+
+### Single Post
+
+```typescript title="src/routes/blog/[slug]/+page.server.ts"
+import { astracms } from '$lib/astracms'
+import { error } from '@sveltejs/kit'
+
+export async function load({ params }) {
+  const post = await astracms.getPost(params.slug)
+
+  if (!post) {
+    throw error(404, 'Post not found')
+  }
+
+  return { post }
+}
+```
+
+```svelte title="src/routes/blog/[slug]/+page.svelte"
+<script>
+  export let data
+</script>
+
+<article>
+  <h1>{data.post.title}</h1>
+  {@html data.post.content}
+</article>
+```
+
+## Svelte Stores
+
+For client-side reactivity:
+
+```svelte
+<script>
+  import { postsStore } from '@astracms/svelte'
+  import { astracms } from '$lib/astracms'
+
+  const posts = postsStore(astracms)
+</script>
+
+{#if $posts.loading}
+  <p>Loading...</p>
+{:else if $posts.error}
+  <p>Error: {$posts.error.message}</p>
+{:else}
+  <ul>
+    {#each $posts.data as post}
+      <li>{post.title}</li>
+    {/each}
+  </ul>
+{/if}
+```

@@ -83,7 +83,7 @@ export function generate({ title, description, tag }: GenerateProps) {
           <img
             alt={siteName}
             src="logo.svg"
-            style={{ width: 60, height: 60 }}
+            style={{ width: 60, height: 60, color: primaryTextColor }}
           />
           <span
             style={{

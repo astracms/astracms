@@ -17,6 +17,7 @@ const categories = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 const listCategoriesRoute = createRoute({
   method: "get",
   path: "/",
+  operationId: "listCategories",
   tags: ["Categories"],
   summary: "List categories",
   description: "Get a paginated list of categories with post counts",
@@ -143,6 +144,7 @@ categories.openapi(listCategoriesRoute, async (c) => {
 const getCategoryRoute = createRoute({
   method: "get",
   path: "/{identifier}",
+  operationId: "getCategory",
   tags: ["Categories"],
   summary: "Get a single category",
   description:
@@ -198,9 +200,9 @@ categories.openapi(getCategoryRoute, async (c) => {
     const page = Number.parseInt(queryParams.page, 10) || 1;
     const include = queryParams.include
       ? queryParams.include
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
       : [];
     const db = createClient(url);
 

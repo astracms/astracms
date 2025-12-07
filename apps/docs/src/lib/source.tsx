@@ -7,10 +7,43 @@ import {
 } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { openapiPlugin } from "fumadocs-openapi/server";
+import {
+  SvelteIcon,
+  AstroIcon,
+  NuxtIcon,
+  VueIcon,
+  ReactIcon,
+  NextjsIcon,
+} from "@/components/icons";
+
+const customIcons: Record<string, React.ReactElement> = {
+  SvelteIcon: <SvelteIcon />,
+  AstroIcon: <AstroIcon />,
+  NuxtIcon: <NuxtIcon />,
+  VueIcon: <VueIcon />,
+  ReactIcon: <ReactIcon />,
+  NextjsIcon: <NextjsIcon />,
+};
+
+function customIconsPlugin(): LoaderPlugin {
+  return {
+    transformPageTree: {
+      file(node) {
+        if (typeof node.icon === "string" && node.icon in customIcons) {
+          return {
+            ...node,
+            icon: customIcons[node.icon],
+          };
+        }
+        return node;
+      },
+    },
+  };
+}
 
 export const source = loader({
   baseUrl: "/",
-  plugins: [pageTreeCodeTitles(), lucideIconsPlugin(), openapiPlugin()],
+  plugins: [pageTreeCodeTitles(), customIconsPlugin(), lucideIconsPlugin(), openapiPlugin()],
   source: docs.toFumadocsSource(),
 });
 
@@ -35,3 +68,4 @@ function pageTreeCodeTitles(): LoaderPlugin {
 
 export type Page = InferPageType<typeof source>;
 export type Meta = InferMetaType<typeof source>;
+

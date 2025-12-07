@@ -1,0 +1,101 @@
+---
+title: Nuxt
+description: AstraCMS integration for Nuxt
+icon: NuxtIcon
+---
+
+The `@astracms/nuxt` package provides a Nuxt module for seamless AstraCMS integration with auto-imports and composables.
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/nuxt
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/nuxt
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/nuxt
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/nuxt
+  ```
+</Tabs>
+
+## Configuration
+
+Add the module to your `nuxt.config.ts`:
+
+```typescript title="nuxt.config.ts"
+export default defineNuxtConfig({
+  modules: ['@astracms/nuxt'],
+
+  astracms: {
+    apiKey: process.env.ASTRACMS_API_KEY,
+  },
+})
+```
+
+## Composables
+
+### useAstraCMSPosts
+
+Fetch posts with automatic reactivity:
+
+```vue title="pages/blog.vue"
+<script setup>
+const { data: posts, pending, error } = await useAstraCMSPosts()
+</script>
+
+<template>
+  <div v-if="pending">Loading...</div>
+  <div v-else-if="error">Error: {{ error.message }}</div>
+  <ul v-else>
+    <li v-for="post in posts" :key="post.id">
+      {{ post.title }}
+    </li>
+  </ul>
+</template>
+```
+
+### useAstraCMSPost
+
+Fetch a single post:
+
+```vue title="pages/blog/[slug].vue"
+<script setup>
+const route = useRoute()
+const { data: post } = await useAstraCMSPost(route.params.slug)
+</script>
+
+<template>
+  <article v-if="post">
+    <h1>{{ post.title }}</h1>
+    <div v-html="post.content" />
+  </article>
+</template>
+```
+
+### useAstraCMSCategories
+
+Fetch all categories:
+
+```vue
+<script setup>
+const { data: categories } = await useAstraCMSCategories()
+</script>
+```
+
+### useAstraCMSTags
+
+Fetch all tags:
+
+```vue
+<script setup>
+const { data: tags } = await useAstraCMSTags()
+</script>
+```

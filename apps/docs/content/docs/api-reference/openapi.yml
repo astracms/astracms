@@ -1,11 +1,52 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.1.0",
   "info": {
-    "version": "1.0.0",
-    "title": "Astra CMS API",
-    "description": "API for Astra CMS content management system"
+    "version": "2.0.0",
+    "title": "AstraCMS API",
+    "description": "The AstraCMS API provides programmatic access to your content. \n\n## API Versions\n\n- **V1** (`/v1/{workspaceId}/...`): Uses workspace ID in the URL path\n- **V2** (`/v2/...`): Uses API key authentication via `X-API-Key` header (recommended)\n\n## Rate Limiting\n\nAll API endpoints are rate limited. When you exceed the limit, you'll receive a 429 response.",
+    "contact": {
+      "name": "AstraCMS Support",
+      "url": "https://astracms.com",
+      "email": "support@astracms.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
   },
+  "servers": [
+    {
+      "url": "https://api.astracms.com",
+      "description": "Production API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Posts",
+      "description": "Blog posts and articles"
+    },
+    {
+      "name": "Categories",
+      "description": "Post categories"
+    },
+    {
+      "name": "Tags",
+      "description": "Post tags"
+    },
+    {
+      "name": "Authors",
+      "description": "Content authors"
+    }
+  ],
   "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API key for V2 endpoints. Get your key from the AstraCMS dashboard."
+      }
+    },
     "schemas": {
       "Tag": {
         "type": "object",
@@ -331,7 +372,7 @@
           "content": {
             "type": "string",
             "nullable": true,
-            "example": "\u003Cp\u003EPost content...\u003C/p\u003E"
+            "example": "<p>Post content...</p>"
           },
           "authors": {
             "type": "array",
@@ -510,7 +551,7 @@
           "content": {
             "type": "string",
             "nullable": true,
-            "example": "\u003Cp\u003EThis is the content of my first blog post.\u003C/p\u003E",
+            "example": "<p>This is the content of my first blog post.</p>",
             "description": "HTML or Markdown content depending on format parameter"
           },
           "featured": {
@@ -985,15 +1026,79 @@
             "$ref": "#/components/schemas/AuthorSingleResponse"
           }
         ]
+      },
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "Unauthorized"
+            ],
+            "example": "Unauthorized"
+          },
+          "message": {
+            "type": "string",
+            "example": "Missing or invalid API key"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ]
+      },
+      "ForbiddenResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "Forbidden"
+            ],
+            "example": "Forbidden"
+          },
+          "message": {
+            "type": "string",
+            "example": "Insufficient permissions for this resource"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ]
+      },
+      "RateLimitResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "Too Many Requests"
+            ],
+            "example": "Too Many Requests"
+          },
+          "message": {
+            "type": "string",
+            "example": "Rate limit exceeded. Please try again later."
+          },
+          "retryAfter": {
+            "type": "number",
+            "example": 60,
+            "description": "Seconds until rate limit resets"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ]
       }
     },
-    "parameters": {
-
-    }
+    "parameters": {}
   },
   "paths": {
     "/v1/{workspaceId}/tags": {
       "get": {
+        "operationId": "listTags",
         "tags": [
           "Tags"
         ],
@@ -1083,6 +1188,7 @@
     },
     "/v1/{workspaceId}/tags/{identifier}": {
       "get": {
+        "operationId": "getTag",
         "tags": [
           "Tags"
         ],
@@ -1193,6 +1299,7 @@
     },
     "/v1/{workspaceId}/categories": {
       "get": {
+        "operationId": "listCategories",
         "tags": [
           "Categories"
         ],
@@ -1282,6 +1389,7 @@
     },
     "/v1/{workspaceId}/categories/{identifier}": {
       "get": {
+        "operationId": "getCategory",
         "tags": [
           "Categories"
         ],
@@ -1392,6 +1500,7 @@
     },
     "/v1/{workspaceId}/posts": {
       "get": {
+        "operationId": "listPosts",
         "tags": [
           "Posts"
         ],
@@ -1556,6 +1665,7 @@
     },
     "/v1/{workspaceId}/posts/{identifier}": {
       "get": {
+        "operationId": "getPost",
         "tags": [
           "Posts"
         ],
@@ -1636,6 +1746,7 @@
     },
     "/v1/{workspaceId}/authors": {
       "get": {
+        "operationId": "listAuthors",
         "tags": [
           "Authors"
         ],
@@ -1725,6 +1836,7 @@
     },
     "/v1/{workspaceId}/authors/{identifier}": {
       "get": {
+        "operationId": "getAuthor",
         "tags": [
           "Authors"
         ],
@@ -1835,23 +1947,18 @@
     },
     "/v2/tags": {
       "get": {
+        "operationId": "listTagsV2",
         "tags": [
           "Tags"
         ],
         "summary": "List tags",
         "description": "Get a paginated list of tags with post counts",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -1904,7 +2011,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -1914,7 +2070,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -1924,23 +2099,18 @@
     },
     "/v2/tags/{identifier}": {
       "get": {
+        "operationId": "getTagV2",
         "tags": [
           "Tags"
         ],
         "summary": "Get a single tag",
         "description": "Get a single tag by slug or ID, optionally including related posts",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2004,7 +2174,46 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
                 }
               }
             }
@@ -2014,7 +2223,36 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2024,7 +2262,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2034,23 +2291,18 @@
     },
     "/v2/categories": {
       "get": {
+        "operationId": "listCategoriesV2",
         "tags": [
           "Categories"
         ],
         "summary": "List categories",
         "description": "Get a paginated list of categories with post counts",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2103,7 +2355,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2113,7 +2414,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2123,23 +2443,18 @@
     },
     "/v2/categories/{identifier}": {
       "get": {
+        "operationId": "getCategoryV2",
         "tags": [
           "Categories"
         ],
         "summary": "Get a single category",
         "description": "Get a single category by slug or ID, optionally including related posts",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2203,7 +2518,46 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
                 }
               }
             }
@@ -2213,7 +2567,36 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2223,7 +2606,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2233,23 +2635,18 @@
     },
     "/v2/posts": {
       "get": {
+        "operationId": "listPostsV2",
         "tags": [
           "Posts"
         ],
         "summary": "List posts",
         "description": "Get a paginated list of published posts with filtering and search capabilities",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2377,7 +2774,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2387,7 +2833,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2397,23 +2862,18 @@
     },
     "/v2/posts/{identifier}": {
       "get": {
+        "operationId": "getPostV2",
         "tags": [
           "Posts"
         ],
         "summary": "Get a single post",
         "description": "Get a single post by slug or ID",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2452,12 +2912,61 @@
               }
             }
           },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Post not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2467,7 +2976,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2477,23 +3005,18 @@
     },
     "/v2/authors": {
       "get": {
+        "operationId": "listAuthorsV2",
         "tags": [
           "Authors"
         ],
         "summary": "List authors",
         "description": "Get a paginated list of authors with post counts",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2546,7 +3069,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2556,7 +3128,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2566,23 +3157,18 @@
     },
     "/v2/authors/{identifier}": {
       "get": {
+        "operationId": "getAuthorV2",
         "tags": [
           "Authors"
         ],
         "summary": "Get a single author",
         "description": "Get a single author by slug or ID, optionally including related posts",
-        "parameters": [
+        "security": [
           {
-            "schema": {
-              "type": "string",
-              "example": "my-workspace",
-              "description": "Workspace identifier"
-            },
-            "required": true,
-            "description": "Workspace identifier",
-            "name": "workspaceId",
-            "in": "path"
-          },
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
           {
             "schema": {
               "type": "string",
@@ -2646,7 +3232,46 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
                 }
               }
             }
@@ -2656,7 +3281,36 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitResponse"
                 }
               }
             }
@@ -2666,7 +3320,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ErrorResponse"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Bad Request"
+                        },
+                        "details": {
+                          "nullable": true
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Additional error context"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }

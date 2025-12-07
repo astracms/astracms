@@ -1,81 +1,41 @@
 ---
 title: Introduction
-description: Build modern content experiences with AstraCMS
-icon: Book
+description: AstraCMS - A modern headless CMS for developers
+icon: Rocket
 ---
 
-**AstraCMS** is a modern headless content management system designed for developers and content teams. Build blogs, websites, and content-driven applications with our powerful API.
+Welcome to **AstraCMS**, a modern headless content management system designed for developers. AstraCMS provides a flexible API for managing blog posts, categories, tags, and authors.
+
+## Features
+
+- **Headless Architecture** - Use your favorite frontend framework
+- **RESTful API** - Simple and intuitive API design
+- **TypeScript First** - Full type safety with generated types
+- **Framework Integrations** - Ready-to-use packages for React, Next.js, Vue, Nuxt, Svelte, and Astro
 
 ## Getting Started
 
-<Cards cols={3}>
-  <Card title="Quickstart" icon={<PlayIcon />} href="/quickstart">
-    Get up and running with AstraCMS in minutes.
+<Cards>
+  <Card title="Integrations" icon={<FolderIcon />} href="/integrations/core">
+    Choose your framework integration
   </Card>
-  <Card title="Integrations" icon={<RocketIcon />} href="/integrations/astro-loader">
-    Use AstraCMS with Astro.js Content Collections.
-  </Card>
-  <Card title="API Reference" icon={<WebhookIcon />} href="/api-reference">
-    Explore the Content Delivery API endpoints.
+  <Card title="API Reference" icon={<FileTextIcon />} href="/api-reference">
+    Explore the REST API
   </Card>
 </Cards>
 
-## Core Concepts
+## Quick Example
 
-### Content Types
+```typescript
+import { createAstraCMSClient } from '@astracms/core'
 
-AstraCMS organizes your content with:
+const client = createAstraCMSClient({
+  apiKey: process.env.ASTRACMS_API_KEY,
+})
 
-- **Posts** - Your main content (articles, blog posts, pages)
-- **Categories** - Group posts into logical sections
-- **Tags** - Add flexible labels for filtering and discovery
-- **Authors** - Profile information for content creators
+// Fetch all posts
+const posts = await client.getPosts()
 
-### Workspaces
-
-Each workspace is an isolated environment for your content. Create separate workspaces for different projects, environments, or clients.
-
-## API Overview
-
-The Content Delivery API provides read-only access to your published content:
-
-```bash
-# List all posts
-curl https://api.astracms.com/v2/posts \
-  -H "Authorization: Bearer YOUR_API_KEY"
-
-# Get a single post by slug
-curl https://api.astracms.com/v2/posts/my-first-post \
-  -H "Authorization: Bearer YOUR_API_KEY"
+// Fetch a single post
+const post = await client.getPost('hello-world')
 ```
-
-<Cards cols={2}>
-  <Card
-    title="Posts API"
-    icon={<FileTextIcon />}
-    href="/api-reference/posts"
-  >
-    Retrieve posts with content, authors, and metadata.
-  </Card>
-  <Card
-    title="Categories API"
-    icon={<FolderIcon />}
-    href="/api-reference/categories"
-  >
-    List and filter content categories.
-  </Card>
-  <Card
-    title="Tags API"
-    icon={<TagIcon />}
-    href="/api-reference/tags"
-  >
-    Manage and query content tags.
-  </Card>
-  <Card
-    title="Authors API"
-    icon={<UsersIcon />}
-    href="/api-reference/authors"
-  >
-    Access author profiles and social links.
-  </Card>
-</Cards>

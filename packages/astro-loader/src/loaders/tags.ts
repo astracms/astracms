@@ -6,17 +6,17 @@ import { fetchAllPages } from "../utils/api";
 /**
  * Options for the tags loader
  */
-export interface TagsLoaderOptions extends AstraCMSConfig {
-    /**
-     * Search query to filter tags by name
-     */
-    query?: string;
-}
+export type TagsLoaderOptions = AstraCMSConfig & {
+  /**
+   * Search query to filter tags by name
+   */
+  query?: string;
+};
 
 /**
  * Astro Content Collection loader for AstraCMS tags
  *
- * @example
+ * @example v2 (recommended)
  * ```ts
  * // src/content.config.ts
  * import { defineCollection } from 'astro:content';
@@ -24,7 +24,6 @@ export interface TagsLoaderOptions extends AstraCMSConfig {
  *
  * const tags = defineCollection({
  *   loader: tagsLoader({
- *     apiUrl: 'https://api.astracms.dev',
  *     apiKey: import.meta.env.ASTRACMS_API_KEY,
  *   }),
  * });
@@ -33,54 +32,52 @@ export interface TagsLoaderOptions extends AstraCMSConfig {
  * ```
  */
 export function tagsLoader(options: TagsLoaderOptions): Loader {
-    const { apiUrl, workspaceId, apiKey, query } = options;
+  const { query, ...config } = options;
 
-    return {
-        name: "astracms-tags-loader",
+  return {
+    name: "astracms-tags-loader",
 
-        async load({ store, logger, parseData, generateDigest }) {
-            logger.info("Loading tags from AstraCMS...");
+    async load({ store, logger, parseData, generateDigest }) {
+      logger.info("Loading tags from AstraCMS...");
 
-            try {
-                const tags = await fetchAllPages<"tags">({
-                    endpoint: "tags",
-                    apiUrl,
-                    workspaceId,
-                    apiKey,
-                    params: {
-                        query,
-                    },
-                });
+      try {
+        const tags = await fetchAllPages<"tags">({
+          ...config,
+          endpoint: "tags",
+          params: {
+            query,
+          },
+        });
 
-                store.clear();
+        store.clear();
 
-                for (const tag of tags as Tag[]) {
-                    const data = await parseData({
-                        id: tag.slug,
-                        data: {
-                            name: tag.name,
-                            slug: tag.slug,
-                            description: tag.description,
-                        },
-                    });
+        for (const tag of tags as Tag[]) {
+          const data = await parseData({
+            id: tag.slug,
+            data: {
+              name: tag.name,
+              slug: tag.slug,
+              description: tag.description,
+            },
+          });
 
-                    const digest = generateDigest(data);
+          const digest = generateDigest(data);
 
-                    store.set({
-                        id: tag.slug,
-                        data,
-                        digest,
-                    });
-                }
+          store.set({
+            id: tag.slug,
+            data,
+            digest,
+          });
+        }
 
-                logger.info(`Loaded ${tags.length} tags from AstraCMS`);
-            } catch (error) {
-                const message = error instanceof Error ? error.message : String(error);
-                logger.error(`Failed to load tags: ${message}`);
-                throw error;
-            }
-        },
+        logger.info(`Loaded ${tags.length} tags from AstraCMS`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error(`Failed to load tags: ${message}`);
+        throw error;
+      }
+    },
 
-        schema: tagEntrySchema,
-    };
+    schema: tagEntrySchema,
+  };
 }

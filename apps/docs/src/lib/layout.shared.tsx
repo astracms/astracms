@@ -1,28 +1,14 @@
-import type { LinkItemType } from "fumadocs-ui/layouts/docs";
-import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+
+import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-export const title = "Starter Kit";
-
-export const logo = (
-  <>
-    <Image
-      alt={title}
-      aria-label={title}
-      className="size-6"
-      height={28}
-      sizes="100px"
-      src={"/logo.svg"}
-      width={28}
-    />
-  </>
-);
+export const title = "Astra CMS";
 
 export const linkItems: LinkItemType[] = [
   {
     type: "icon",
-    url: "https://github.com/techwithanirudh/fumadocs-starter",
+    url: "https://github.com/astracms",
     text: "Github",
     icon: (
       <svg fill="currentColor" role="img" viewBox="0 0 24 24">
@@ -45,8 +31,7 @@ export function baseOptions(): BaseLayoutProps {
     nav: {
       title: (
         <>
-          {logo}
-          <span className="font-medium [header_&]:text-[15px]">{title}</span>
+          <span className="font-medium in-[header]:text-[15px]">{title}</span>
         </>
       ),
       transparentMode: "top",

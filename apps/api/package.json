@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
-    "env": "dotenv -e .dev.vars"
+    "env": "dotenv -e .dev.vars",
+    "generate:openapi": "tsx scripts/generate-openapi.ts"
   },
   "dependencies": {
     "@astra/db": "workspace:*",

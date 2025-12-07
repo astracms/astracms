@@ -99,12 +99,53 @@ app.route("/v2", v2);
 
 // OpenAPI documentation
 app.doc("/doc", {
-  openapi: "3.0.0",
+  openapi: "3.1.0",
   info: {
-    version: "1.0.0",
-    title: "Astra CMS API",
-    description: "API for Astra CMS content management system",
+    version: "2.0.0",
+    title: "AstraCMS API",
+    description: `
+The AstraCMS API provides programmatic access to your content. 
+
+## API Versions
+
+- **V1** (\`/v1/{workspaceId}/...\`): Uses workspace ID in the URL path
+- **V2** (\`/v2/...\`): Uses API key authentication via \`X-API-Key\` header (recommended)
+
+## Rate Limiting
+
+All API endpoints are rate limited. When you exceed the limit, you'll receive a 429 response.
+    `.trim(),
+    contact: {
+      name: "AstraCMS Support",
+      url: "https://astracms.com",
+      email: "support@astracms.com",
+    },
+    license: {
+      name: "MIT",
+      url: "https://opensource.org/licenses/MIT",
+    },
   },
+  servers: [
+    {
+      url: "https://api.astracms.com",
+      description: "Production API",
+    },
+  ],
+  tags: [
+    { name: "Posts", description: "Blog posts and articles" },
+    { name: "Categories", description: "Post categories" },
+    { name: "Tags", description: "Post tags" },
+    { name: "Authors", description: "Content authors" },
+  ],
+});
+
+// OpenAPI security schemes (registered separately for proper component generation)
+app.openAPIRegistry.registerComponent("securitySchemes", "ApiKeyAuth", {
+  type: "apiKey",
+  in: "header",
+  name: "X-API-Key",
+  description: "API key for V2 endpoints. Get your key from the AstraCMS dashboard.",
 });
 
 export default app;
+

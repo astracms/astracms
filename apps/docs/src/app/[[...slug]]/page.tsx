@@ -48,7 +48,7 @@ export default async function Page(
           {page.data.title}
         </h1>
 
-        <div className="ml-auto flex hidden shrink-0 flex-row items-center items-center justify-end gap-2 sm:flex">
+        <div className="ml-auto hidden shrink-0 flex-row items-center justify-end gap-2 sm:flex">
           <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
           <ViewOptions
             githubUrl={`https://github.com/${owner}/${repo}/blob/main/content/docs/${page.path}`}

@@ -1,0 +1,135 @@
+---
+title: React
+description: AstraCMS integration for React
+icon: ReactIcon
+---
+
+The `@astracms/react` package provides React hooks for fetching data from AstraCMS.
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/react
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/react
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/react
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/react
+  ```
+</Tabs>
+
+## Setup
+
+Wrap your app with the provider:
+
+```tsx title="App.tsx"
+import { AstraCMSProvider } from '@astracms/react'
+
+function App() {
+  return (
+    <AstraCMSProvider
+      config={{
+        apiKey: process.env.REACT_APP_ASTRACMS_API_KEY,
+      }}
+    >
+      <YourApp />
+    </AstraCMSProvider>
+  )
+}
+```
+
+## Hooks
+
+### usePosts
+
+Fetch all posts:
+
+```tsx
+import { usePosts } from '@astracms/react'
+
+function BlogList() {
+  const { posts, loading, error } = usePosts()
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### usePost
+
+Fetch a single post:
+
+```tsx
+import { usePost } from '@astracms/react'
+
+function BlogPost({ slug }: { slug: string }) {
+  const { post, loading, error } = usePost(slug)
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+  if (!post) return <div>Post not found</div>
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </article>
+  )
+}
+```
+
+### useCategories
+
+Fetch all categories:
+
+```tsx
+import { useCategories } from '@astracms/react'
+
+function CategoryList() {
+  const { categories, loading } = useCategories()
+
+  return (
+    <ul>
+      {categories.map((category) => (
+        <li key={category.id}>{category.name}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### useTags
+
+Fetch all tags:
+
+```tsx
+import { useTags } from '@astracms/react'
+
+function TagCloud() {
+  const { tags } = useTags()
+
+  return (
+    <div>
+      {tags.map((tag) => (
+        <span key={tag.id}>{tag.name}</span>
+      ))}
+    </div>
+  )
+}
+```

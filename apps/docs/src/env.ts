@@ -9,12 +9,7 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string().startsWith("sk-"),
   },
   client: {
-    NEXT_PUBLIC_BASE_URL: z.preprocess(
-      (val) =>
-        val ??
-        (process.env.NODE_ENV !== "production" ? "http://localhost:3000" : val),
-      z.url()
-    ),
+    NEXT_PUBLIC_BASE_URL: z.url()
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

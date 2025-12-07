@@ -1,0 +1,97 @@
+---
+title: Next.js
+description: AstraCMS integration for Next.js
+icon: NextjsIcon
+---
+
+The `@astracms/next` package provides optimized utilities for using AstraCMS with Next.js, including server components support and automatic caching.
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/next
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/next
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/next
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/next
+  ```
+</Tabs>
+
+## Configuration
+
+Create a client instance in your app:
+
+```typescript title="lib/astracms.ts"
+import { createAstraCMSNext } from '@astracms/next'
+
+export const astracms = createAstraCMSNext({
+  apiKey: process.env.ASTRACMS_API_KEY!,
+})
+```
+
+## Server Components
+
+Use the client directly in server components:
+
+```tsx title="app/blog/page.tsx"
+import { astracms } from '@/lib/astracms'
+
+export default async function BlogPage() {
+  const posts = await astracms.getPosts()
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+## With Caching
+
+Enable Next.js caching for optimal performance:
+
+```typescript
+const posts = await astracms.getPosts({
+  next: { revalidate: 60 }, // Revalidate every 60 seconds
+})
+```
+
+## Static Generation
+
+For fully static sites:
+
+```tsx title="app/blog/[slug]/page.tsx"
+import { astracms } from '@/lib/astracms'
+
+export async function generateStaticParams() {
+  const posts = await astracms.getPosts()
+  return posts.map((post) => ({ slug: post.slug }))
+}
+
+export default async function PostPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> 
+}) {
+  const { slug } = await params
+  const post = await astracms.getPost(slug)
+
+  if (!post) {
+    notFound()
+  }
+
+  return <article>{post.content}</article>
+}
+```

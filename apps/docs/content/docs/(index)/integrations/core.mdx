@@ -1,0 +1,256 @@
+---
+title: Core Package
+description: Universal TypeScript client for AstraCMS
+icon: Code
+---
+
+The `@astracms/core` package provides the foundation for all AstraCMS integrations. It includes a TypeScript API client, Zod schemas for validation, and type definitions.
+
+## Installation
+
+<Tabs groupId="package-manager" persist items={['npm', 'pnpm', 'yarn', 'bun']}>
+  ```bash tab="npm"
+  npm install @astracms/core
+  ```
+
+  ```bash tab="pnpm"
+  pnpm add @astracms/core
+  ```
+
+  ```bash tab="yarn"
+  yarn add @astracms/core
+  ```
+
+  ```bash tab="bun"
+  bun add @astracms/core
+  ```
+</Tabs>
+
+## Quick Start
+
+```typescript title="index.ts"
+import { createAstraCMSClient } from '@astracms/core'
+
+const client = createAstraCMSClient({
+  apiKey: process.env.ASTRACMS_API_KEY,
+})
+
+// Fetch all published posts
+const posts = await client.getPosts()
+
+// Fetch a single post
+const post = await client.getPost('hello-world')
+```
+
+## Configuration
+
+### API Key Authentication (Recommended)
+
+Uses the v2 API by default:
+
+```typescript
+const client = createAstraCMSClient({
+  apiKey: 'your-api-key',
+})
+```
+
+### Workspace ID Authentication (Legacy v1 API)
+
+For v1 API, you must specify `apiVersion: 'v1'`:
+
+```typescript
+const client = createAstraCMSClient({
+  apiVersion: 'v1',
+  workspaceId: 'your-workspace-id',
+})
+```
+
+<Callout type="info">
+API key authentication is recommended as it's more secure and doesn't expose your workspace ID.
+</Callout>
+
+## Client Methods
+
+### getPosts(options?)
+
+Fetch all published posts with optional filtering.
+
+```typescript
+const posts = await client.getPosts({
+  limit: 10,
+  page: 1,
+  categories: ['technology'],
+  tags: ['javascript', 'react'],
+  excludeCategories: ['internal'],
+  excludeTags: ['draft'],
+  query: 'search term',
+})
+```
+
+**Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `limit` | `number` | Max posts to return (default: all) |
+| `page` | `number` | Page number for pagination |
+| `categories` | `string[]` | Filter by category slugs |
+| `tags` | `string[]` | Filter by tag slugs |
+| `excludeCategories` | `string[]` | Exclude category slugs |
+| `excludeTags` | `string[]` | Exclude tag slugs |
+| `query` | `string` | Search query |
+
+### getPost(slug, options?)
+
+Fetch a single post by its slug.
+
+```typescript
+const post = await client.getPost('my-post', {
+  format: 'markdown', // or 'html'
+})
+```
+
+**Returns:** `Post | null`
+
+### getCategories(options?)
+
+Fetch all categories.
+
+```typescript
+const categories = await client.getCategories({
+  query: 'search',
+})
+```
+
+### getTags(options?)
+
+Fetch all tags.
+
+```typescript
+const tags = await client.getTags({
+  query: 'search',
+})
+```
+
+### getAuthors(options?)
+
+Fetch all authors.
+
+```typescript
+const authors = await client.getAuthors({
+  query: 'search',
+})
+```
+
+## Types
+
+All types are exported from the package:
+
+```typescript
+import type {
+  AstraCMSConfig,
+  Post,
+  Category,
+  Tag,
+  Author,
+  AuthorSocial,
+  GetPostsOptions,
+  Pagination,
+} from '@astracms/core'
+```
+
+### Post
+
+```typescript
+interface Post {
+  id: string
+  title: string
+  description: string
+  slug: string
+  content: string
+  coverImage: string | null
+  featured: boolean
+  publishedAt: string
+  updatedAt: string
+  category: Category
+  tags: Tag[]
+  authors: Author[]
+  attribution: string | null
+}
+```
+
+### Category
+
+```typescript
+interface Category {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+}
+```
+
+### Tag
+
+```typescript
+interface Tag {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+}
+```
+
+### Author
+
+```typescript
+interface Author {
+  id: string
+  name: string
+  slug: string
+  bio: string | null
+  image: string | null
+  role: string | null
+  socials: AuthorSocial[]
+}
+
+interface AuthorSocial {
+  platform: string
+  url: string
+}
+```
+
+## Zod Schemas
+
+For runtime validation, all schemas are exported:
+
+```typescript
+import {
+  postSchema,
+  categorySchema,
+  tagSchema,
+  authorSchema,
+  authorSocialSchema,
+  paginationSchema,
+  postsResponseSchema,
+  categoriesResponseSchema,
+  tagsResponseSchema,
+  authorsResponseSchema,
+} from '@astracms/core'
+
+// Validate API response
+const result = postsResponseSchema.parse(apiResponse)
+```
+
+## Next Steps
+
+<Cards cols={2}>
+  <Card title="React" icon={<FileTextIcon />} href="/docs/integrations/react">
+    Use React hooks for data fetching
+  </Card>
+  <Card title="Next.js" icon={<FolderIcon />} href="/docs/integrations/next">
+    Server components with caching
+  </Card>
+  <Card title="Vue" icon={<VueIcon />} href="/docs/integrations/vue">
+    Vue 3 composables
+  </Card>
+</Cards>

@@ -9,25 +9,25 @@ export type { TagsLoaderOptions } from "./loaders/tags";
 export { tagsLoader } from "./loaders/tags";
 
 export {
-    authorEntrySchema,
-    authorSchema,
-    authorSocialSchema,
-    categoryEntrySchema,
-    categorySchema,
-    postSchema,
-    tagEntrySchema,
-    tagSchema,
+  authorEntrySchema,
+  authorSchema,
+  authorSocialSchema,
+  categoryEntrySchema,
+  categorySchema,
+  postSchema,
+  tagEntrySchema,
+  tagSchema,
 } from "./schemas";
 
 export type {
-    AstraCMSConfig,
-    Author,
-    AuthorSocial,
-    AuthorsAPIResponse,
-    CategoriesAPIResponse,
-    Category,
-    Post,
-    PostsAPIResponse,
-    Tag,
-    TagsAPIResponse,
+  AstraCMSConfig,
+  Author,
+  AuthorSocial,
+  AuthorsAPIResponse,
+  CategoriesAPIResponse,
+  Category,
+  Post,
+  PostsAPIResponse,
+  Tag,
+  TagsAPIResponse,
 } from "./types";

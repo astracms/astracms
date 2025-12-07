@@ -18,6 +18,7 @@ const posts = new OpenAPIHono<{ Bindings: Env; Variables: Variables }>();
 const listPostsRoute = createRoute({
   method: "get",
   path: "/",
+  operationId: "listPosts",
   tags: ["Posts"],
   summary: "List posts",
   description:
@@ -69,27 +70,27 @@ posts.openapi(listPostsRoute, async (c) => {
     const order = queryParams.order || "desc";
     const categories = queryParams.categories
       ? queryParams.categories
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
       : [];
     const excludeCategories = queryParams.excludeCategories
       ? queryParams.excludeCategories
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
       : [];
     const tags = queryParams.tags
       ? queryParams.tags
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
       : [];
     const excludeTags = queryParams.excludeTags
       ? queryParams.excludeTags
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
       : [];
     const query = queryParams.query;
     const format = queryParams.format;
@@ -226,21 +227,21 @@ posts.openapi(listPostsRoute, async (c) => {
 
     const paginationInfo = limit
       ? {
-          limit,
-          currentPage: page,
-          nextPage,
-          previousPage: prevPage,
-          totalPages,
-          totalItems: totalPosts,
-        }
+        limit,
+        currentPage: page,
+        nextPage,
+        previousPage: prevPage,
+        totalPages,
+        totalItems: totalPosts,
+      }
       : {
-          limit: totalPosts,
-          currentPage: 1,
-          nextPage: null,
-          previousPage: null,
-          totalPages: 1,
-          totalItems: totalPosts,
-        };
+        limit: totalPosts,
+        currentPage: 1,
+        nextPage: null,
+        previousPage: null,
+        totalPages: 1,
+        totalItems: totalPosts,
+      };
 
     return c.json(
       {
@@ -265,6 +266,7 @@ posts.openapi(listPostsRoute, async (c) => {
 const getPostRoute = createRoute({
   method: "get",
   path: "/{identifier}",
+  operationId: "getPost",
   tags: ["Posts"],
   summary: "Get a single post",
   description: "Get a single post by slug or ID",
