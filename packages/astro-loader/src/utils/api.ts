@@ -22,7 +22,7 @@ type FetchAPIOptions = AstraCMSConfig & {
 };
 
 /** Default API URL for AstraCMS */
-const DEFAULT_API_URL = "https://api.astracms.com";
+const DEFAULT_API_URL = "https://api.astracms.dev";
 
 /**
  * Type guard to check if config is V1Config

@@ -117,8 +117,8 @@ All API endpoints are rate limited. When you exceed the limit, you'll receive a 
     `.trim(),
     contact: {
       name: "AstraCMS Support",
-      url: "https://astracms.com",
-      email: "support@astracms.com",
+      url: "https://astracms.dev",
+      email: "support@astracms.dev",
     },
     license: {
       name: "MIT",
@@ -127,7 +127,7 @@ All API endpoints are rate limited. When you exceed the limit, you'll receive a 
   },
   servers: [
     {
-      url: "https://api.astracms.com",
+      url: "https://api.astracms.dev",
       description: "Production API",
     },
   ],

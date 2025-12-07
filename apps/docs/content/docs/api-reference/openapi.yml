@@ -6,8 +6,8 @@
     "description": "The AstraCMS API provides programmatic access to your content. \n\n## API Versions\n\n- **V1** (`/v1/{workspaceId}/...`): Uses workspace ID in the URL path\n- **V2** (`/v2/...`): Uses API key authentication via `X-API-Key` header (recommended)\n\n## Rate Limiting\n\nAll API endpoints are rate limited. When you exceed the limit, you'll receive a 429 response.",
     "contact": {
       "name": "AstraCMS Support",
-      "url": "https://astracms.com",
-      "email": "support@astracms.com"
+      "url": "https://astracms.dev",
+      "email": "support@astracms.dev"
     },
     "license": {
       "name": "MIT",
@@ -16,7 +16,7 @@
   },
   "servers": [
     {
-      "url": "https://api.astracms.com",
+      "url": "https://api.astracms.dev",
       "description": "Production API"
     }
   ],
@@ -53,7 +53,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1tag123"
+            "example": "clx3y5a7c9e1g3i5k7m9o"
           },
           "name": {
             "type": "string",
@@ -168,7 +168,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1post123"
+            "example": "clx4b6d8f0h2j4l6n8p0r"
           },
           "title": {
             "type": "string",
@@ -209,7 +209,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1tag123"
+            "example": "clx3y5a7c9e1g3i5k7m9o"
           },
           "name": {
             "type": "string",
@@ -279,7 +279,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1cat123"
+            "example": "clx2k4m6n8p0r2t4v6x8z"
           },
           "name": {
             "type": "string",
@@ -338,7 +338,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1post123"
+            "example": "clx4b6d8f0h2j4l6n8p0r"
           },
           "title": {
             "type": "string",
@@ -381,7 +381,7 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "example": "cm1author123"
+                  "example": "clx1a2b3c4d5e6f7g8h9i"
                 },
                 "name": {
                   "type": "string",
@@ -407,7 +407,7 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "example": "cm1tag123"
+                  "example": "clx3y5a7c9e1g3i5k7m9o"
                 },
                 "name": {
                   "type": "string",
@@ -431,7 +431,7 @@
             "properties": {
               "id": {
                 "type": "string",
-                "example": "cm1cat123"
+                "example": "clx2k4m6n8p0r2t4v6x8z"
               },
               "name": {
                 "type": "string",
@@ -468,7 +468,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1cat123"
+            "example": "clx2k4m6n8p0r2t4v6x8z"
           },
           "name": {
             "type": "string",
@@ -538,7 +538,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1post123"
+            "example": "clx4b6d8f0h2j4l6n8p0r"
           },
           "slug": {
             "type": "string",
@@ -591,7 +591,7 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "example": "cm1abc123"
+                  "example": "clx1a2b3c4d5e6f7g8h9i"
                 },
                 "name": {
                   "type": "string",
@@ -654,7 +654,7 @@
             "properties": {
               "id": {
                 "type": "string",
-                "example": "cm1cat123"
+                "example": "clx2k4m6n8p0r2t4v6x8z"
               },
               "name": {
                 "type": "string",
@@ -684,7 +684,7 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "example": "cm1tag123"
+                  "example": "clx3y5a7c9e1g3i5k7m9o"
                 },
                 "name": {
                   "type": "string",
@@ -820,7 +820,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1author123"
+            "example": "clx1a2b3c4d5e6f7g8h9i"
           },
           "name": {
             "type": "string",
@@ -898,7 +898,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1author123"
+            "example": "clx1a2b3c4d5e6f7g8h9i"
           },
           "name": {
             "type": "string",
@@ -964,7 +964,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "cm1author123"
+            "example": "clx1a2b3c4d5e6f7g8h9i"
           },
           "name": {
             "type": "string",

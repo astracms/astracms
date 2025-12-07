@@ -2,7 +2,7 @@ import { z } from "@hono/zod-openapi";
 
 // Base schemas
 export const AuthorSchema = z.object({
-  id: z.string().openapi({ example: "cm1abc123" }),
+  id: z.string().openapi({ example: "clx1a2b3c4d5e6f7g8h9i" }),
   name: z.string().openapi({ example: "John Doe" }),
   image: z
     .string()
@@ -20,7 +20,7 @@ export const AuthorSchema = z.object({
 });
 
 export const CategorySchema = z.object({
-  id: z.string().openapi({ example: "cm1cat123" }),
+  id: z.string().openapi({ example: "clx2k4m6n8p0r2t4v6x8z" }),
   name: z.string().openapi({ example: "Technology" }),
   slug: z.string().openapi({ example: "technology" }),
   description: z
@@ -30,7 +30,7 @@ export const CategorySchema = z.object({
 });
 
 export const TagSchema = z.object({
-  id: z.string().openapi({ example: "cm1tag123" }),
+  id: z.string().openapi({ example: "clx3y5a7c9e1g3i5k7m9o" }),
   name: z.string().openapi({ example: "JavaScript" }),
   slug: z.string().openapi({ example: "javascript" }),
   description: z
@@ -41,7 +41,7 @@ export const TagSchema = z.object({
 
 export const PostSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1post123" }),
+    id: z.string().openapi({ example: "clx4b6d8f0h2j4l6n8p0r" }),
     slug: z.string().openapi({ example: "my-first-post" }),
     title: z.string().openapi({ example: "My First Blog Post" }),
     content: z.string().nullable().openapi({

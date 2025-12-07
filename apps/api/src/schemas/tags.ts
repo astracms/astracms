@@ -3,7 +3,7 @@ import { z } from "@hono/zod-openapi";
 // Base schemas
 export const TagSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1tag123" }),
+    id: z.string().openapi({ example: "clx3y5a7c9e1g3i5k7m9o" }),
     name: z.string().openapi({ example: "JavaScript" }),
     slug: z.string().openapi({ example: "javascript" }),
     description: z
@@ -18,7 +18,7 @@ export const TagSchema = z
 
 export const TagWithoutCountSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1tag123" }),
+    id: z.string().openapi({ example: "clx3y5a7c9e1g3i5k7m9o" }),
     name: z.string().openapi({ example: "JavaScript" }),
     slug: z.string().openapi({ example: "javascript" }),
     description: z
@@ -30,7 +30,7 @@ export const TagWithoutCountSchema = z
 
 export const PostSummarySchema = z
   .object({
-    id: z.string().openapi({ example: "cm1post123" }),
+    id: z.string().openapi({ example: "clx4b6d8f0h2j4l6n8p0r" }),
     title: z.string().openapi({ example: "Getting Started with JavaScript" }),
     slug: z.string().openapi({ example: "getting-started-with-javascript" }),
     description: z
@@ -129,7 +129,7 @@ export const TagsListResponseSchema = z
 
 export const TagWithPostsSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1tag123" }),
+    id: z.string().openapi({ example: "clx3y5a7c9e1g3i5k7m9o" }),
     name: z.string().openapi({ example: "JavaScript" }),
     slug: z.string().openapi({ example: "javascript" }),
     description: z

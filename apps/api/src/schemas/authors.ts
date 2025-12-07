@@ -10,7 +10,7 @@ export const SocialSchema = z
 
 export const AuthorSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1author123" }),
+    id: z.string().openapi({ example: "clx1a2b3c4d5e6f7g8h9i" }),
     name: z.string().openapi({ example: "John Doe" }),
     image: z
       .string()
@@ -31,7 +31,7 @@ export const AuthorSchema = z
 
 export const AuthorWithoutCountSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1author123" }),
+    id: z.string().openapi({ example: "clx1a2b3c4d5e6f7g8h9i" }),
     name: z.string().openapi({ example: "John Doe" }),
     image: z
       .string()
@@ -49,7 +49,7 @@ export const AuthorWithoutCountSchema = z
 
 export const PostSummarySchema = z
   .object({
-    id: z.string().openapi({ example: "cm1post123" }),
+    id: z.string().openapi({ example: "clx4b6d8f0h2j4l6n8p0r" }),
     title: z.string().openapi({ example: "Getting Started with JavaScript" }),
     slug: z.string().openapi({ example: "getting-started-with-javascript" }),
     description: z
@@ -148,7 +148,7 @@ export const AuthorsListResponseSchema = z
 
 export const AuthorWithPostsSchema = z
   .object({
-    id: z.string().openapi({ example: "cm1author123" }),
+    id: z.string().openapi({ example: "clx1a2b3c4d5e6f7g8h9i" }),
     name: z.string().openapi({ example: "John Doe" }),
     image: z
       .string()
