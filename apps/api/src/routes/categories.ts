@@ -200,9 +200,9 @@ categories.openapi(getCategoryRoute, async (c) => {
     const page = Number.parseInt(queryParams.page, 10) || 1;
     const include = queryParams.include
       ? queryParams.include
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
       : [];
     const db = createClient(url);
 

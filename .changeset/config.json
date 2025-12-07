@@ -1,0 +1,31 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [
+    [
+      "@astracms/core",
+      "@astracms/react",
+      "@astracms/next",
+      "@astracms/vue",
+      "@astracms/svelte",
+      "@astracms/nuxt",
+      "@astracms/astro-loader"
+    ]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@astra/db",
+    "@astra/ui",
+    "@astra/parser",
+    "@astra/tsconfig",
+    "astracms",
+    "cms",
+    "web",
+    "api",
+    "docs"
+  ]
+}

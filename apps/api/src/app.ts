@@ -144,8 +144,8 @@ app.openAPIRegistry.registerComponent("securitySchemes", "ApiKeyAuth", {
   type: "apiKey",
   in: "header",
   name: "X-API-Key",
-  description: "API key for V2 endpoints. Get your key from the AstraCMS dashboard.",
+  description:
+    "API key for V2 endpoints. Get your key from the AstraCMS dashboard.",
 });
 
 export default app;
-

@@ -28,6 +28,12 @@ function createV2RouteWithScope(
 
 // Export V2 routes with scope enforcement
 export const v2PostsRoutes = createV2RouteWithScope(v2Posts, "posts:read");
-export const v2CategoriesRoutes = createV2RouteWithScope(v2Categories, "categories:read");
+export const v2CategoriesRoutes = createV2RouteWithScope(
+  v2Categories,
+  "categories:read"
+);
 export const v2TagsRoutes = createV2RouteWithScope(v2Tags, "tags:read");
-export const v2AuthorsRoutes = createV2RouteWithScope(v2Authors, "authors:read");
+export const v2AuthorsRoutes = createV2RouteWithScope(
+  v2Authors,
+  "authors:read"
+);

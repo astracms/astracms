@@ -1,17 +1,21 @@
 import {
-    AstraCMSClient,
-    type AstraCMSConfig,
-    type Author,
-    type Category,
-    createAstraCMSClient,
-    type GetPostsOptions,
-    type Post,
-    type Tag,
+  type AstraCMSClient,
+  type AstraCMSConfig,
+  createAstraCMSClient,
+  type GetPostsOptions,
+  type Post,
 } from "@astracms/core";
 
-// Re-export types
-export type { AstraCMSConfig, GetPostsOptions, Post, Category, Tag, Author };
-export { createAstraCMSClient, AstraCMSClient };
+// Re-export types and values from core
+export type {
+  AstraCMSConfig,
+  Author,
+  Category,
+  GetPostsOptions,
+  Post,
+  Tag,
+} from "@astracms/core";
+export { AstraCMSClient, createAstraCMSClient } from "@astracms/core";
 
 /**
  * SvelteKit load function helper for fetching posts
@@ -28,14 +32,14 @@ export { createAstraCMSClient, AstraCMSClient };
  * ```
  */
 export function loadPosts(
-    config: AstraCMSConfig,
-    options: GetPostsOptions = {}
+  config: AstraCMSConfig,
+  options: GetPostsOptions = {}
 ) {
-    return async () => {
-        const client = createAstraCMSClient(config);
-        const posts = await client.getPosts(options);
-        return { posts };
-    };
+  return async () => {
+    const client = createAstraCMSClient(config);
+    const posts = await client.getPosts(options);
+    return { posts };
+  };
 }
 
 /**
@@ -55,11 +59,11 @@ export function loadPosts(
  * ```
  */
 export async function loadPost(
-    client: AstraCMSClient,
-    slug: string,
-    options: { format?: "html" | "markdown" } = {}
+  client: AstraCMSClient,
+  slug: string,
+  options: { format?: "html" | "markdown" } = {}
 ): Promise<Post | null> {
-    return client.getPost(slug, options);
+  return client.getPost(slug, options);
 }
 
 /**
@@ -77,14 +81,14 @@ export async function loadPost(
  * ```
  */
 export function createLoadAll(config: AstraCMSConfig) {
-    return async () => {
-        const client = createAstraCMSClient(config);
-        const [posts, categories, tags, authors] = await Promise.all([
-            client.getPosts(),
-            client.getCategories(),
-            client.getTags(),
-            client.getAuthors(),
-        ]);
-        return { posts, categories, tags, authors };
-    };
+  return async () => {
+    const client = createAstraCMSClient(config);
+    const [posts, categories, tags, authors] = await Promise.all([
+      client.getPosts(),
+      client.getCategories(),
+      client.getTags(),
+      client.getAuthors(),
+    ]);
+    return { posts, categories, tags, authors };
+  };
 }

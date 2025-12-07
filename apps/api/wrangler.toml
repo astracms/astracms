@@ -14,11 +14,12 @@ enabled = true
 head_sampling_rate = 1
 
 [vars]
-DATABASE_URL = "postgresql://neondb_owner:npg_q1CU5IunYwHc@ep-wandering-scene-ah9r85ib-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 ENVIRONMENT = "production"
-POLAR_ACCESS_TOKEN = "polar_oat_QHkcEzKTEJkqE7ciyq7FtRzw7WJ8ICNDarkuj0jtJ8z"
-REDIS_TOKEN = "AUgoAAIncDI0YTdlZWQwZjAxMDc0MzgxYjRjMTQ2YjI0YTcyNjAzY3AyMTg0NzI"
-REDIS_URL = "https://sterling-tick-18472.upstash.io"
+# Secrets are passed via GitHub Actions secrets:
+# - DATABASE_URL
+# - POLAR_ACCESS_TOKEN
+# - REDIS_TOKEN
+# - REDIS_URL
 
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
