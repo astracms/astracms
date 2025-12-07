@@ -27,7 +27,6 @@ yarn add @astracms/astro-loader
 
 ```bash
 # .env
-ASTRACMS_API_URL=https://api.astracms.dev
 ASTRACMS_API_KEY=your_api_key_here
 ```
 
@@ -44,7 +43,6 @@ import {
 } from '@astracms/astro-loader';
 
 const config = {
-  apiUrl: import.meta.env.ASTRACMS_API_URL,
   apiKey: import.meta.env.ASTRACMS_API_KEY,
 };
 
@@ -130,9 +128,9 @@ Loads blog posts from AstraCMS.
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
-| `apiUrl` | `string` | ✓ | AstraCMS API base URL |
 | `apiKey` | `string` | * | API key (recommended for v2 API) |
 | `workspaceId` | `string` | * | Workspace ID (required for v1 API) |
+| `apiVersion` | `'v1' \| 'v2'` | | API version (defaults to 'v2') |
 | `format` | `'html' \| 'markdown'` | | Content format (default: `'markdown'`) |
 | `categories` | `string[]` | | Filter by category slugs |
 | `excludeCategories` | `string[]` | | Exclude category slugs |
@@ -148,9 +146,9 @@ Loads categories from AstraCMS.
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
-| `apiUrl` | `string` | ✓ | AstraCMS API base URL |
 | `apiKey` | `string` | * | API key (recommended) |
 | `workspaceId` | `string` | * | Workspace ID |
+| `apiVersion` | `'v1' \| 'v2'` | | API version |
 | `query` | `string` | | Search query |
 
 ### `tagsLoader(options)`
@@ -159,9 +157,9 @@ Loads tags from AstraCMS.
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
-| `apiUrl` | `string` | ✓ | AstraCMS API base URL |
 | `apiKey` | `string` | * | API key (recommended) |
 | `workspaceId` | `string` | * | Workspace ID |
+| `apiVersion` | `'v1' \| 'v2'` | | API version |
 | `query` | `string` | | Search query |
 
 ### `authorsLoader(options)`
@@ -170,9 +168,9 @@ Loads authors from AstraCMS.
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
-| `apiUrl` | `string` | ✓ | AstraCMS API base URL |
 | `apiKey` | `string` | * | API key (recommended) |
 | `workspaceId` | `string` | * | Workspace ID |
+| `apiVersion` | `'v1' \| 'v2'` | | API version |
 | `query` | `string` | | Search query |
 
 ## Schemas
@@ -199,7 +197,6 @@ const customPostSchema = postSchema.extend({
 
 ```typescript
 postsLoader({
-  apiUrl: 'https://api.astracms.dev',
   apiKey: import.meta.env.ASTRACMS_API_KEY,
 });
 ```
@@ -208,7 +205,7 @@ postsLoader({
 
 ```typescript
 postsLoader({
-  apiUrl: 'https://api.astracms.dev',
+  apiVersion: 'v1',
   workspaceId: 'your-workspace-id',
 });
 ```

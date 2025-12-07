@@ -6,27 +6,29 @@ import {
   type Post,
   type Tag,
 } from "@astracms/core";
-import {
-  type Ref,
-  ref,
-  useAsyncData,
-  useFetch,
-  useRuntimeConfig,
-  watch,
-} from "#imports";
+import { type Ref, ref, watch } from "vue";
+import { useAsyncData, useRuntimeConfig } from "#imports";
 
 /**
  * Get a configured AstraCMS client instance
  */
 export function useAstraCMS(): AstraCMSClient {
   const config = useRuntimeConfig();
-  const { apiUrl, apiKey, workspaceId } = config.public.astracms as {
-    apiUrl: string;
+  const { apiKey, workspaceId, apiVersion } = config.public.astracms as {
     apiKey?: string;
     workspaceId?: string;
+    apiVersion?: "v1" | "v2";
   };
 
-  return new AstraCMSClient({ apiUrl, apiKey, workspaceId });
+  if (apiVersion === "v1" && workspaceId) {
+    return new AstraCMSClient({ apiVersion: "v1", workspaceId });
+  }
+
+  if (!apiKey) {
+    throw new Error("AstraCMS: apiKey is required for v2 API");
+  }
+
+  return new AstraCMSClient({ apiKey });
 }
 
 /**
@@ -122,7 +124,7 @@ export function usePostSearch(
   const debouncedQuery = ref(query.value);
   let timer: ReturnType<typeof setTimeout> | null = null;
 
-  watch(query, (newQuery) => {
+  watch(query, (newQuery: string) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
       debouncedQuery.value = newQuery;

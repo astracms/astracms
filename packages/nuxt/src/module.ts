@@ -1,12 +1,25 @@
-import type { AstraCMSConfig } from "@astracms/core";
 import {
   addImports,
-  addServerHandler,
   createResolver,
   defineNuxtModule,
 } from "@nuxt/kit";
 
-export interface ModuleOptions extends Partial<AstraCMSConfig> {
+export interface ModuleOptions {
+  /**
+   * API Key for v2 authentication (recommended)
+   */
+  apiKey?: string;
+
+  /**
+   * Workspace ID for v1 authentication (legacy)
+   */
+  workspaceId?: string;
+
+  /**
+   * API version - 'v1' or 'v2' (defaults to 'v2')
+   */
+  apiVersion?: "v1" | "v2";
+
   /**
    * Whether to auto-import composables
    * @default true
@@ -30,9 +43,9 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Add runtime config
     nuxt.options.runtimeConfig.public.astracms = {
-      apiUrl: options.apiUrl ?? "",
       apiKey: options.apiKey ?? "",
       workspaceId: options.workspaceId ?? "",
+      apiVersion: options.apiVersion ?? "v2",
     };
 
     // Auto-import composables

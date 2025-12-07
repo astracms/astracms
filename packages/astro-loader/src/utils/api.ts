@@ -40,13 +40,12 @@ export async function fetchAPI<T extends Endpoint>(
 ): Promise<EndpointDataMap[T]> {
   const { endpoint, params, ...config } = options;
 
-  const apiUrl = config._apiUrl ?? DEFAULT_API_URL;
   const isV1 = isV1Config(config);
 
   // Build URL based on API version
   const baseUrl = isV1
-    ? `${apiUrl}/v1/${(config as V1Config).workspaceId}/${endpoint}`
-    : `${apiUrl}/v2/${endpoint}`;
+    ? `${DEFAULT_API_URL}/v1/${(config as V1Config).workspaceId}/${endpoint}`
+    : `${DEFAULT_API_URL}/v2/${endpoint}`;
 
   const url = new URL(baseUrl);
 

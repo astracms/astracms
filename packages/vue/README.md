@@ -23,7 +23,6 @@ import App from './App.vue';
 const app = createApp(App);
 
 app.use(createAstraCMSPlugin({
-  apiUrl: 'https://api.astracms.dev',
   apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
 }));
 
@@ -38,7 +37,6 @@ app.mount('#app');
 import { provideAstraCMS } from '@astracms/vue';
 
 provideAstraCMS({
-  apiUrl: 'https://api.astracms.dev',
   apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
 });
 </script>

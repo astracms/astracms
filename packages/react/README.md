@@ -19,10 +19,7 @@ import { AstraCMSProvider } from '@astracms/react';
 
 export default function App() {
   return (
-    <AstraCMSProvider
-      apiUrl="https://api.astracms.dev"
-      apiKey={process.env.NEXT_PUBLIC_ASTRACMS_API_KEY}
-    >
+    <AstraCMSProvider apiKey={process.env.NEXT_PUBLIC_ASTRACMS_API_KEY}>
       <YourApp />
     </AstraCMSProvider>
   );
@@ -82,9 +79,11 @@ Context provider that configures the AstraCMS client for all child components.
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `apiUrl` | `string` | Yes | AstraCMS API base URL |
-| `apiKey` | `string` | No* | API key for v2 authentication |
+| `apiKey` | `string` | Yes* | API key for v2 authentication |
 | `workspaceId` | `string` | No* | Workspace ID for v1 authentication |
+| `apiVersion` | `'v1' \| 'v2'` | No | API version (defaults to 'v2') |
+
+*Either `apiKey` (recommended) or `workspaceId` with `apiVersion: 'v1'` is required.
 
 ### Hooks
 

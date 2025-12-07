@@ -12,7 +12,6 @@ const AstraCMSKey: InjectionKey<AstraCMSClient> = Symbol("astracms");
  * import { provideAstraCMS } from '@astracms/vue';
  *
  * provideAstraCMS({
- *   apiUrl: 'https://api.astracms.dev',
  *   apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
  * });
  * </script>
@@ -47,7 +46,6 @@ export function useAstraCMSClient(): AstraCMSClient {
  *
  * const app = createApp(App);
  * app.use(createAstraCMSPlugin({
- *   apiUrl: 'https://api.astracms.dev',
  *   apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
  * }));
  * ```

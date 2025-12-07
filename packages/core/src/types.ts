@@ -6,21 +6,10 @@
 export type ApiVersion = "v1" | "v2";
 
 /**
- * Base configuration shared between v1 and v2
- */
-interface BaseConfig {
-  /**
-   * Override the default API URL (for testing/development only)
-   * @internal
-   */
-  _apiUrl?: string;
-}
-
-/**
  * Configuration for v2 API (recommended)
  * Uses API key authentication for enhanced security
  */
-export interface V2Config extends BaseConfig {
+export interface V2Config {
   /**
    * API version (defaults to 'v2' if not specified)
    */
@@ -37,7 +26,7 @@ export interface V2Config extends BaseConfig {
  * Configuration for v1 API (legacy)
  * Uses workspace ID authentication
  */
-export interface V1Config extends BaseConfig {
+export interface V1Config {
   /**
    * API version - must be 'v1' when using workspaceId
    */

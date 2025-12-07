@@ -18,7 +18,6 @@ export default defineNuxtConfig({
   modules: ['@astracms/nuxt'],
   
   astracms: {
-    apiUrl: 'https://api.astracms.dev',
     apiKey: process.env.ASTRACMS_API_KEY,
   },
 });
@@ -34,7 +33,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       astracms: {
-        apiUrl: 'https://api.astracms.dev',
         apiKey: '', // Set via NUXT_PUBLIC_ASTRACMS_API_KEY
       },
     },
@@ -99,10 +97,10 @@ All use Nuxt's `useAsyncData` for SSR:
 
 ```ts
 interface ModuleOptions {
-  apiUrl?: string;
-  apiKey?: string;
-  workspaceId?: string;
-  autoImport?: boolean; // default: true
+  apiKey?: string;       // API key for v2 authentication (recommended)
+  workspaceId?: string;  // Workspace ID for v1 authentication
+  apiVersion?: 'v1' | 'v2'; // API version (defaults to 'v2')
+  autoImport?: boolean;  // default: true
 }
 ```
 

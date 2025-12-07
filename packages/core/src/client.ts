@@ -47,12 +47,10 @@ function isV1Config(config: AstraCMSConfig): config is V1Config {
  */
 export class AstraCMSClient {
   private readonly config: AstraCMSConfig;
-  private readonly apiUrl: string;
   private readonly isV1: boolean;
 
   constructor(config: AstraCMSConfig) {
     this.config = config;
-    this.apiUrl = config._apiUrl ?? DEFAULT_API_URL;
     this.isV1 = isV1Config(config);
   }
 
@@ -64,8 +62,8 @@ export class AstraCMSClient {
 
     // Build URL based on API version
     const baseUrl = this.isV1
-      ? `${this.apiUrl}/v1/${(this.config as V1Config).workspaceId}/${endpoint}`
-      : `${this.apiUrl}/v2/${endpoint}`;
+      ? `${DEFAULT_API_URL}/v1/${(this.config as V1Config).workspaceId}/${endpoint}`
+      : `${DEFAULT_API_URL}/v2/${endpoint}`;
 
     const url = new URL(baseUrl);
 

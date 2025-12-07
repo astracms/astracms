@@ -26,7 +26,6 @@ export { AstraCMSClient, createAstraCMSClient } from "@astracms/core";
  * import { loadPosts } from '@astracms/svelte';
  *
  * export const load = loadPosts({
- *   apiUrl: 'https://api.astracms.dev',
  *   apiKey: env.ASTRACMS_API_KEY,
  * });
  * ```
@@ -75,7 +74,6 @@ export async function loadPost(
  * import { createLoadAll } from '@astracms/svelte';
  *
  * export const load = createLoadAll({
- *   apiUrl: 'https://api.astracms.dev',
  *   apiKey: env.ASTRACMS_API_KEY,
  * });
  * ```

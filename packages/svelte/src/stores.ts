@@ -36,7 +36,6 @@ interface AsyncState<T> {
  *   import { createAstraCMSStores } from '@astracms/svelte';
  *
  *   const { posts, categories, tags, authors } = createAstraCMSStores({
- *     apiUrl: 'https://api.astracms.dev',
  *     apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
  *   });
  * </script>

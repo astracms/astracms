@@ -17,7 +17,6 @@ pnpm add @astracms/next @astracms/core
 Set up your environment variables in `.env.local`:
 
 ```env
-ASTRACMS_API_URL=https://api.astracms.dev
 ASTRACMS_API_KEY=your_api_key_here
 ```
 

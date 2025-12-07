@@ -19,7 +19,6 @@ pnpm add @astracms/svelte @astracms/core
   import { createAstraCMSStores } from '@astracms/svelte';
 
   const { posts, categories, tags, authors } = createAstraCMSStores({
-    apiUrl: 'https://api.astracms.dev',
     apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
   });
 </script>
@@ -44,7 +43,6 @@ pnpm add @astracms/svelte @astracms/core
   import { createAstraCMSClient, createSearchStore } from '@astracms/svelte';
 
   const client = createAstraCMSClient({
-    apiUrl: 'https://api.astracms.dev',
     apiKey: import.meta.env.VITE_ASTRACMS_API_KEY,
   });
 
@@ -71,7 +69,6 @@ import { env } from '$env/dynamic/private';
 
 export async function load() {
   const client = createAstraCMSClient({
-    apiUrl: 'https://api.astracms.dev',
     apiKey: env.ASTRACMS_API_KEY,
   });
 
@@ -86,7 +83,7 @@ import { createAstraCMSClient } from '@astracms/svelte';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params }) {
-  const client = createAstraCMSClient({ ... });
+  const client = createAstraCMSClient({ apiKey: env.ASTRACMS_API_KEY });
   const post = await client.getPost(params.slug);
   if (!post) throw error(404, 'Post not found');
   return { post };

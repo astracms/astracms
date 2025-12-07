@@ -15,10 +15,15 @@ pnpm add @astracms/core
 ```typescript
 import { AstraCMSClient, type Post, type Category } from '@astracms/core';
 
-// Create a client instance
+// Create a client instance (v2 - recommended)
 const client = new AstraCMSClient({
-  apiUrl: 'https://api.astracms.dev',
   apiKey: process.env.ASTRACMS_API_KEY,
+});
+
+// Or with v1 API (legacy)
+const clientV1 = new AstraCMSClient({
+  apiVersion: 'v1',
+  workspaceId: 'your-workspace-id',
 });
 
 // Fetch posts
@@ -46,15 +51,19 @@ const authors = await client.getAuthors();
 
 The main client class for interacting with the AstraCMS API.
 
-#### Constructor Options
+#### Constructor Options (v2 - Recommended)
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
-| `apiUrl` | `string` | Yes | AstraCMS API base URL |
-| `apiKey` | `string` | No* | API key for v2 authentication |
-| `workspaceId` | `string` | No* | Workspace ID for v1 authentication |
+| `apiKey` | `string` | Yes | API key for v2 authentication |
+| `apiVersion` | `'v2'` | No | Optional, defaults to 'v2' |
 
-*Either `apiKey` (recommended) or `workspaceId` is required.
+#### Constructor Options (v1 - Legacy)
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `apiVersion` | `'v1'` | Yes | Must be 'v1' |
+| `workspaceId` | `string` | Yes | Workspace ID for v1 authentication |
 
 ### Methods
 

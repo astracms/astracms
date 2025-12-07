@@ -651,6 +651,9 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(msw@2.12.4(@types/node@24.10.1)(typescript@5.9.3))(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/db:
     dependencies:
@@ -735,6 +738,9 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.25(typescript@5.9.3)
 
   packages/parser:
     dependencies:
