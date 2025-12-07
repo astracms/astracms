@@ -1,6 +1,7 @@
 {
   "name": "@astra/parser",
   "version": "0.0.0",
+  "private": true,
   "exports": {
     "./tiptap": "./src/tiptap.ts"
   },

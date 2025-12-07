@@ -1,6 +1,7 @@
 {
   "name": "@astra/db",
   "version": "0.0.0",
+  "private": true,
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts"
