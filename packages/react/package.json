@@ -1,7 +1,7 @@
 {
-  "name": "@astracms/astro-loader",
+  "name": "@astracms/react",
   "version": "0.1.0",
-  "description": "Astro Content Collection loader for AstraCMS",
+  "description": "React hooks for AstraCMS data fetching",
   "type": "module",
   "private": false,
   "exports": {
@@ -16,35 +16,34 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --external astro",
-    "dev": "tsup src/index.ts --format esm --dts --watch --external astro",
+    "build": "tsup src/index.ts --format esm --dts --external react --external @astracms/core",
+    "dev": "tsup src/index.ts --format esm --dts --watch --external react --external @astracms/core",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
-    "astro",
-    "astro-loader",
-    "content-collections",
-    "cms",
+    "react",
+    "hooks",
     "astracms",
-    "blog",
-    "headless-cms"
+    "cms",
+    "headless-cms",
+    "blog"
   ],
   "author": "AstraCMS",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/astracms/astracms",
-    "directory": "packages/astro-loader"
+    "directory": "packages/react"
   },
   "peerDependencies": {
-    "astro": "^5.0.0"
+    "react": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@astracms/core": "workspace:*",
-    "zod": "^3.24.2"
+    "@astracms/core": "workspace:*"
   },
   "devDependencies": {
-    "astro": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.2"
   }

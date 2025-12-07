@@ -1,0 +1,60 @@
+{
+  "name": "@astracms/next",
+  "version": "0.1.0",
+  "description": "Next.js utilities for AstraCMS with RSC and caching support",
+  "type": "module",
+  "private": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/client.ts --format esm --dts --external next --external react --external @astracms/core --external @astracms/react",
+    "dev": "tsup src/index.ts src/client.ts --format esm --dts --watch --external next --external react --external @astracms/core --external @astracms/react",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "next",
+    "nextjs",
+    "rsc",
+    "server-components",
+    "astracms",
+    "cms",
+    "headless-cms",
+    "blog"
+  ],
+  "author": "AstraCMS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astracms/astracms",
+    "directory": "packages/next"
+  },
+  "peerDependencies": {
+    "next": "^14.0.0 || ^15.0.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@astracms/core": "workspace:*",
+    "@astracms/react": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.0.0",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.2"
+  }
+}

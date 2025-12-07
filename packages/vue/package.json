@@ -1,7 +1,7 @@
 {
-  "name": "@astracms/astro-loader",
+  "name": "@astracms/vue",
   "version": "0.1.0",
-  "description": "Astro Content Collection loader for AstraCMS",
+  "description": "Vue 3 composables for AstraCMS data fetching",
   "type": "module",
   "private": false,
   "exports": {
@@ -16,36 +16,35 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --external astro",
-    "dev": "tsup src/index.ts --format esm --dts --watch --external astro",
+    "build": "tsup src/index.ts --format esm --dts --external vue --external @astracms/core",
+    "dev": "tsup src/index.ts --format esm --dts --watch --external vue --external @astracms/core",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
-    "astro",
-    "astro-loader",
-    "content-collections",
-    "cms",
+    "vue",
+    "vue3",
+    "composables",
     "astracms",
-    "blog",
-    "headless-cms"
+    "cms",
+    "headless-cms",
+    "blog"
   ],
   "author": "AstraCMS",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/astracms/astracms",
-    "directory": "packages/astro-loader"
+    "directory": "packages/vue"
   },
   "peerDependencies": {
-    "astro": "^5.0.0"
+    "vue": "^3.3.0"
   },
   "dependencies": {
-    "@astracms/core": "workspace:*",
-    "zod": "^3.24.2"
+    "@astracms/core": "workspace:*"
   },
   "devDependencies": {
-    "astro": "^5.0.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vue": "^3.5.0"
   }
 }

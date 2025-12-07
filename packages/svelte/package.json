@@ -1,12 +1,14 @@
 {
-  "name": "@astracms/astro-loader",
+  "name": "@astracms/svelte",
   "version": "0.1.0",
-  "description": "Astro Content Collection loader for AstraCMS",
+  "description": "Svelte stores and SvelteKit utilities for AstraCMS",
   "type": "module",
   "private": false,
+  "svelte": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
       "import": "./dist/index.js"
     }
   },
@@ -16,35 +18,34 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --external astro",
-    "dev": "tsup src/index.ts --format esm --dts --watch --external astro",
+    "build": "tsup src/index.ts --format esm --dts --external svelte --external @astracms/core",
+    "dev": "tsup src/index.ts --format esm --dts --watch --external svelte --external @astracms/core",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
-    "astro",
-    "astro-loader",
-    "content-collections",
-    "cms",
+    "svelte",
+    "sveltekit",
+    "stores",
     "astracms",
-    "blog",
-    "headless-cms"
+    "cms",
+    "headless-cms",
+    "blog"
   ],
   "author": "AstraCMS",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/astracms/astracms",
-    "directory": "packages/astro-loader"
+    "directory": "packages/svelte"
   },
   "peerDependencies": {
-    "astro": "^5.0.0"
+    "svelte": "^4.0.0 || ^5.0.0"
   },
   "dependencies": {
-    "@astracms/core": "workspace:*",
-    "zod": "^3.24.2"
+    "@astracms/core": "workspace:*"
   },
   "devDependencies": {
-    "astro": "^5.0.0",
+    "svelte": "^5.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.2"
   }

@@ -1,0 +1,52 @@
+{
+  "name": "@astracms/nuxt",
+  "version": "0.1.0",
+  "description": "Nuxt 3 module for AstraCMS with auto-imports and SSR support",
+  "type": "module",
+  "private": false,
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "nuxt-module-build build",
+    "dev": "nuxt-module-build build --stub",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt3",
+    "nuxt-module",
+    "astracms",
+    "cms",
+    "headless-cms",
+    "blog"
+  ],
+  "author": "AstraCMS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astracms/astracms",
+    "directory": "packages/nuxt"
+  },
+  "peerDependencies": {
+    "nuxt": "^3.0.0"
+  },
+  "dependencies": {
+    "@astracms/core": "workspace:*",
+    "@nuxt/kit": "^3.16.0"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "^0.8.0",
+    "nuxt": "^3.16.0",
+    "typescript": "^5.7.2"
+  }
+}
