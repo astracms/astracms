@@ -1,9 +1,8 @@
-import type { RefAttributes, SVGProps } from "react";
+import type { SVGProps } from "react";
 
 type SVGAttributes = Partial<SVGProps<SVGSVGElement>>;
-type ElementAttributes = RefAttributes<SVGSVGElement> & SVGAttributes;
 
-export interface IconProps extends ElementAttributes {
+export interface IconProps extends Omit<SVGAttributes, "ref"> {
   size?: string | number;
   absoluteStrokeWidth?: boolean;
 }

@@ -6,7 +6,6 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
-    OPENAI_API_KEY: z.string().startsWith("sk-"),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.url()

@@ -17,9 +17,9 @@ export default function FeaturesCard() {
         <FeatureCard>
           <CardHeader className="pb-0">
             <CardHeading
-              description="Advanced tracking system, Instantly locate all your assets."
+              description="Serve your content from the edge to ensure readers everywhere get instant access."
               icon={MapPinIcon}
-              title="Real time location tracking"
+              title="Instant Global Reach"
             />
           </CardHeader>
 
@@ -43,9 +43,9 @@ export default function FeaturesCard() {
         <FeatureCard>
           <CardHeader className="pb-0">
             <CardHeading
-              description="Scheduling system, Instantly locate all your assets."
+              description="Plan your publishing schedule with advanced scheduling tools."
               icon={CalendarHeartIcon}
-              title="Advanced Scheduling"
+              title="Editorial Calendar"
             />
           </CardHeader>
 
@@ -66,29 +66,29 @@ export default function FeaturesCard() {
 
         <FeatureCard className="p-2 lg:col-span-2">
           <p className="mx-auto my-6 max-w-md text-balance text-center font-semibold text-2xl">
-            Smart scheduling with automated reminders for maintenance.
+            Everything you need to manage a professional publication.
           </p>
 
           <div className="flex justify-center gap-6 overflow-hidden">
             <CircularUI
               circles={[{ pattern: "border" }, { pattern: "border" }]}
-              label="Inclusion"
+              label="SEO"
             />
 
             <CircularUI
               circles={[{ pattern: "none" }, { pattern: "primary" }]}
-              label="Inclusion"
+              label="Media"
             />
 
             <CircularUI
               circles={[{ pattern: "blue" }, { pattern: "none" }]}
-              label="Join"
+              label="Tags"
             />
 
             <CircularUI
               circles={[{ pattern: "primary" }, { pattern: "none" }]}
               className="hidden sm:block"
-              label="Exclusion"
+              label="Users"
             />
           </div>
         </FeatureCard>

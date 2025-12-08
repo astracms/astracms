@@ -8,12 +8,7 @@
     "ultracite/remix"
   ],
   "files": {
-    "includes": [
-      "**",
-      "!packages/ui/src",
-      "!apps/cms/src/hooks/use-mobile.tsx",
-      "!apps/docs"
-    ]
+    "includes": ["**", "!packages/ui/src", "!apps/docs", "!packages/agent"]
   },
   "linter": {
     "rules": {

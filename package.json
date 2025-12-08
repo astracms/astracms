@@ -48,24 +48,11 @@
   "engines": {
     "node": ">=22"
   },
+  "packageManager": "pnpm@10.24.0",
   "pnpm": {
     "overrides": {
-      "@types/react": "19.0.2",
-      "@types/react-dom": "19.0.2"
-    },
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@parcel/watcher",
-      "@prisma/client",
-      "@prisma/engines",
-      "@tailwindcss/oxide",
-      "bufferutil",
-      "esbuild",
-      "prisma",
-      "sharp",
-      "unrs-resolver",
-      "workerd"
-    ]
-  },
-  "packageManager": "pnpm@10.24.0"
+      "@types/react": "19.2.0",
+      "@types/react-dom": "19.2.0"
+    }
+  }
 }

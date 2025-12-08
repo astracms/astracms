@@ -17,19 +17,19 @@ export default function SignupFeaturesCard() {
           <div className="p-6 sm:p-12">
             <span className="flex items-center gap-2 text-muted-foreground">
               <MapPinIcon className="size-4" />
-              Real time location tracking
+              Intelligent Writing Partner
             </span>
 
             <p className="mt-8 font-semibold text-2xl">
-              Advanced tracking system, Instantly locate all your assets.
+              Generate ideas, polish your prose, and format your stories with a
+              powerful AI.
             </p>
           </div>
 
           <div aria-hidden className="relative">
             <div className="absolute inset-0 z-10 m-auto size-fit">
               <div className="relative z-1 flex size-fit w-fit items-center gap-2 rounded-lg border bg-background px-3 py-1 font-medium text-xs shadow-md shadow-zinc-950/5 dark:bg-muted">
-                <span className="text-lg">🇨🇩</span> Last connection from DR
-                Congo
+                <span className="text-lg">🇨🇩</span> Traffic from Kinshasa, DRC
               </div>
               <div className="-bottom-2 absolute inset-2 mx-auto rounded-lg border bg-background px-3 py-4 font-medium text-xs shadow-md shadow-zinc-950/5 dark:bg-zinc-900" />
             </div>
@@ -44,11 +44,11 @@ export default function SignupFeaturesCard() {
           <div className="relative z-10">
             <span className="flex items-center gap-2 text-muted-foreground">
               <ChatDotsIcon className="size-4" />
-              Email and web support
+              Team Collaboration
             </span>
 
             <p className="my-8 font-semibold text-2xl">
-              Reach out via email or web for any assistance you need.
+              Collaborate on drafts and streamline your editorial workflow.
             </p>
           </div>
           <div aria-hidden className="flex flex-col gap-8">
@@ -57,38 +57,35 @@ export default function SignupFeaturesCard() {
                 <span className="flex size-5 rounded-full border">
                   <PiIcon className="m-auto size-3" />
                 </span>
-                <span className="text-muted-foreground text-xs">
-                  Sat 22 Feb
-                </span>
+                <span className="text-muted-foreground text-xs">Today</span>
               </div>
               <div className="mt-1.5 w-3/5 rounded-lg border bg-background p-3 text-xs">
-                Hey, I'm having trouble with my account.
+                Ready to review the new landing page copy?
               </div>
             </div>
 
             <div>
               <div className="mb-1 ml-auto w-3/5 rounded-lg bg-blue-600 p-3 text-white text-xs">
-                Molestiae numquam debitis et ullam distinctio provident nobis
-                repudiandae deleniti necessitatibus.
+                Looks perfect! I've approved it for publication.
               </div>
               <span className="block text-right text-muted-foreground text-xs">
-                Now
+                Just now
               </span>
             </div>
           </div>
         </div>
         <div className="col-span-full border-y p-12">
           <p className="text-center font-semibold text-4xl lg:text-7xl">
-            99.99% Uptime
+            Reader Analytics
           </p>
         </div>
         <div className="relative col-span-full">
           <div className="absolute z-10 max-w-lg px-6 pt-6 pr-12 md:px-12 md:pt-12">
             <p className="my-8 font-semibold text-2xl">
-              Monitor your application's activity in real-time.{" "}
+              Track detailed engagement metrics.{" "}
               <span className="text-muted-foreground">
                 {" "}
-                Instantly identify and resolve issues.
+                Know exactly what content performs best.
               </span>
             </p>
           </div>

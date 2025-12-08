@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-interface SocialIconProps extends SVGProps<SVGSVGElement> {}
+type SocialIconProps = Omit<SVGProps<SVGSVGElement>, "ref">;
 
 export const Google = (props: SocialIconProps) => (
   <svg

@@ -1,3 +1,15 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - bufferutil
+  - esbuild
+  - msw
+  - prisma
+  - protobufjs
+  - sharp
+  - unrs-resolver
+  - workerd

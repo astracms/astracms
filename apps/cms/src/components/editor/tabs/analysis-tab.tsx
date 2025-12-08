@@ -1,17 +1,23 @@
 "use client";
 
-import { Button } from "@astra/ui/components/button";
+import { Label } from "@astra/ui/components/label";
 import { Separator } from "@astra/ui/components/separator";
+import { Switch } from "@astra/ui/components/switch";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@astra/ui/components/tooltip";
 import { ArrowClockwiseIcon, InfoIcon } from "@phosphor-icons/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { EditorInstance } from "novel";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
+import { toast } from "sonner";
 import { useReadability } from "@/hooks/use-readability";
+import { QUERY_KEYS } from "@/lib/queries/keys";
 import { useUnsavedChanges } from "@/providers/unsaved-changes";
+import { useWorkspace } from "@/providers/workspace";
+import type { Workspace } from "@/types/workspace";
 import { Gauge } from "../../ui/gauge";
 import { HiddenScrollbar } from "../../ui/hidden-scrollbar";
 import type { ReadabilitySuggestion } from "../ai/readability-suggestions";
@@ -36,6 +42,78 @@ export function AnalysisTab({
 }: AnalysisTabProps) {
   const [editorText, setEditorText] = useState("");
   const { setHasUnsavedChanges } = useUnsavedChanges();
+  const { activeWorkspace } = useWorkspace();
+  const queryClient = useQueryClient();
+  const aiToggleId = useId();
+
+  // Mutation to toggle AI settings
+  const { mutate: toggleAi, isPending: isTogglingAi } = useMutation({
+    mutationFn: async (enabled: boolean) => {
+      const res = await fetch("/api/editor/preferences", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ai: { enabled } }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to update AI settings");
+      }
+      return res.json();
+    },
+    onMutate: async (enabled) => {
+      if (!activeWorkspace?.id) return;
+
+      await queryClient.cancelQueries({
+        queryKey: QUERY_KEYS.WORKSPACE(activeWorkspace.id),
+      });
+
+      const previousWorkspace = queryClient.getQueryData<Workspace>(
+        QUERY_KEYS.WORKSPACE(activeWorkspace.id)
+      );
+
+      // Optimistic update
+      queryClient.setQueryData<Workspace | undefined>(
+        QUERY_KEYS.WORKSPACE(activeWorkspace.id),
+        (old) => (old ? { ...old, ai: { enabled } } : old)
+      );
+      queryClient.setQueryData<Workspace | undefined>(
+        QUERY_KEYS.WORKSPACE_BY_SLUG(activeWorkspace.slug),
+        (old) => (old ? { ...old, ai: { enabled } } : old)
+      );
+
+      return { previousWorkspace };
+    },
+    onSuccess: (_, enabled) => {
+      toast.success(
+        enabled ? "AI suggestions enabled" : "AI suggestions disabled"
+      );
+    },
+    onError: (error, _, context) => {
+      // Rollback on error
+      if (context?.previousWorkspace && activeWorkspace?.id) {
+        queryClient.setQueryData(
+          QUERY_KEYS.WORKSPACE(activeWorkspace.id),
+          context.previousWorkspace
+        );
+        queryClient.setQueryData(
+          QUERY_KEYS.WORKSPACE_BY_SLUG(activeWorkspace.slug),
+          context.previousWorkspace
+        );
+      }
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update AI settings"
+      );
+    },
+    onSettled: () => {
+      if (activeWorkspace?.id) {
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.WORKSPACE(activeWorkspace.id),
+        });
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.WORKSPACE_BY_SLUG(activeWorkspace.slug),
+        });
+      }
+    },
+  });
 
   useEffect(() => {
     if (!editor) {
@@ -135,21 +213,43 @@ export function AnalysisTab({
                 ) : null}
               </div>
               {aiEnabled && (
-                <Button
+                <button
                   aria-label="Refresh suggestions"
-                  className="h-7 w-7 cursor-pointer"
+                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md hover:bg-accent disabled:opacity-50"
                   disabled={Boolean(aiLoading)}
                   onClick={onRefreshAi}
-                  size="icon"
                   type="button"
-                  variant="ghost"
                 >
                   <ArrowClockwiseIcon
                     className={aiLoading ? "h-4 w-4 animate-spin" : "h-4 w-4"}
                   />
-                </Button>
+                </button>
               )}
             </div>
+
+            {/* AI Toggle */}
+            <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
+              <div className="flex flex-col gap-0.5">
+                <Label
+                  className="cursor-pointer font-medium text-sm"
+                  htmlFor={aiToggleId}
+                >
+                  ✨ AI Suggestions
+                </Label>
+                <p className="text-muted-foreground text-xs">
+                  {aiEnabled
+                    ? "AI-powered writing assistance is active"
+                    : "Enable for smarter suggestions"}
+                </p>
+              </div>
+              <Switch
+                checked={aiEnabled}
+                disabled={isTogglingAi}
+                id={aiToggleId}
+                onCheckedChange={(checked) => toggleAi(checked)}
+              />
+            </div>
+
             {aiEnabled ? (
               <ReadabilitySuggestions
                 editor={editor ?? null}

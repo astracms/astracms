@@ -62,7 +62,41 @@ export async function fetchAiReadabilitySuggestionsStrings(params: {
     content: params.content,
     metrics: params.metrics,
   });
-  return parseStringArrayFromText(text);
+
+  // The API returns {suggestions: [{text, explanation?, textReference?}]}
+  // We need to extract the text from each suggestion
+  try {
+    let json: unknown = null;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      // Try to find JSON in the response
+      const jsonMatch = text.match(/\{[\s\S]*"suggestions"[\s\S]*\}/);
+      if (jsonMatch) {
+        json = JSON.parse(jsonMatch[0]);
+      }
+    }
+
+    if (json && typeof json === "object" && "suggestions" in json) {
+      const suggestions = (json as { suggestions: unknown[] }).suggestions;
+      if (Array.isArray(suggestions)) {
+        return suggestions
+          .map((s) => {
+            if (typeof s === "string") return s;
+            if (s && typeof s === "object" && "text" in s) {
+              return String((s as { text: unknown }).text);
+            }
+            return null;
+          })
+          .filter((s): s is string => s !== null && s.length > 0);
+      }
+    }
+
+    // Fallback: try to parse as plain string array
+    return parseStringArrayFromText(text);
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchAiReadabilitySuggestionsObject(params: {

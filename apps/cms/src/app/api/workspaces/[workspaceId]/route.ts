@@ -91,9 +91,13 @@ export async function GET(
 
   const currentUserRole = currentUserMember?.role || null;
 
+  // Flatten editorPreferences.ai to ai for frontend compatibility
+  const { editorPreferences, ...workspaceWithoutEditorPrefs } = workspace;
+
   const workspaceWithUserRole = {
-    ...workspace,
+    ...workspaceWithoutEditorPrefs,
     currentUserRole,
+    ai: editorPreferences?.ai ?? null,
   };
 
   return NextResponse.json(workspaceWithUserRole);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
+import { type UIMessage as AIMessage, useChat } from "@ai-sdk/react";
 import {
   Message,
   MessageAction,
@@ -20,7 +20,7 @@ import {
 } from "@astra/ui/components/ai-elements/suggestion";
 import { Button } from "@astra/ui/components/button";
 import { ScrollArea } from "@astra/ui/components/scroll-area";
-import { ArrowUpIcon } from "@phosphor-icons/react";
+import { ArrowUpIcon, StopIcon, TrashIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -28,20 +28,74 @@ import {
   AddCategoryView,
   AddTagView,
   CreatePostView,
+  ListMediaView,
+  ListResourcesView,
+  PresentOptionsView,
   SearchView,
+  WebSearchView,
 } from "@/components/agent/tool-views";
-import type { CMSAgentUIMessage } from "@/lib/ai/agent";
+
+interface SuggestionItem {
+  key: string;
+  value: string;
+  isAction?: boolean;
+  sendValue?: string;
+}
 
 export function PageClient() {
-  const { status, sendMessage, messages } = useChat<CMSAgentUIMessage>({
-    onError: (error: Error) => {
-      toast.error(`Failed to send message: ${error.message}`);
-    },
-  });
+  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
+
+  const { status, sendMessage, messages, setMessages, stop } =
+    useChat<AIMessage>({
+      onError: (error: Error) => {
+        toast.error(`Failed to send message: ${error.message}`);
+      },
+    });
   const [input, setInput] = useState<string>("");
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
+  const handleClearChat = async () => {
+    try {
+      const res = await fetch("/api/chat/clear", { method: "DELETE" });
+      if (res.ok) {
+        setMessages([]);
+        toast.success("Chat cleared");
+      } else {
+        toast.error("Failed to clear chat");
+      }
+    } catch {
+      toast.error("Failed to clear chat");
+    }
+  };
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch("/api/chat");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            setMessages(data);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch messages:", error);
+      }
+    };
+    fetchMessages();
+  }, [setMessages]);
+
+  const handleSelectImage = (media: {
+    id: string;
+    url: string;
+    name: string;
+  }) => {
+    sendMessage({
+      text: `Selected image name: ${media.name} (ID: ${media.id})`,
+    });
+  };
+
+  const handleUploadClick = () => {
+    toast.info("Media upload is available in the Media Library page");
   };
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -52,14 +106,18 @@ export function PageClient() {
     }
   }, [messages.length]);
 
-  const suggestions: { key: string; value: string }[] = [
-    { key: "1", value: "Create a new blog post about AI" },
-    { key: "2", value: "Add a 'Technology' tag" },
-    { key: "3", value: "Search for published posts" },
-    { key: "4", value: "Create a 'Tutorials' category" },
-    { key: "5", value: "Draft a post about Next.js 15" },
-    { key: "6", value: "Find posts with 'Draft' status" },
-  ];
+  const handleSuggestionClick = (suggestionValue: string) => {
+    // Find the suggestion object to check if it's an action
+    const suggestion = suggestions.find((s) => s.value === suggestionValue);
+
+    if (suggestion?.isAction) {
+      // It's a selection from the tool -> send immediately
+      sendMessage({ text: suggestion.sendValue || suggestionValue });
+    } else {
+      // It's a standard prompt starter -> put in input
+      setInput(suggestionValue);
+    }
+  };
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-background">
@@ -98,62 +156,112 @@ export function PageClient() {
                   >
                     <MessageContent>
                       {message.parts.map((part, index) => {
-                        switch (part.type) {
-                          case "text":
-                            return (
-                              <MessageResponse key={index}>
-                                {part.text}
-                              </MessageResponse>
-                            );
+                        // Handle text parts
+                        if (part.type === "text") {
+                          return (
+                            <MessageResponse key={index}>
+                              {part.text}
+                            </MessageResponse>
+                          );
+                        }
 
-                          case "step-start":
-                            return index > 0 ? (
-                              <div className="my-3" key={index}>
-                                <hr className="border-border" />
-                              </div>
-                            ) : null;
+                        // Handle step separators
+                        if (part.type === "step-start") {
+                          return index > 0 ? (
+                            <div className="my-3" key={index}>
+                              <hr className="border-border" />
+                            </div>
+                          ) : null;
+                        }
 
-                          case "tool-addTag":
+                        // Handle tool invocations
+                        // AI SDK v5 uses part.type like "tool-add-tag" or just has toolName
+                        if (part.type.startsWith("tool-")) {
+                          const toolName = part.type.replace("tool-", "");
+
+                          // Match tool names (Mastra uses kebab-case IDs like "add-tag")
+                          if (toolName === "add-tag" || toolName === "addTag") {
                             return <AddTagView invocation={part} key={index} />;
-
-                          case "tool-addCategory":
+                          }
+                          if (
+                            toolName === "add-category" ||
+                            toolName === "addCategory"
+                          ) {
                             return (
                               <AddCategoryView invocation={part} key={index} />
                             );
-
-                          case "tool-createPost":
+                          }
+                          if (
+                            toolName === "create-post" ||
+                            toolName === "createPost"
+                          ) {
                             return (
                               <CreatePostView invocation={part} key={index} />
                             );
-
-                          case "tool-search":
+                          }
+                          if (toolName === "search") {
                             return <SearchView invocation={part} key={index} />;
-
-                          default:
+                          }
+                          if (
+                            toolName === "update-post" ||
+                            toolName === "updatePost"
+                          ) {
+                            return (
+                              <CreatePostView invocation={part} key={index} />
+                            );
+                          }
+                          if (
+                            toolName === "list-resources" ||
+                            toolName === "listResources"
+                          ) {
+                            return (
+                              <ListResourcesView
+                                invocation={part}
+                                key={index}
+                              />
+                            );
+                          }
+                          if (
+                            toolName === "get-analytics" ||
+                            toolName === "getAnalytics"
+                          ) {
+                            // Generic analytics view - show as text for now
                             return null;
+                          }
+                          if (
+                            toolName === "get-authors" ||
+                            toolName === "getAuthors"
+                          ) {
+                            // Generic authors view - show as text for now
+                            return null;
+                          }
+                          if (
+                            toolName === "web-search" ||
+                            toolName === "webSearch"
+                          ) {
+                            return (
+                              <WebSearchView invocation={part} key={index} />
+                            );
+                          }
+
+                          if (
+                            toolName === "list-media" ||
+                            toolName === "listMedia"
+                          ) {
+                            return (
+                              <ListMediaView
+                                invocation={part}
+                                key={index}
+                                onSelectImage={handleSelectImage}
+                                onUploadClick={handleUploadClick}
+                              />
+                            );
+                          }
                         }
+
+                        return null;
                       })}
                     </MessageContent>
-                    {message.role === "assistant" && status !== "streaming" && (
-                      <MessageToolbar>
-                        <div className="flex items-center gap-1">
-                          <MessageAction
-                            onClick={() => {
-                              // Extract text parts for copying
-                              const textContent = message.parts
-                                .filter((part) => part.type === "text")
-                                .map((part) =>
-                                  part.type === "text" ? part.text : ""
-                                )
-                                .join("\n\n");
-                              navigator.clipboard.writeText(textContent);
-                              toast.success("Copied to clipboard");
-                            }}
-                            tooltip="Copy"
-                          />
-                        </div>
-                      </MessageToolbar>
-                    )}
                   </Message>
                 </motion.div>
               ))}
@@ -168,21 +276,25 @@ export function PageClient() {
 
         <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-background via-background to-transparent pt-10 pb-6">
           <div className="mx-auto max-w-3xl space-y-3 px-4">
-            <Suggestions>
-              {suggestions.map((suggestion) => (
-                <Suggestion
-                  key={suggestion.key}
-                  onClick={handleSuggestionClick}
-                  suggestion={suggestion.value}
-                />
-              ))}
-            </Suggestions>
+            {suggestions.length > 0 && (
+              <Suggestions>
+                {suggestions.map((suggestion) => (
+                  <Suggestion
+                    key={suggestion.key}
+                    onClick={handleSuggestionClick}
+                    suggestion={suggestion.value}
+                  />
+                ))}
+              </Suggestions>
+            )}
             <PromptInputProvider>
               <PromptInputForm
                 input={input}
                 isStreaming={status === "streaming"}
+                onClearChat={handleClearChat}
                 sendMessage={sendMessage}
                 setInput={setInput}
+                stop={stop}
               />
             </PromptInputProvider>
           </div>
@@ -194,17 +306,35 @@ export function PageClient() {
 
 interface PromptInputFormProps {
   sendMessage: (message: { text: string; cancel?: boolean }) => void;
+  stop: () => void;
   isStreaming: boolean;
   input: string;
   setInput: (value: string) => void;
+  onClearChat: () => Promise<void>;
 }
 
 function PromptInputForm({
   sendMessage,
+  stop,
   isStreaming,
   input,
   setInput,
+  onClearChat,
 }: PromptInputFormProps) {
+  const [isClearing, setIsClearing] = useState(false);
+
+  const handleClearChat = async () => {
+    if (isStreaming) {
+      stop();
+    }
+    setIsClearing(true);
+    try {
+      await onClearChat();
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
   return (
     <PromptInput
       className="relative overflow-hidden rounded-xl border bg-background shadow-lg transition-all focus-within:ring-2 focus-within:ring-primary/20"
@@ -229,12 +359,37 @@ function PromptInputForm({
         />
         <Button
           className="rounded-lg transition-all hover:scale-105 active:scale-95"
-          disabled={isStreaming || !input.trim()}
+          disabled={isClearing}
+          onClick={handleClearChat}
           size="icon"
-          type="submit"
+          title="Clear chat"
+          type="button"
+          variant="ghost"
         >
-          <ArrowUpIcon className="size-4" />
+          <TrashIcon className="size-4" />
         </Button>
+        {isStreaming ? (
+          <Button
+            className="rounded-lg transition-all hover:scale-105 active:scale-95"
+            onClick={() => stop()}
+            size="icon"
+            title="Stop generation"
+            type="button"
+            variant="destructive"
+          >
+            <StopIcon className="size-4" />
+          </Button>
+        ) : (
+          <Button
+            className="rounded-lg transition-all hover:scale-105 active:scale-95"
+            disabled={!input.trim()}
+            size="icon"
+            title="Send message"
+            type="submit"
+          >
+            <ArrowUpIcon className="size-4" />
+          </Button>
+        )}
       </div>
     </PromptInput>
   );
