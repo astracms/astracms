@@ -38,9 +38,9 @@ export function AddTagView({ invocation }: ToolViewProps) {
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm dark:border-blue-800 dark:bg-blue-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-blue-500" />
-        <span className="text-blue-700 dark:text-blue-300">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
           Creating tag "{input?.name ?? "..."}"...
         </span>
       </div>
@@ -51,8 +51,8 @@ export function AddTagView({ invocation }: ToolViewProps) {
     // Check for failure: either success is false OR there's an actual error message
     if (!output.success || output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">
             ❌ Error: {output.error || "Unknown error"}
           </span>
         </div>
@@ -61,8 +61,8 @@ export function AddTagView({ invocation }: ToolViewProps) {
     // Success case
     if (output.tag) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm dark:border-green-800 dark:bg-green-950/30">
-          <span className="text-green-700 dark:text-green-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+          <span className="text-foreground">
             ✅ Tag "{output.tag.name}" created successfully
           </span>
         </div>
@@ -72,8 +72,8 @@ export function AddTagView({ invocation }: ToolViewProps) {
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -98,9 +98,9 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 p-3 text-sm dark:border-purple-800 dark:bg-purple-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-purple-500" />
-        <span className="text-purple-700 dark:text-purple-300">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
           Creating category "{input?.name ?? "..."}"...
         </span>
       </div>
@@ -111,8 +111,8 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
     // Check for failure: either success is false OR there's an actual error message
     if (!output.success || output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">
             ❌ Error: {output.error || "Unknown error"}
           </span>
         </div>
@@ -121,8 +121,8 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
     // Success case
     if (output.category) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm dark:border-green-800 dark:bg-green-950/30">
-          <span className="text-green-700 dark:text-green-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+          <span className="text-foreground">
             ✅ Category "{output.category.name}" created successfully
           </span>
         </div>
@@ -132,8 +132,8 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -156,9 +156,9 @@ export function CreatePostView({ invocation }: ToolViewProps) {
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 p-3 text-sm dark:border-indigo-800 dark:bg-indigo-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-indigo-500" />
-        <span className="text-indigo-700 dark:text-indigo-300">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
           Creating post "{input?.title ?? "..."}"...
         </span>
       </div>
@@ -169,8 +169,8 @@ export function CreatePostView({ invocation }: ToolViewProps) {
     // Check for failure: either success is false OR there's an actual error message
     if (!output.success || output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">
             ❌ Error: {output.error || "Unknown error"}
           </span>
         </div>
@@ -179,11 +179,9 @@ export function CreatePostView({ invocation }: ToolViewProps) {
     // Success case
     if (output.post) {
       return (
-        <div className="flex flex-col gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm dark:border-green-800 dark:bg-green-950/30">
-          <span className="text-green-700 dark:text-green-300">
-            ✅ Post created successfully
-          </span>
-          <div className="ml-6 space-y-1 text-green-600 text-xs dark:text-green-400">
+        <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+          <span className="text-foreground">✅ Post created successfully</span>
+          <div className="ml-6 space-y-1 text-muted-foreground text-xs">
             <div>
               <strong>Title:</strong> {output.post.title}
             </div>
@@ -198,8 +196,8 @@ export function CreatePostView({ invocation }: ToolViewProps) {
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -230,9 +228,9 @@ export function SearchView({ invocation }: ToolViewProps) {
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm dark:border-amber-800 dark:bg-amber-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-amber-500" />
-        <span className="text-amber-700 dark:text-amber-300">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
           Searching for "{input?.query ?? "..."}"...
         </span>
       </div>
@@ -242,10 +240,8 @@ export function SearchView({ invocation }: ToolViewProps) {
   if (state === "output-available" && output) {
     if (output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
-            ❌ Error: {output.error}
-          </span>
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">❌ Error: {output.error}</span>
         </div>
       );
     }
@@ -258,8 +254,8 @@ export function SearchView({ invocation }: ToolViewProps) {
 
     if (totalResults === 0) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm dark:border-gray-800 dark:bg-gray-950/30">
-          <span className="text-gray-700 dark:text-gray-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+          <span className="text-muted-foreground">
             No results found for "{input?.query ?? "search"}"
           </span>
         </div>
@@ -267,11 +263,11 @@ export function SearchView({ invocation }: ToolViewProps) {
     }
 
     return (
-      <div className="flex flex-col gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm dark:border-green-800 dark:bg-green-950/30">
-        <span className="text-green-700 dark:text-green-300">
+      <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+        <span className="text-foreground">
           ✅ Found {totalResults} result{totalResults !== 1 ? "s" : ""}
         </span>
-        <div className="ml-6 space-y-2 text-green-600 text-xs dark:text-green-400">
+        <div className="ml-6 space-y-2 text-muted-foreground text-xs">
           {results?.posts && results.posts.length > 0 && (
             <div>
               <strong>Posts ({results.posts.length}):</strong>
@@ -309,8 +305,8 @@ export function SearchView({ invocation }: ToolViewProps) {
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -340,9 +336,9 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm dark:border-amber-800 dark:bg-amber-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-amber-500" />
-        <span className="text-amber-700 dark:text-amber-300">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
           Loading {input?.type ?? "resources"}...
         </span>
       </div>
@@ -352,10 +348,8 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
   if (state === "output-available" && output) {
     if (output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
-            ❌ Error: {output.error}
-          </span>
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">❌ Error: {output.error}</span>
         </div>
       );
     }
@@ -370,12 +364,12 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
     const resourceType = input?.type || "items";
 
     return (
-      <div className="flex flex-col gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-sm dark:border-green-800 dark:bg-green-950/30">
-        <span className="text-green-700 dark:text-green-300">
+      <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+        <span className="text-foreground">
           ✅ Found {pagination?.total || results.length} {resourceType}
           {(pagination?.total || results.length) !== 1 ? "s" : ""}
         </span>
-        <div className="ml-6 space-y-1 text-green-600 text-xs dark:text-green-400">
+        <div className="ml-6 space-y-1 text-muted-foreground text-xs">
           <ul className="list-inside list-disc space-y-1">
             {results.map((item, idx) => {
               const record = item as Record<string, unknown>;
@@ -394,7 +388,7 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
             })}
           </ul>
           {pagination && pagination.totalPages > 1 && (
-            <div className="mt-2 border-green-300 border-t pt-2 dark:border-green-700">
+            <div className="mt-2 border-border border-t pt-2">
               Page {pagination.page} of {pagination.totalPages}
             </div>
           )}
@@ -405,8 +399,8 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -434,9 +428,9 @@ export function WebSearchView({ invocation }: ToolViewProps) {
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-cyan-200 bg-cyan-50 p-3 text-sm dark:border-cyan-800 dark:bg-cyan-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-cyan-500" />
-        <span className="text-cyan-700 dark:text-cyan-300">
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
           🌐 Searching the web for "{input?.query ?? "..."}..."
         </span>
       </div>
@@ -446,8 +440,8 @@ export function WebSearchView({ invocation }: ToolViewProps) {
   if (state === "output-available" && output) {
     if (output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">
             ❌ Web search error: {output.error}
           </span>
         </div>
@@ -458,8 +452,8 @@ export function WebSearchView({ invocation }: ToolViewProps) {
 
     if (results.length === 0) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm dark:border-gray-800 dark:bg-gray-950/30">
-          <span className="text-gray-700 dark:text-gray-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+          <span className="text-muted-foreground">
             🌐 No web results found for "{input?.query ?? "search"}"
           </span>
         </div>
@@ -467,27 +461,27 @@ export function WebSearchView({ invocation }: ToolViewProps) {
     }
 
     return (
-      <div className="flex flex-col gap-2 rounded-lg border border-cyan-200 bg-cyan-50 p-3 text-sm dark:border-cyan-800 dark:bg-cyan-950/30">
-        <span className="text-cyan-700 dark:text-cyan-300">
+      <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
+        <span className="text-foreground">
           🌐 Found {results.length} web result{results.length !== 1 ? "s" : ""}
         </span>
         {output.answer && (
-          <div className="rounded border border-cyan-300 bg-white/50 p-2 text-cyan-800 text-xs dark:border-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-200">
+          <div className="rounded border bg-background/50 p-2 text-muted-foreground text-xs">
             <strong>Summary:</strong> {output.answer}
           </div>
         )}
-        <div className="ml-2 space-y-1 text-cyan-600 text-xs dark:text-cyan-400">
+        <div className="ml-2 space-y-1 text-muted-foreground text-xs">
           {results.slice(0, 5).map((result, index) => (
             <div className="flex flex-col" key={`${result.url}-${index}`}>
               <a
-                className="font-medium text-cyan-700 underline hover:text-cyan-900 dark:text-cyan-300 dark:hover:text-cyan-100"
+                className="font-medium text-foreground underline hover:text-primary"
                 href={result.url}
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 {result.title}
               </a>
-              <span className="line-clamp-1 text-cyan-500 dark:text-cyan-500">
+              <span className="line-clamp-1 text-muted-foreground">
                 {result.content.slice(0, 100)}...
               </span>
             </div>
@@ -499,8 +493,8 @@ export function WebSearchView({ invocation }: ToolViewProps) {
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -539,11 +533,9 @@ export function PresentOptionsView({
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-50 p-3 text-sm dark:border-violet-800 dark:bg-violet-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-violet-500" />
-        <span className="text-violet-700 dark:text-violet-300">
-          Preparing options...
-        </span>
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">Preparing options...</span>
       </div>
     );
   }
@@ -622,8 +614,8 @@ export function PresentOptionsView({
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
@@ -648,26 +640,15 @@ interface ListMediaOutput {
   error?: string;
 }
 
-interface ListMediaToolViewProps extends ToolViewProps {
-  onSelectImage?: (media: { id: string; url: string; name: string }) => void;
-  onUploadClick?: () => void;
-}
-
-export function ListMediaView({
-  invocation,
-  onSelectImage,
-  onUploadClick,
-}: ListMediaToolViewProps) {
+export function ListMediaView({ invocation }: ToolViewProps) {
   const state = getState(invocation);
   const output = invocation?.output as ListMediaOutput | undefined;
 
   if (state === "input-available" || state === "input-streaming") {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-teal-200 bg-teal-50 p-3 text-sm dark:border-teal-800 dark:bg-teal-950/30">
-        <div className="size-2 animate-pulse rounded-full bg-teal-500" />
-        <span className="text-teal-700 dark:text-teal-300">
-          Loading media library...
-        </span>
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">Loading media library...</span>
       </div>
     );
   }
@@ -675,8 +656,8 @@ export function ListMediaView({
   if (state === "output-available" && output) {
     if (!output.success || output.error) {
       return (
-        <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-          <span className="text-red-700 dark:text-red-300">
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">
             ❌ Error: {output.error || "Failed to load media"}
           </span>
         </div>
@@ -691,61 +672,43 @@ export function ListMediaView({
           <p className="text-muted-foreground text-sm">
             No images found in your media library
           </p>
-          {onUploadClick && (
-            <button
-              className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-              onClick={onUploadClick}
-              type="button"
-            >
-              Upload an image
-            </button>
-          )}
         </div>
       );
     }
 
+    const displayMedia = media.slice(0, 4);
+    const hasMore = media.length > 4 || output.hasMore;
+    const totalCount = output.total ?? media.length;
+
     return (
       <div className="my-3 space-y-3">
-        <div className="flex items-center justify-between">
-          <p className="font-medium text-sm">
-            Select an image ({output.total ?? media.length} available)
-          </p>
-          {onUploadClick && (
-            <button
-              className="rounded-md border px-3 py-1.5 text-muted-foreground text-sm transition-colors hover:border-primary hover:text-foreground"
-              onClick={onUploadClick}
-              type="button"
-            >
-              📤 Upload new
-            </button>
-          )}
-        </div>
+        <p className="font-medium text-sm">
+          Media Library ({totalCount} available)
+        </p>
 
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-          {media.map((item) => (
-            <button
-              className="group relative aspect-square overflow-hidden rounded-lg border-2 border-transparent transition-all hover:border-primary"
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {displayMedia.map((item) => (
+            <div
+              className="group relative aspect-square overflow-hidden rounded-lg border"
               key={item.id}
-              onClick={() => onSelectImage?.(item)}
-              type="button"
             >
               <Image
                 alt={item.name}
-                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                className="h-full w-full object-cover"
                 height={100}
                 src={item.url}
                 width={100}
               />
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent p-1.5">
                 <p className="line-clamp-1 text-white text-xs">{item.name}</p>
               </div>
-            </button>
+            </div>
           ))}
         </div>
 
-        {output.hasMore && (
-          <p className="text-center text-muted-foreground text-xs">
-            Showing {media.length} of {output.total} images
+        {hasMore && (
+          <p className="text-center text-muted-foreground text-sm">
+            View more in Media Library
           </p>
         )}
       </div>
@@ -754,8 +717,98 @@ export function ListMediaView({
 
   if (state === "output-error") {
     return (
-      <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm dark:border-red-800 dark:bg-red-950/30">
-        <span className="text-red-700 dark:text-red-300">
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
+          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+        </span>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+export function CreateBlogAutoView({ invocation }: ToolViewProps) {
+  const state = getState(invocation);
+  const input = invocation?.input as { topic?: string } | undefined;
+  const output = invocation?.output as
+    | {
+        success: boolean;
+        post?: {
+          id: string;
+          slug: string;
+          title: string;
+          category: string;
+          tags: string[];
+          wordCount: number;
+          editUrl: string;
+        };
+        error?: string;
+      }
+    | undefined;
+
+  if (state === "input-available" || state === "input-streaming") {
+    return (
+      <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 text-sm">
+        <div className="size-2 animate-pulse rounded-full bg-primary" />
+        <span className="text-muted-foreground">
+          Creating blog post about "{input?.topic ?? "..."}"...
+        </span>
+      </div>
+    );
+  }
+
+  if (state === "output-available" && output) {
+    // Check for failure
+    if (!output.success || output.error) {
+      return (
+        <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+          <span className="text-destructive">
+            ❌ Error: {output.error || "Unknown error"}
+          </span>
+        </div>
+      );
+    }
+
+    // Success case
+    if (output.post) {
+      return (
+        <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-4 text-sm">
+          <span className="text-foreground">
+            ✅ Blog post created successfully
+          </span>
+          <div className="ml-6 space-y-1.5 text-muted-foreground text-xs">
+            <div>
+              <strong>Title:</strong> {output.post.title}
+            </div>
+            <div>
+              <strong>Category:</strong> {output.post.category}
+            </div>
+            <div>
+              <strong>Tags:</strong> {output.post.tags.join(", ")}
+            </div>
+            <div>
+              <strong>Word Count:</strong> {output.post.wordCount} words
+            </div>
+            <div className="pt-1">
+              <a
+                className="font-medium text-primary underline hover:text-primary/80"
+                href={output.post.editUrl}
+                rel="noopener noreferrer"
+              >
+                Edit post →
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  if (state === "output-error") {
+    return (
+      <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
+        <span className="text-destructive">
           ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>

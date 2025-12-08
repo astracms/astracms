@@ -6,6 +6,7 @@
  */
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { generateWithAI } from "../lib/ai-generator";
 
 /**
  * Create the keyword research tool
@@ -65,7 +66,7 @@ export const createKeywordResearchTool = () =>
         .string()
         .describe("Strategic recommendations for keyword usage"),
     }),
-    execute: async ({ context, mastra }) => {
+    execute: async ({ context }) => {
       try {
         const {
           topic,
@@ -75,24 +76,14 @@ export const createKeywordResearchTool = () =>
 
         console.log("[KEYWORD RESEARCH] Starting research for topic:", topic);
 
-        // Get agent from Mastra context
-        const agent = mastra?.getAgent("cmsAgent");
-        if (!agent) {
-          throw new Error(
-            "CMS agent not available. Please ensure the agent is properly configured."
-          );
-        }
-
         // Build keyword research prompt
         const targetKeywordContext =
           targetKeywords.length > 0
             ? `\nSpecific keywords to analyze: ${targetKeywords.join(", ")}`
             : "";
 
-        const response = await agent.generate([
-          {
-            role: "user",
-            content: `Conduct comprehensive keyword research for SEO optimization.
+        const text = await generateWithAI(
+          `Conduct comprehensive keyword research for SEO optimization.
 
 Topic: "${topic}"
 Audience: ${audience}${targetKeywordContext}
@@ -132,13 +123,8 @@ Provide a concise strategic summary (3-4 sentences) on:
 - Content structure suggestions
 - SEO optimization tips
 
-Generate comprehensive keyword research now:`,
-          },
-        ]);
-
-        // Parse the AI response
-        const text = response.text || "";
-        console.log("[KEYWORD RESEARCH] Received analysis, parsing...");
+Generate comprehensive keyword research now:`
+        );
 
         // Extract primary keywords
         const primaryKeywords: Array<{

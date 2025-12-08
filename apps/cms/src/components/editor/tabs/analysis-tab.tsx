@@ -1,23 +1,16 @@
 "use client";
 
-import { Label } from "@astra/ui/components/label";
 import { Separator } from "@astra/ui/components/separator";
-import { Switch } from "@astra/ui/components/switch";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@astra/ui/components/tooltip";
 import { ArrowClockwiseIcon, InfoIcon } from "@phosphor-icons/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { EditorInstance } from "novel";
-import { useEffect, useId, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 import { useReadability } from "@/hooks/use-readability";
-import { QUERY_KEYS } from "@/lib/queries/keys";
 import { useUnsavedChanges } from "@/providers/unsaved-changes";
-import { useWorkspace } from "@/providers/workspace";
-import type { Workspace } from "@/types/workspace";
 import { Gauge } from "../../ui/gauge";
 import { HiddenScrollbar } from "../../ui/hidden-scrollbar";
 import type { ReadabilitySuggestion } from "../ai/readability-suggestions";
@@ -42,78 +35,6 @@ export function AnalysisTab({
 }: AnalysisTabProps) {
   const [editorText, setEditorText] = useState("");
   const { setHasUnsavedChanges } = useUnsavedChanges();
-  const { activeWorkspace } = useWorkspace();
-  const queryClient = useQueryClient();
-  const aiToggleId = useId();
-
-  // Mutation to toggle AI settings
-  const { mutate: toggleAi, isPending: isTogglingAi } = useMutation({
-    mutationFn: async (enabled: boolean) => {
-      const res = await fetch("/api/editor/preferences", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ai: { enabled } }),
-      });
-      if (!res.ok) {
-        throw new Error("Failed to update AI settings");
-      }
-      return res.json();
-    },
-    onMutate: async (enabled) => {
-      if (!activeWorkspace?.id) return;
-
-      await queryClient.cancelQueries({
-        queryKey: QUERY_KEYS.WORKSPACE(activeWorkspace.id),
-      });
-
-      const previousWorkspace = queryClient.getQueryData<Workspace>(
-        QUERY_KEYS.WORKSPACE(activeWorkspace.id)
-      );
-
-      // Optimistic update
-      queryClient.setQueryData<Workspace | undefined>(
-        QUERY_KEYS.WORKSPACE(activeWorkspace.id),
-        (old) => (old ? { ...old, ai: { enabled } } : old)
-      );
-      queryClient.setQueryData<Workspace | undefined>(
-        QUERY_KEYS.WORKSPACE_BY_SLUG(activeWorkspace.slug),
-        (old) => (old ? { ...old, ai: { enabled } } : old)
-      );
-
-      return { previousWorkspace };
-    },
-    onSuccess: (_, enabled) => {
-      toast.success(
-        enabled ? "AI suggestions enabled" : "AI suggestions disabled"
-      );
-    },
-    onError: (error, _, context) => {
-      // Rollback on error
-      if (context?.previousWorkspace && activeWorkspace?.id) {
-        queryClient.setQueryData(
-          QUERY_KEYS.WORKSPACE(activeWorkspace.id),
-          context.previousWorkspace
-        );
-        queryClient.setQueryData(
-          QUERY_KEYS.WORKSPACE_BY_SLUG(activeWorkspace.slug),
-          context.previousWorkspace
-        );
-      }
-      toast.error(
-        error instanceof Error ? error.message : "Failed to update AI settings"
-      );
-    },
-    onSettled: () => {
-      if (activeWorkspace?.id) {
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.WORKSPACE(activeWorkspace.id),
-        });
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.WORKSPACE_BY_SLUG(activeWorkspace.slug),
-        });
-      }
-    },
-  });
 
   useEffect(() => {
     if (!editor) {
@@ -196,7 +117,7 @@ export function AnalysisTab({
                     ? "Getting Started"
                     : "Suggestions"}
                 </h4>
-                {aiEnabled && textMetrics.wordCount > 0 ? (
+                {aiEnabled && aiSuggestions && aiSuggestions.length > 0 ? (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <InfoIcon
@@ -212,9 +133,9 @@ export function AnalysisTab({
                   </Tooltip>
                 ) : null}
               </div>
-              {aiEnabled && (
+              {aiEnabled && aiSuggestions && aiSuggestions.length > 0 && (
                 <button
-                  aria-label="Refresh suggestions"
+                  aria-label="Refresh AI suggestions"
                   className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md hover:bg-accent disabled:opacity-50"
                   disabled={Boolean(aiLoading)}
                   onClick={onRefreshAi}
@@ -227,35 +148,47 @@ export function AnalysisTab({
               )}
             </div>
 
-            {/* AI Toggle */}
-            <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
-              <div className="flex flex-col gap-0.5">
-                <Label
-                  className="cursor-pointer font-medium text-sm"
-                  htmlFor={aiToggleId}
-                >
-                  ✨ AI Suggestions
-                </Label>
-                <p className="text-muted-foreground text-xs">
-                  {aiEnabled
-                    ? "AI-powered writing assistance is active"
-                    : "Enable for smarter suggestions"}
-                </p>
-              </div>
-              <Switch
-                checked={aiEnabled}
-                disabled={isTogglingAi}
-                id={aiToggleId}
-                onCheckedChange={(checked) => toggleAi(checked)}
-              />
-            </div>
-
             {aiEnabled ? (
-              <ReadabilitySuggestions
-                editor={editor ?? null}
-                isLoading={aiLoading}
-                suggestions={aiSuggestions ?? []}
-              />
+              aiSuggestions && aiSuggestions.length > 0 ? (
+                <ReadabilitySuggestions
+                  editor={editor ?? null}
+                  isLoading={aiLoading}
+                  suggestions={aiSuggestions}
+                />
+              ) : (
+                <div className="space-y-3">
+                  {/* Local suggestions shown by default */}
+                  <div className="space-y-2 text-muted-foreground text-sm">
+                    {(localSuggestions ?? textMetrics.suggestions).map(
+                      (suggestion) => (
+                        <p key={suggestion}>• {suggestion}</p>
+                      )
+                    )}
+                  </div>
+
+                  {/* AI fetch button */}
+                  {textMetrics.wordCount > 0 && (
+                    <button
+                      className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed bg-muted/30 p-3 text-sm transition-colors hover:border-primary hover:bg-primary/5 disabled:opacity-50"
+                      disabled={Boolean(aiLoading)}
+                      onClick={onRefreshAi}
+                      type="button"
+                    >
+                      {aiLoading ? (
+                        <>
+                          <ArrowClockwiseIcon className="h-4 w-4 animate-spin" />
+                          <span>Generating AI suggestions...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-base">✨</span>
+                          <span>Get AI-Powered Suggestions</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              )
             ) : (
               <div className="space-y-2 text-muted-foreground text-sm">
                 {(localSuggestions ?? textMetrics.suggestions).map(

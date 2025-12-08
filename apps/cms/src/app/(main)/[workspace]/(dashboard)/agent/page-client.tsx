@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import {
   AddCategoryView,
   AddTagView,
+  CreateBlogAutoView,
   CreatePostView,
   ListMediaView,
   ListResourcesView,
@@ -35,16 +36,16 @@ import {
   WebSearchView,
 } from "@/components/agent/tool-views";
 
-interface SuggestionItem {
-  key: string;
-  value: string;
-  isAction?: boolean;
-  sendValue?: string;
-}
+const SUGGESTIONS = [
+  "Create a blog post about AI",
+  "Show me all available tags",
+  "List all categories",
+  "What posts do I have?",
+  "Help me write a new article",
+  "Show my media library",
+];
 
 export function PageClient() {
-  const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
-
   const { status, sendMessage, messages, setMessages, stop } =
     useChat<AIMessage>({
       onError: (error: Error) => {
@@ -84,20 +85,6 @@ export function PageClient() {
     fetchMessages();
   }, [setMessages]);
 
-  const handleSelectImage = (media: {
-    id: string;
-    url: string;
-    name: string;
-  }) => {
-    sendMessage({
-      text: `Selected image name: ${media.name} (ID: ${media.id})`,
-    });
-  };
-
-  const handleUploadClick = () => {
-    toast.info("Media upload is available in the Media Library page");
-  };
-
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -107,16 +94,7 @@ export function PageClient() {
   }, [messages.length]);
 
   const handleSuggestionClick = (suggestionValue: string) => {
-    // Find the suggestion object to check if it's an action
-    const suggestion = suggestions.find((s) => s.value === suggestionValue);
-
-    if (suggestion?.isAction) {
-      // It's a selection from the tool -> send immediately
-      sendMessage({ text: suggestion.sendValue || suggestionValue });
-    } else {
-      // It's a standard prompt starter -> put in input
-      setInput(suggestionValue);
-    }
+    setInput(suggestionValue);
   };
 
   return (
@@ -249,11 +227,18 @@ export function PageClient() {
                             toolName === "listMedia"
                           ) {
                             return (
-                              <ListMediaView
+                              <ListMediaView invocation={part} key={index} />
+                            );
+                          }
+
+                          if (
+                            toolName === "create-blog-auto" ||
+                            toolName === "createBlogAuto"
+                          ) {
+                            return (
+                              <CreateBlogAutoView
                                 invocation={part}
                                 key={index}
-                                onSelectImage={handleSelectImage}
-                                onUploadClick={handleUploadClick}
                               />
                             );
                           }
@@ -276,17 +261,15 @@ export function PageClient() {
 
         <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-background via-background to-transparent pt-10 pb-6">
           <div className="mx-auto max-w-3xl space-y-3 px-4">
-            {suggestions.length > 0 && (
-              <Suggestions>
-                {suggestions.map((suggestion) => (
-                  <Suggestion
-                    key={suggestion.key}
-                    onClick={handleSuggestionClick}
-                    suggestion={suggestion.value}
-                  />
-                ))}
-              </Suggestions>
-            )}
+            <Suggestions>
+              {SUGGESTIONS.map((suggestion) => (
+                <Suggestion
+                  key={suggestion}
+                  onClick={handleSuggestionClick}
+                  suggestion={suggestion}
+                />
+              ))}
+            </Suggestions>
             <PromptInputProvider>
               <PromptInputForm
                 input={input}

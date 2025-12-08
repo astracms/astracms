@@ -7,6 +7,7 @@
 import { db } from "@astra/db";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { generateWithAI } from "../lib/ai-generator";
 
 /**
  * Create the content strategy tool
@@ -74,7 +75,7 @@ export const createContentStrategyTool = (workspaceId: string) =>
         .string()
         .describe("Strategic recommendations and next steps"),
     }),
-    execute: async ({ context, mastra }) => {
+    execute: async ({ context }) => {
       try {
         const {
           targetAudience = "general audience",
@@ -89,14 +90,6 @@ export const createContentStrategyTool = (workspaceId: string) =>
         );
         console.log("[CONTENT STRATEGY] Target audience:", targetAudience);
         console.log("[CONTENT STRATEGY] Keywords:", keywords.join(", "));
-
-        // Get agent from Mastra context
-        const agent = mastra?.getAgent("cmsAgent");
-        if (!agent) {
-          throw new Error(
-            "CMS agent not available. Please ensure the agent is properly configured."
-          );
-        }
 
         // ===== ANALYZE EXISTING CONTENT =====
         console.log("[CONTENT STRATEGY] Analyzing existing content...");
@@ -161,10 +154,8 @@ export const createContentStrategyTool = (workspaceId: string) =>
             ? `\nExisting content:\n- ${existingTopics}\n\nCategories: ${existingCategories}\nTags: ${existingTags}`
             : "\nNo existing published content yet - this is a fresh start.";
 
-        const response = await agent.generate([
-          {
-            role: "user",
-            content: `Generate a comprehensive content strategy based on this workspace's needs.
+        const text = await generateWithAI(
+          `Generate a comprehensive content strategy based on this workspace's needs.
 
 TARGET AUDIENCE: ${targetAudience}
 PREFERRED CONTENT TYPE: ${contentType}${keywordContext}${competitorContext}
@@ -201,13 +192,8 @@ Provide a strategic summary (3-5 sentences) covering:
 - Topic clustering strategy (how topics should relate)
 - Long-term content goals (3-6 month vision)
 
-Generate comprehensive content strategy now:`,
-          },
-        ]);
-
-        // Parse the AI response
-        const text = response.text || "";
-        console.log("[CONTENT STRATEGY] Received strategy, parsing...");
+Generate comprehensive content strategy now:`
+        );
 
         // Extract topic ideas
         const topicIdeas: Array<{

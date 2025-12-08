@@ -137,8 +137,6 @@ export function EditorSidebar({
     };
   }, [editor, debouncedText]);
 
-  const [hasFetchedAiOnce, setHasFetchedAiOnce] = useState(false);
-
   const localSuggestions = useMemo(
     () =>
       generateLocalSuggestions({
@@ -191,26 +189,6 @@ export function EditorSidebar({
     "tab",
     parseAsStringLiteral(Object.keys(tabs)).withDefault("metadata")
   );
-
-  useEffect(() => {
-    if (
-      aiEnabled &&
-      activeTab === "analysis" &&
-      !!workspaceId &&
-      !hasFetchedAiOnce &&
-      editorHTML.trim().length > 0
-    ) {
-      refetchAi();
-      setHasFetchedAiOnce(true);
-    }
-  }, [
-    aiEnabled,
-    activeTab,
-    workspaceId,
-    hasFetchedAiOnce,
-    editorHTML,
-    refetchAi,
-  ]);
 
   const handleRefreshAi = () => {
     refetchAi();

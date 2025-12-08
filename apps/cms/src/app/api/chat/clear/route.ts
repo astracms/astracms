@@ -15,7 +15,6 @@ export async function DELETE() {
   }
 
   const threadId = `${sessionData.session.activeOrganizationId}-${sessionData.user.id}`;
-  const resourceId = "cms-chat";
 
   // Create agent to access memory
   const cmsAgent = createCMSAgent({
@@ -33,8 +32,8 @@ export async function DELETE() {
     );
   }
 
-  // Delete the thread with corrupted tool calls
-  await memory.createThread({ threadId, resourceId });
+  // Delete all messages in the thread to clear memory
+  await memory.deleteThread(threadId);
 
   return NextResponse.json({
     success: true,

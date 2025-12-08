@@ -15,25 +15,26 @@ export default function FeaturesCard() {
     <section className="hidden max-h-screen overflow-hidden border-gray-400 border-r bg-zinc-50 p-4 md:flex dark:border-gray-800 dark:bg-transparent">
       <div className="mx-auto grid gap-4 lg:grid-cols-2">
         <FeatureCard>
-          <CardHeader className="pb-0">
+          <CardHeader className="px-2 pb-0">
             <CardHeading
-              description="Serve your content from the edge to ensure readers everywhere get instant access."
+              description="Generate ideas, polish your prose, and format your stories with a
+              powerful AI."
               icon={MapPinIcon}
-              title="Instant Global Reach"
+              title="Intelligent Writing Partner"
             />
           </CardHeader>
 
-          <div className="relative border-t border-dashed max-sm:mb-6">
+          <div className="relative h-full">
             <div
               aria-hidden
-              className="absolute inset-0 [background:radial-gradient(125%_125%_at_50%_0%,transparent_40%,var(--color-blue-600),var(--color-white)_100%)]"
+              className="absolute inset-0 [background:radial-gradient(125%_125%_at_50%_0%,transparent_40%,var(--color-blue-600),var(--color-background)_100%)]"
             />
-            <div className="aspect-76/59 p-1 px-6">
+            <div className="aspect-89/50">
               <DualModeImage
-                alt="payments illustration"
-                darkSrc="/payments.png"
+                alt="global network illustration"
+                darkSrc="/images/valentine-vintage.png"
                 height={929}
-                lightSrc="/payments-light.png"
+                lightSrc="/images/valentine-vintage.png"
                 width={1207}
               />
             </div>
@@ -41,7 +42,7 @@ export default function FeaturesCard() {
         </FeatureCard>
 
         <FeatureCard>
-          <CardHeader className="pb-0">
+          <CardHeader className="px-2 pb-0">
             <CardHeading
               description="Plan your publishing schedule with advanced scheduling tools."
               icon={CalendarHeartIcon}
@@ -50,13 +51,13 @@ export default function FeaturesCard() {
           </CardHeader>
 
           <CardContent>
-            <div className="mask-radial-at-right mask-radial-from-75% mask-radial-[75%_75%] relative max-sm:mb-6">
+            <div className="mask-radial-at-right mask-radial-from-25% mask-radial-[75%_75%] relative max-sm:mb-6">
               <div className="aspect-76/59 overflow-hidden rounded-lg border">
                 <DualModeImage
                   alt="calendar illustration"
-                  darkSrc="/origin-cal-dark.png"
+                  darkSrc="/images/book-on-hand.png"
                   height={929}
-                  lightSrc="/origin-cal.png"
+                  lightSrc="/images/book-on-hand.png"
                   width={1207}
                 />
               </div>
@@ -130,7 +131,7 @@ type CardHeadingProps = {
 };
 
 const CardHeading = ({ icon: Icon, title, description }: CardHeadingProps) => (
-  <div className="p-6">
+  <div className="p-2 sm:p-4">
     <span className="flex items-center gap-2 text-muted-foreground">
       <Icon className="size-4" />
       {title}

@@ -17,12 +17,12 @@ export default function SignupFeaturesCard() {
           <div className="p-6 sm:p-12">
             <span className="flex items-center gap-2 text-muted-foreground">
               <MapPinIcon className="size-4" />
-              Intelligent Writing Partner
+              Instant Global Reach
             </span>
 
             <p className="mt-8 font-semibold text-2xl">
-              Generate ideas, polish your prose, and format your stories with a
-              powerful AI.
+              Serve your content from the edge to ensure readers everywhere get
+              instant access.
             </p>
           </div>
 

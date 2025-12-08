@@ -14,7 +14,6 @@ import {
   BookBookmarkIcon,
   BookOpenIcon,
   KeyIcon,
-  LinkSimpleBreak,
   WebhooksLogoIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
@@ -34,11 +33,13 @@ const items = [
   {
     name: "Documentation",
     url: "https://docs.astracms.dev",
+    external: true,
     icon: BookBookmarkIcon,
   },
   {
     name: "Blog",
     url: "https://astracms.dev/blog",
+    external: true,
     icon: BookOpenIcon,
   },
 ];
@@ -63,7 +64,12 @@ export function NavDevs() {
                   : "hover:text-accent-foreground"
               }`}
             >
-              <Link href={`/${params.workspace}/${item.url}`}>
+              <Link
+                href={
+                  item.external ? item.url : `/${params.workspace}/${item.url}`
+                }
+                target={item.external ? "_blank" : "_self"}
+              >
                 <item.icon />
                 <span>{item.name}</span>
               </Link>

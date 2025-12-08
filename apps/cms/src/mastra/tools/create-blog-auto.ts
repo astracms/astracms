@@ -8,6 +8,7 @@ import { db } from "@astra/db";
 import { markdownToHtml, markdownToTiptap } from "@astra/parser/tiptap";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { generateWithAI } from "../lib/ai-generator";
 
 /**
  * Generate a URL-friendly slug from text
@@ -79,7 +80,7 @@ export const createBlogAutoTool = (workspaceId: string) =>
         .optional(),
       error: z.string().optional(),
     }),
-    execute: async ({ context, mastra }) => {
+    execute: async ({ context }) => {
       try {
         const {
           topic,
@@ -88,14 +89,6 @@ export const createBlogAutoTool = (workspaceId: string) =>
           length = "medium",
         } = context;
 
-        // Get agent from Mastra context
-        const agent = mastra?.getAgent("cmsAgent");
-        if (!agent) {
-          throw new Error(
-            "CMS agent not available. Please ensure the agent is properly configured."
-          );
-        }
-
         console.log(
           "[AUTO BLOG] Starting automated blog creation for topic:",
           topic
@@ -103,10 +96,8 @@ export const createBlogAutoTool = (workspaceId: string) =>
 
         // ===== STEP 1: Generate Title =====
         console.log("[AUTO BLOG] Step 1: Generating title...");
-        const titleResponse = await agent.generate([
-          {
-            role: "user",
-            content: `Generate ONE compelling, SEO-optimized blog post title for: "${topic}"
+        const titleText = await generateWithAI(
+          `Generate ONE compelling, SEO-optimized blog post title for: "${topic}"
 
 Requirements:
 - Use power words (discover, master, ultimate, proven)
@@ -114,11 +105,10 @@ Requirements:
 - Include relevant keywords naturally
 - Make it specific and actionable
 
-Return ONLY the title, nothing else.`,
-          },
-        ]);
+Return ONLY the title, nothing else.`
+        );
 
-        const title = (titleResponse.text?.trim() || topic).slice(0, 100);
+        const title = (titleText.trim() || topic).slice(0, 100);
         console.log("[AUTO BLOG] Generated title:", title);
 
         // ===== STEP 2: Auto-select or create category =====
@@ -153,20 +143,17 @@ Return ONLY the title, nothing else.`,
           const categoryList = categories
             .map((c) => `- ${c.name} (${c.slug})`)
             .join("\n");
-          const categoryResponse = await agent.generate([
-            {
-              role: "user",
-              content: `Given the blog post title "${title}" about "${topic}", which category is most appropriate?
+          const categoryText = await generateWithAI(
+            `Given the blog post title "${title}" about "${topic}", which category is most appropriate?
 
 Available categories:
 ${categoryList}
 
-Return ONLY the category slug, nothing else.`,
-            },
-          ]);
+Return ONLY the category slug, nothing else.`
+          );
 
-          const suggestedSlug = categoryResponse.text
-            ?.trim()
+          const suggestedSlug = categoryText
+            .trim()
             .toLowerCase()
             .replace(/[^a-z0-9-]/g, "");
           const matchedCategory = categories.find(
@@ -189,10 +176,8 @@ Return ONLY the category slug, nothing else.`,
             ? `\nTarget keywords to incorporate naturally: ${keywords.join(", ")}`
             : "";
 
-        const contentResponse = await agent.generate([
-          {
-            role: "user",
-            content: `Write a comprehensive, SEO-optimized blog post in markdown format.
+        const contentText = await generateWithAI(
+          `Write a comprehensive, SEO-optimized blog post in markdown format.
 
 Title: "${title}"
 Topic: "${topic}"
@@ -213,6 +198,8 @@ REQUIREMENTS:
 - Include practical examples and tips
 - Use transition words for flow
 - Keep paragraphs short (3-4 sentences max)
+- DO NOT include word count annotations like "(Word count: 248)" anywhere in the content
+- Write continuously without mentioning word counts
 
 SEO:
 - Natural keyword incorporation (1-2% density)
@@ -220,22 +207,19 @@ SEO:
 - Use descriptive headings
 - Optimize for featured snippets
 
-Write the complete article now:`,
-          },
-        ]);
+Write the complete article now:`
+        );
 
         const content =
-          contentResponse.text ||
+          contentText ||
           `## Introduction\n\nThis is a comprehensive guide about ${topic}.\n\n## Conclusion\n\nNow you have a better understanding of ${topic}.`;
         const wordCount = content.split(/\s+/).length;
         console.log("[AUTO BLOG] Generated content:", wordCount, "words");
 
         // ===== STEP 4: Generate meta description =====
         console.log("[AUTO BLOG] Step 4: Generating meta description...");
-        const descResponse = await agent.generate([
-          {
-            role: "user",
-            content: `Write an SEO-optimized meta description for a blog post titled "${title}" about "${topic}".
+        const descText = await generateWithAI(
+          `Write an SEO-optimized meta description for a blog post titled "${title}" about "${topic}".
 
 CRITICAL:
 - EXACTLY 150-160 characters
@@ -244,12 +228,11 @@ CRITICAL:
 - NO quotation marks
 - Make it compelling
 
-Return ONLY the description, nothing else.`,
-          },
-        ]);
+Return ONLY the description, nothing else.`
+        );
 
         const rawDescription =
-          descResponse.text?.trim().replace(/^["']|["']$/g, "") ||
+          descText.trim().replace(/^["']|["']$/g, "") ||
           `Learn about ${topic} in this comprehensive guide.`;
         const description =
           rawDescription.length > 160
@@ -263,10 +246,8 @@ Return ONLY the description, nothing else.`,
 
         // ===== STEP 5: Generate and create tags =====
         console.log("[AUTO BLOG] Step 5: Generating tags...");
-        const tagsResponse = await agent.generate([
-          {
-            role: "user",
-            content: `Generate 3-5 relevant tag names (1-2 words each) for a blog post about "${topic}".
+        const tagsText = await generateWithAI(
+          `Generate 3-5 relevant tag names (1-2 words each) for a blog post about "${topic}".
 
 Requirements:
 - Concise (1-2 words)
@@ -274,11 +255,10 @@ Requirements:
 - Mix of broad and specific tags
 - Use lowercase
 
-Return as comma-separated list, nothing else.`,
-          },
-        ]);
+Return as comma-separated list, nothing else.`
+        );
 
-        const tagNames = (tagsResponse.text || "")
+        const tagNames = (tagsText || "")
           .split(",")
           .map((t) => t.trim())
           .filter((t) => t.length > 0 && t.length < 30)
@@ -395,7 +375,7 @@ Return as comma-separated list, nothing else.`,
             category: category.name,
             tags: tagNames,
             wordCount,
-            editUrl: `/editor/${post.id}`,
+            editUrl: `/astracms/editor/p/${post.id}`,
           },
         };
       } catch (error) {
