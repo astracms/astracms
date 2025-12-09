@@ -122,7 +122,9 @@ const { Content } = await render(post);
     ))}
   </div>
   
-  <Content />
+  <div class="prose">
+    <Content />
+  </div>
   
   <div class="authors">
     {post.data.authors.map((author) => (

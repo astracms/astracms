@@ -600,6 +600,9 @@ importers:
       '@astracms/astro-loader':
         specifier: ^0.1.1
         version: 0.1.1(astro@5.16.4(@types/node@24.10.1)(@upstash/redis@1.35.7)(@vercel/functions@2.2.13(@aws-sdk/credential-provider-web-identity@3.947.0))(db0@0.3.4(@electric-sql/pglite@0.3.2)(@libsql/client@0.15.15(bufferutil@4.0.9))(mysql2@3.15.3))(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
+      '@astracms/core':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@astrojs/mdx':
         specifier: ^4.3.8
         version: 4.3.12(astro@5.16.4(@types/node@24.10.1)(@upstash/redis@1.35.7)(@vercel/functions@2.2.13(@aws-sdk/credential-provider-web-identity@3.947.0))(db0@0.3.4(@electric-sql/pglite@0.3.2)(@libsql/client@0.15.15(bufferutil@4.0.9))(mysql2@3.15.3))(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))

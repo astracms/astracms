@@ -54,7 +54,7 @@ export function RevealKeyDialog({
   };
 
   return (
-    <Dialog onOpenChange={onClose} open={open}>
+    <Dialog onOpenChange={(open) => !open && onClose()} open={open}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>API Key Created Successfully</DialogTitle>

@@ -13,7 +13,7 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection("categories");
   return blogEntries
     .filter(
-      (entry) => entry.data.slug !== "legal" && entry.data.slug !== "changelog"
+      (entry) => entry.data.slug !== "legal" && entry.data.slug !== "changelog",
     )
     .map((entry) => ({
       params: { slug: entry.data.slug },
@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 
 const categoriesEntries = await getCollection("categories");
-const postsResponse = await fetchPosts(`?categories=${entry.data.slug}`);
+const postsResponse = await fetchPosts([entry.data.slug], [], "");
 ---
 
 <Layout
@@ -43,21 +43,26 @@ const postsResponse = await fetchPosts(`?categories=${entry.data.slug}`);
             Blog
           </h1>
           <p class="text-muted-foreground text-center text-sm md:text-base">
-            {entry.data.description || "Updates, news, and guides from the team."}
-          </p>
-          <CategoryFilter categories={categoriesEntries}/>
-        </div>
-        {postsResponse.posts.length > 0 ? (
-          <ul class='grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 auto-rows-fr'>
             {
-              postsResponse.posts.map((post) => (
-                <CategoryCard entry={post} />
-              ))
+              entry.data.description ||
+                "Updates, news, and guides from the team."
             }
-          </ul>
-        ) : (
-          <p class='text-muted-foreground text-center text-sm md:text-base'>No posts found</p>
-        )}
+          </p>
+          <CategoryFilter categories={categoriesEntries} />
+        </div>
+        {
+          postsResponse.length > 0 ? (
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 auto-rows-fr">
+              {postsResponse.map((post) => (
+                <CategoryCard entry={post} />
+              ))}
+            </ul>
+          ) : (
+            <p class="text-muted-foreground text-center text-sm md:text-base">
+              No posts found
+            </p>
+          )
+        }
       </Container>
     </div>
   </section>

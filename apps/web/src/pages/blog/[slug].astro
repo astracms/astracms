@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Container from "@/components/Container.astro";
 import Prose from "@/components/Prose.astro";
 import Layout from "@/layouts/Layout.astro";
@@ -25,10 +25,12 @@ const formattedDate = new Date(entry.data.publishedAt).toLocaleDateString(
     year: "numeric",
     month: "long",
     day: "numeric",
-  }
+  },
 );
 
-const readTime = calculateReadTime(entry.data.content);
+const { Content } = await render(entry);
+
+const readTime = calculateReadTime(entry.body as string);
 ---
 
 <Layout
@@ -73,27 +75,48 @@ const readTime = calculateReadTime(entry.data.content);
               <div class="flex items-center gap-2">
                 <span class="h-4 w-0.5 bg-gray-300 shrink-0"></span>
                 <p class="text-muted-foreground text-sm sm:text-base">
-                  {readTime}minute read
+                  {readTime} minute read
                 </p>
               </div>
             </div>
-            <!-- <div class="flex items-center gap-2">
-              {entry.data.authors[0].image ? (
-                <Image src={entry.data.authors[0].image} alt={entry.data.authors[0].name} class="size-7 rounded-full" inferSize />
-              ) : (
-                <span class="h-4 w-0.5 bg-gray-300 shrink-0"></span>
-              )}
-              <p class="text-muted-foreground text-sm sm:text-base">{entry.data.authors[0].name}</p>
-            </div> -->
+            <div class="flex items-center gap-2">
+              {
+                entry.data?.authors?.map((author) => (
+                  <div class="flex items-center gap-2">
+                    {author.image ? (
+                      <Image
+                        src={author.image}
+                        alt={author.name}
+                        class="size-7 rounded-full"
+                        inferSize
+                      />
+                    ) : (
+                      <span class="h-4 w-0.5 bg-gray-300 shrink-0" />
+                    )}
+                    <p class="text-muted-foreground text-sm sm:text-base">
+                      {author.name}
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
           </div>
         </section>
-        <!-- <div>
-          {entry.data.coverImage && (
-            <Image src={entry.data.coverImage} alt={entry.data.title} class="w-full max-w-3xl mx-auto mb-8" inferSize />
-          )}
-        </div> -->
+        <div>
+          {
+            entry.data.coverImage && (
+              <Image
+                src={entry.data.coverImage}
+                alt={entry.data.title}
+                class="w-full max-w-3xl mx-auto mb-8"
+                inferSize
+              />
+            )
+          }
+        </div>
+
         <Prose>
-          <div set:html={entry.data.content}/>
+          <Content />
         </Prose>
       </Container>
     </div>
