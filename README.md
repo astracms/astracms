@@ -16,10 +16,10 @@
 - Organise content with **tags** and **categories**
 - Upload and embed images in posts
 - Fetch your content anywhere through the **REST API**
+- Generate blog post and content using AI
 
 ## 🚧 Roadmap
 
-- Generate blog post and content using AI
 - Readability insights and analysis directly in the editor
 - AI-assisted writing for grammar and style suggestions
 - Image optimisation / compression for Pro users
