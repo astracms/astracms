@@ -11,7 +11,7 @@ import { SITE_CONFIG } from "@/utils/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
-  title: "Log In - Astra CMS",
+  title: "Log In - AstraCMS",
   alternates: {
     canonical: "/login",
   },
@@ -51,7 +51,7 @@ export default async function LoginPage(props: PageProps) {
       <FeaturesCard />
       <section className="flex h-full flex-col items-center justify-between p-4">
         <div className="self-start">
-          <h1 className="sr-only font-semibold uppercase">Astra CMS</h1>
+          <h1 className="sr-only font-semibold uppercase">AstraCMS</h1>
         </div>
         <div className="flex min-w-[300px] flex-col gap-8 rounded-md p-6 lg:w-[384px] lg:px-8 lg:py-10">
           <div className="text-center">

@@ -24,9 +24,9 @@ const mono = Geist_Mono({
 export const metadata = createMetadata({
   title: {
     template: "%s | Documentation",
-    default: "Documentation | Astra CMS",
+    default: "Documentation | AstraCMS",
   },
-  description: "Documentation for Astra CMS",
+  description: "Documentation for AstraCMS",
   metadataBase: baseUrl,
   alternates: {
     types: {

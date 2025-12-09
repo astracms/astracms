@@ -23,7 +23,7 @@ export type Link = {
 };
 
 export const SITE: Site = {
-  TITLE: "Astra",
+  TITLE: "AstraCMS",
   DESCRIPTION:
     "A simple, collaborative CMS for publishing articles, changelogs, and product updates.",
   EMAIL: "support@astracms.dev",
@@ -44,29 +44,29 @@ export const FAQs: {
   answer: string;
 }[] = [
   {
-    question: "What is Astra?",
+    question: "What is AstraCMS?",
     answer:
-      "Astra is a headless CMS designed specifically for managing blogs, changelogs, and articles. It provides a simple interface for creating and organizing content, along with a powerful API to fetch and display it on your website or app.",
+      "AstraCMS is a headless CMS designed specifically for managing blogs, changelogs, and articles. It provides a simple interface for creating and organizing content, along with a powerful API to fetch and display it on your website or app.",
   },
   {
-    question: "Is Astra free?",
+    question: "Is AstraCMS free?",
     answer:
-      "Yes, Astra is free to use with generous limits on all core features. We also offer paid plans for teams needing higher limits and advanced features.",
+      "Yes, AstraCMS is free to use with generous limits on all core features. We also offer paid plans for teams needing higher limits and advanced features.",
   },
   {
-    question: "How does Astra work?",
+    question: "How does AstraCMS work?",
     answer:
-      "Astra is a headless CMS that provides content management through a simple API. You can create, edit and manage content through our dashboard, then fetch it via our API to display on your website or app.",
+      "AstraCMS is a headless CMS that provides content management through a simple API. You can create, edit and manage content through our dashboard, then fetch it via our API to display on your website or app.",
   },
   {
-    question: "Do I need technical knowledge to use Astra?",
+    question: "Do I need technical knowledge to use AstraCMS?",
     answer:
       "No technical knowledge is required to use our content management dashboard. However, to integrate the API with your website or app, basic development experience is helpful. We provide detailed documentation and templates to make integration easy.",
   },
   {
     question: "What kind of content can I manage?",
     answer:
-      "Astra is primarily focused on managing blog posts, changelogs, articles, and static pages. We support rich text, images, and videos to help you create engaging content for your blog or documentation site.",
+      "AstraCMS is primarily focused on managing blog posts, changelogs, articles, and static pages. We support rich text, images, and videos to help you create engaging content for your blog or documentation site.",
   },
   {
     question: "Is there a limit on API requests?",

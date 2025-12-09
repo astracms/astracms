@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         title: (
           <>
             <Logo />
-            <span className="font-medium max-md:hidden">Astra CMS</span>
+            <span className="font-medium max-md:hidden">AstraCMS</span>
           </>
         ),
       }}

@@ -3,7 +3,7 @@ import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-export const title = "Astra CMS";
+export const title = "AstraCMS";
 
 export const linkItems: LinkItemType[] = [
   {
