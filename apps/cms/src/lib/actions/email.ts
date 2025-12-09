@@ -36,7 +36,7 @@ export async function sendInviteEmailAction({
 }: SendInviteEmailProps) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: inviteeEmail,
       subject: `Join ${workspaceName} on AstraCMS`,
       text: "This is a mock invite email",
@@ -69,7 +69,7 @@ export async function sendInviteEmailAction({
 
   try {
     const response = await resend.emails.send({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: inviteeEmail,
       subject: `Join ${workspaceName} on AstraCMS`,
       react: InviteUserEmail({
@@ -112,7 +112,7 @@ export async function sendVerificationEmailAction({
 
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "Verification <emails@astracms.dev>",
+      from: "Verification <emails@mail.astracms.dev>",
       to: userEmail,
       text: "This is a mock verification email",
       subject: "Verify your email address",
@@ -129,7 +129,7 @@ export async function sendVerificationEmailAction({
 
   try {
     await resend.emails.send({
-      from: "Verification <emails@astracms.dev>",
+      from: "Verification <emails@mail.astracms.dev>",
       to: userEmail,
       subject: "Verify your email address",
       react: VerifyUserEmail({
@@ -161,7 +161,7 @@ export async function sendResetPasswordAction({
 }) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       text: "This is a mock reset password email",
       subject: "Reset Your Password",
@@ -175,7 +175,7 @@ export async function sendResetPasswordAction({
 
   try {
     const response = await resend.emails.send({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: "Reset Your Password",
       react: ResetPasswordEmail({
@@ -205,7 +205,7 @@ export async function sendWelcomeEmailAction({
 }) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       text: "This is a mock welcome email",
       subject: "Welcome to AstraCMS!",
@@ -219,7 +219,7 @@ export async function sendWelcomeEmailAction({
 
   try {
     await resend.emails.send({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: "Welcome to AstraCMS!",
       react: WelcomeEmail({
@@ -251,7 +251,7 @@ export async function sendSubscriptionCreatedEmailAction({
 }: SendSubscriptionCreatedEmailProps) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: `Your ${planName} subscription is now active!`,
       text: "This is a mock subscription created email",
@@ -268,7 +268,7 @@ export async function sendSubscriptionCreatedEmailAction({
 
   try {
     await resend.emails.send({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: `Your ${planName} subscription is now active!`,
       react: SubscriptionCreatedEmail({
@@ -302,7 +302,7 @@ export async function sendSubscriptionCanceledEmailAction({
 }: SendSubscriptionCanceledEmailProps) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: `Your ${planName} subscription has been canceled`,
       text: "This is a mock subscription canceled email",
@@ -319,7 +319,7 @@ export async function sendSubscriptionCanceledEmailAction({
 
   try {
     await resend.emails.send({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: `Your ${planName} subscription has been canceled`,
       react: SubscriptionCanceledEmail({
@@ -354,7 +354,7 @@ export async function sendSubscriptionRenewedEmailAction({
 }: SendSubscriptionRenewedEmailProps) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: `Your ${planName} subscription has been renewed`,
       text: "This is a mock subscription renewed email",
@@ -371,7 +371,7 @@ export async function sendSubscriptionRenewedEmailAction({
 
   try {
     await resend.emails.send({
-      from: "AstraCMS <emails@astracms.dev>",
+      from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
       subject: `Your ${planName} subscription has been renewed`,
       react: SubscriptionRenewedEmail({
