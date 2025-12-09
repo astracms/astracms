@@ -1,12 +1,5 @@
 import { db } from "@astra/db";
-import {
-  checkout,
-  polar,
-  portal,
-  usage,
-  webhooks,
-} from "@polar-sh/better-auth";
-import { Polar } from "@polar-sh/sdk";
+import { creem } from "@creem_io/better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { createAuthMiddleware } from "better-auth/api";
@@ -19,11 +12,6 @@ import {
   sendWelcomeEmailAction,
 } from "@/lib/actions/email";
 import { storeUserImageAction } from "@/lib/actions/user";
-import { handleCustomerCreated } from "@/lib/polar/customer.created";
-import { handleSubscriptionCanceled } from "@/lib/polar/subscription.canceled";
-import { handleSubscriptionCreated } from "@/lib/polar/subscription.created";
-import { handleSubscriptionRevoked } from "@/lib/polar/subscription.revoked";
-import { handleSubscriptionUpdated } from "@/lib/polar/subscription.updated";
 import { getLastActiveWorkspaceOrNewOneToSetAsActive } from "@/lib/queries/workspace";
 import {
   createAuthor,
@@ -32,12 +20,10 @@ import {
   validateWorkspaceSlug,
   validateWorkspaceTimezone,
 } from "../actions/workspace";
+import { handleSubscriptionCreated } from "../creem/subscription.created";
+import { handleSubscriptionRevoked } from "../creem/subscription.revoked";
+import { handleSubscriptionUpdated } from "../creem/subscription.updated";
 import { redis } from "../redis";
-
-const polarClient = new Polar({
-  accessToken: process.env.POLAR_ACCESS_TOKEN,
-  server: process.env.NODE_ENV === "production" ? "production" : "sandbox",
-});
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
@@ -94,49 +80,68 @@ export const auth = betterAuth({
     modelName: "workspace",
   },
   plugins: [
-    polar({
-      client: polarClient,
-      createCustomerOnSignUp: process.env.NODE_ENV === "production",
-      authenticatedUsersOnly: true,
-      use: [
-        portal(),
-        usage(),
-        checkout({
-          products: [
-            {
-              productId: process.env.POLAR_HOBBY_PRODUCT_ID || "",
-              slug: "hobby",
-            },
-            {
-              productId: process.env.POLAR_PRO_PRODUCT_ID || "",
-              slug: "pro",
-            },
-            {
-              productId: process.env.POLAR_TEAM_PRODUCT_ID || "",
-              slug: "team",
-            },
-          ],
-          successUrl: process.env.POLAR_SUCCESS_URL || "",
-        }),
-        webhooks({
-          secret: process.env.POLAR_WEBHOOK_SECRET || "",
-          onCustomerCreated: async (payload) => {
-            await handleCustomerCreated(payload);
-          },
-          onSubscriptionCreated: async (payload) => {
-            await handleSubscriptionCreated(payload);
-          },
-          onSubscriptionUpdated: async (payload) => {
-            await handleSubscriptionUpdated(payload);
-          },
-          onSubscriptionCanceled: async (payload) => {
-            await handleSubscriptionCanceled(payload);
-          },
-          onSubscriptionRevoked: async (payload) => {
-            await handleSubscriptionRevoked(payload);
-          },
-        }),
-      ],
+    creem({
+      apiKey: process.env.CREEM_API_KEY as string,
+      webhookSecret: process.env.CREEM_WEBHOOK_SECRET as string,
+      testMode: process.env.NODE_ENV !== "production",
+      defaultSuccessUrl: "/success",
+      persistSubscriptions: false, // Using custom subscription handling with AI credits
+
+      // Checkout handler for one-time payments
+      onCheckoutCompleted: async (data) => {
+        const { customer, product } = data;
+        console.log(`${customer?.email} purchased ${product.name}`);
+      },
+
+      // Subscription webhook handlers - delegate to custom handlers
+      onSubscriptionActive: async (data) => {
+        await handleSubscriptionCreated(data);
+      },
+
+      onSubscriptionPaid: async (data) => {
+        await handleSubscriptionUpdated(data);
+      },
+
+      onSubscriptionTrialing: async (data) => {
+        await handleSubscriptionCreated(data);
+      },
+
+      onSubscriptionUpdate: async (data) => {
+        await handleSubscriptionUpdated(data);
+      },
+
+      onSubscriptionCanceled: async (data) => {
+        await handleSubscriptionUpdated(data);
+      },
+
+      onSubscriptionExpired: async (data) => {
+        await handleSubscriptionRevoked(data);
+      },
+
+      onSubscriptionPastDue: async (data) => {
+        await handleSubscriptionUpdated(data);
+      },
+
+      onSubscriptionPaused: async (data) => {
+        await handleSubscriptionUpdated(data);
+      },
+
+      onSubscriptionUnpaid: async (data) => {
+        await handleSubscriptionUpdated(data);
+      },
+
+      // Access control handlers
+      onGrantAccess: async ({ reason, customer, product }) => {
+        console.log(
+          `Granting ${reason} to ${customer.email} for ${product.name}`
+        );
+      },
+
+      onRevokeAccess: async ({ reason, customer, product }) => {
+        console.log(
+          `Revoking ${reason} from ${customer.email} for ${product.name}`
+        );
+      },
     }),
     organization({
       // membershipLimit: 10,

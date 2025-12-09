@@ -15,6 +15,7 @@ import { Separator } from "@astra/ui/components/separator";
 import {
   CheckIcon,
   ImagesIcon,
+  Lightning,
   PlugsIcon,
   UsersIcon,
 } from "@phosphor-icons/react";
@@ -23,20 +24,52 @@ import { toast } from "sonner";
 import { WorkspacePageWrapper } from "@/components/layout/wrapper";
 import { AsyncButton } from "@/components/ui/async-button";
 import { usePlan } from "@/hooks/use-plan";
-import { authClient, checkout } from "@/lib/auth/client";
+import { authClient } from "@/lib/auth/client";
 import { PRICING_PLANS } from "@/lib/constants";
 import { useWorkspace } from "@/providers/workspace";
 import { formatBytes } from "@/utils/string";
+
+interface AICreditStats {
+  used: number;
+  limit: number;
+  remaining: number;
+  usagePercentage: number;
+  canUseAI: boolean;
+}
 
 function PageClient() {
   const { activeWorkspace, isOwner } = useWorkspace();
   const { planLimits, currentMemberCount, currentPlan, currentMediaUsage } =
     usePlan();
-  const [checkoutLoading, setCheckoutLoading] = useState<"pro" | "free" | null>(
-    null
-  );
+  const [checkoutLoading, setCheckoutLoading] = useState<
+    "pro" | "free" | "enterprise" | null
+  >(null);
+  const [aiCredits, setAICredits] = useState<AICreditStats>({
+    used: 0,
+    limit: 0,
+    remaining: 0,
+    usagePercentage: 0,
+    canUseAI: false,
+  });
 
   const subscription = activeWorkspace?.subscription;
+
+  // Fetch AI credit usage
+  useEffect(() => {
+    const fetchAICredits = async () => {
+      try {
+        const response = await fetch("/api/metrics/ai-credits");
+        if (response.ok) {
+          const data = await response.json();
+          setAICredits(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch AI credits:", error);
+      }
+    };
+
+    fetchAICredits();
+  }, []);
 
   const formatDate = useCallback(
     async (dateValue: string | Date | null | undefined) => {
@@ -59,17 +92,6 @@ function PageClient() {
     },
     []
   );
-
-  const getPlanDisplayName = () => {
-    switch (currentPlan) {
-      case "pro":
-        return "Pro Plan";
-      case "team":
-        return "Team Plan";
-      default:
-        return "Hobby Plan";
-    }
-  };
 
   const formatApiRequestLimit = (limit: number) => {
     if (limit === -1) {
@@ -132,13 +154,13 @@ function PageClient() {
 
   const redirectCustomerPortal = async () => {
     try {
-      await authClient.customer.portal();
+      await authClient.creem.createPortal();
     } catch (_e) {
       toast.error("Failed to redirect to customer portal");
     }
   };
 
-  const handleCheckout = async (plan: "pro" | "free") => {
+  const handleCheckout = async (plan: "pro" | "free" | "enterprise") => {
     if (!activeWorkspace?.id) {
       return;
     }
@@ -146,10 +168,35 @@ function PageClient() {
     setCheckoutLoading(plan);
 
     try {
-      await checkout({
-        slug: plan,
-        referenceId: activeWorkspace.id,
+      // Get the product ID based on the plan
+      const productIdMap = {
+        free: process.env.NEXT_PUBLIC_CREEM_HOBBY_PRODUCT_ID,
+        pro: process.env.NEXT_PUBLIC_CREEM_PRO_PRODUCT_ID,
+        enterprise: process.env.NEXT_PUBLIC_CREEM_ENTERPRISE_PRODUCT_ID,
+      };
+
+      const productId = productIdMap[plan];
+
+      if (!productId) {
+        toast.error("Product ID not configured for this plan");
+        return;
+      }
+
+      const { data, error } = await authClient.creem.createCheckout({
+        productId,
+        successUrl: `${window.location.origin}/success`,
+        metadata: {
+          workspaceId: activeWorkspace.id,
+        },
       });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data && "url" in data && data.url) {
+        window.location.href = data.url;
+      }
     } catch (error) {
       console.error(error);
       toast.error("Failed to process checkout");
@@ -159,6 +206,15 @@ function PageClient() {
   };
 
   const usageData = [
+    {
+      name: "AI Credits",
+      icon: Lightning,
+      used: aiCredits.used.toLocaleString(),
+      total: aiCredits.limit > 0 ? aiCredits.limit.toLocaleString() : "N/A",
+      percentage: aiCredits.usagePercentage,
+      remaining: aiCredits.remaining.toLocaleString(),
+      highlight: aiCredits.limit === 0 ? "No AI access" : undefined,
+    },
     {
       name: "API Requests",
       icon: PlugsIcon,
@@ -192,16 +248,14 @@ function PageClient() {
         <CardHeader>
           <CardTitle>Usage Overview</CardTitle>
           <CardDescription>
-            Track your usage across API requests, storage, and team members
+            Track your usage across AI credits, API requests, storage, and team
+            members
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6 rounded-lg bg-muted/50 p-6 md:grid-cols-3 md:divide-x">
+          <div className="grid gap-6 rounded-lg bg-muted/50 p-6 md:grid-cols-2 lg:grid-cols-4">
             {usageData.map((item) => (
-              <div
-                className="flex items-center gap-4 px-4 first:pl-0 last:pr-0"
-                key={item.name}
-              >
+              <div className="flex items-center gap-4 px-4" key={item.name}>
                 <div className="flex-1 space-y-2">
                   <div className="flex items-baseline justify-between">
                     <p className="text-muted-foreground text-sm">{item.name}</p>
@@ -216,6 +270,11 @@ function PageClient() {
                       / {item.total}
                     </p>
                   </div>
+                  {"highlight" in item && item.highlight && (
+                    <p className="text-muted-foreground text-xs italic">
+                      {item.highlight}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
@@ -234,7 +293,7 @@ function PageClient() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {PRICING_PLANS.map((plan) => {
               const isCurrentPlan = currentPlan === plan.id;
 
@@ -285,15 +344,19 @@ function PageClient() {
                       </Button>
                     ) : (
                       <AsyncButton
-                        className="w-full"
+                        className="w-full cursor-pointer"
                         isLoading={checkoutLoading === plan.id}
                         onClick={() =>
-                          handleCheckout(plan.id as "pro" | "free")
+                          handleCheckout(
+                            plan.id as "pro" | "free" | "enterprise"
+                          )
                         }
                       >
                         {plan.id === "free"
                           ? "Downgrade to Hobby"
-                          : "Upgrade to Pro"}
+                          : plan.id === "enterprise"
+                            ? "Upgrade to Enterprise"
+                            : "Upgrade to Pro"}
                       </AsyncButton>
                     )}
                   </CardFooter>

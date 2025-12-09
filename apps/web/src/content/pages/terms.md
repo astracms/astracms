@@ -1,9 +1,9 @@
 ---
 title: Terms of Service
 slug: terms
-published: 2020-01-01T06:15:00Z
+published: 2025-12-09T00:00:00Z
 description: AstraCMS's Terms of Service.
-lastUpdated: 2020-01-01T06:15:00Z
+lastUpdated: 2025-12-09T00:00:00Z
 ---
 
 ## 1. Acceptance of Terms
@@ -35,7 +35,7 @@ By accessing or using AstraCMS ("the Service"), you agree to these Terms of Serv
 
 - Some features require a paid Subscription.
 - Subscriptions are billed in advance on a recurring basis (monthly or yearly, as selected).
-- Payments are processed through third-party providers (e.g., Polar). AstraCMS does not store payment card details.
+- Payments are processed through third-party provider (creem.io). AstraCMS does not store payment card details.
 - All fees are non-refundable except as required by law.
 - If a payment fails, we may suspend or downgrade your access until payment is resolved.
 - We reserve the right to change pricing with reasonable prior notice.

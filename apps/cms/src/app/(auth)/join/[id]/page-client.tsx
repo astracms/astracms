@@ -130,7 +130,7 @@ function PageClient({ id, user }: PageClientProps) {
       .then((res) => {
         if (res.error) {
           setError(res.error.message || "An error occurred");
-        } else {
+        } else if (res.data) {
           setInvitation(res.data);
         }
       })

@@ -11,7 +11,10 @@
       "@/*": ["./src/*"],
       "@astra/ui/*": ["../../packages/ui/src/*"]
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "declaration": false,
+    "declarationMap": false,
+    "composite": false
   },
   "include": [
     "next-env.d.ts",

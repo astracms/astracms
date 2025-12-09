@@ -1,5 +1,5 @@
 import { toast } from "@astra/ui/components/sonner";
-import { polarClient } from "@polar-sh/better-auth";
+import { creemClient } from "@creem_io/better-auth/client";
 import {
   emailOTPClient,
   inferOrgAdditionalFields,
@@ -8,12 +8,12 @@ import {
 import { createAuthClient } from "better-auth/react";
 import type { auth } from "./auth";
 
-export const authClient = createAuthClient({
+const client = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   plugins: [
     organizationClient({ schema: inferOrgAdditionalFields<typeof auth>() }),
     emailOTPClient(),
-    polarClient(),
+    creemClient(),
   ],
   fetchOptions: {
     onError(e) {
@@ -24,6 +24,32 @@ export const authClient = createAuthClient({
   },
 });
 
+// Type assertion to include Creem methods
+export const authClient = client as typeof client & {
+  creem: {
+    createCheckout: (params: {
+      productId: string;
+      successUrl?: string;
+      metadata?: Record<string, unknown>;
+    }) => Promise<{ data?: { url: string }; error?: Error }>;
+    createPortal: () => Promise<{ data?: { url: string }; error?: Error }>;
+    cancelSubscription: (params?: { id?: string }) => Promise<{
+      data?: { success: boolean; message: string };
+      error?: Error;
+    }>;
+    retrieveSubscription: () => Promise<{ data?: unknown; error?: Error }>;
+    hasAccessGranted: () => Promise<{
+      data?: { hasAccess: boolean; expiresAt?: Date };
+      error?: Error;
+    }>;
+    searchTransactions: (params?: {
+      productId?: string;
+      pageNumber?: number;
+      pageSize?: number;
+    }) => Promise<{ data?: { transactions: unknown[] }; error?: Error }>;
+  };
+};
+
 export const {
   signUp,
   signIn,
@@ -33,5 +59,4 @@ export const {
   useListOrganizations,
   useActiveOrganization,
   emailOtp,
-  checkout,
-} = authClient;
+} = client;

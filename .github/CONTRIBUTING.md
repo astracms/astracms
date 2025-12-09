@@ -12,7 +12,7 @@ Before you start, make sure you have the following installed or available:
 - **Redis** database (we use [Upstash](https://upstash.com) for serverless Redis)
 - **Google** and **GitHub** OAuth apps (for authentication)
 - **Cloudflare** account with R2 enabled (for media uploads)
-- **Optional**: [Polar](https://sandbox.polar.sh) sandbox account if you want to test payments
+- **Optional**: [Creem](https://creem.io) sandbox account if you want to test payments
 - **Optional**: [QStash](https://upstash.com/qstash) for reliable webhook delivery
 
 ---
@@ -105,7 +105,7 @@ Packages contain internal shared modules used across different applications:
 
    - Cloudflare R2 credentials for file uploads (see below)
 
-   - Optional: If you want to test payments, set up a [Polar](https://sandbox.polar.sh) sandbox account and fill in the POLAR_* variables.
+   - Optional: If you want to test payments, set up a [Creem](https://creem.io) sandbox account and fill in the CREEM_* variables.
 
    - Optional: If you want to test webhook delivery, set up [QStash](https://upstash.com/qstash) and fill in the QSTASH_TOKEN variable.
 

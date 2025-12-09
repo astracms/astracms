@@ -4,6 +4,9 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { InviteUserEmail } from "@/components/emails/invite";
 import { ResetPasswordEmail } from "@/components/emails/reset";
+import { SubscriptionCanceledEmail } from "@/components/emails/subscription-canceled";
+import { SubscriptionCreatedEmail } from "@/components/emails/subscription-created";
+import { SubscriptionRenewedEmail } from "@/components/emails/subscription-renewed";
 import { VerifyUserEmail } from "@/components/emails/verify";
 import { WelcomeEmail } from "@/components/emails/welcome";
 import { sendDevEmail } from "@/lib/email";
@@ -227,6 +230,162 @@ export async function sendWelcomeEmailAction({
     return { message: "Email sent successfully" };
   } catch (error) {
     console.error("Detailed error sending email:", error);
+    return { error: "Failed to send email", details: error };
+  }
+}
+
+type SendSubscriptionCreatedEmailProps = {
+  userEmail: string;
+  planName: string;
+  workspaceName: string;
+  periodStart: string;
+  periodEnd: string;
+};
+
+export async function sendSubscriptionCreatedEmailAction({
+  userEmail,
+  planName,
+  workspaceName,
+  periodStart,
+  periodEnd,
+}: SendSubscriptionCreatedEmailProps) {
+  if (!resend && isDevelopment) {
+    return sendDevEmail({
+      from: "AstraCMS <emails@astracms.dev>",
+      to: userEmail,
+      subject: `Your ${planName} subscription is now active!`,
+      text: "This is a mock subscription created email",
+      _mockContext: {
+        type: "welcome",
+        data: { userEmail, planName, workspaceName, periodStart, periodEnd },
+      },
+    });
+  }
+
+  if (!resend) {
+    throw new Error("Resend API key not set");
+  }
+
+  try {
+    await resend.emails.send({
+      from: "AstraCMS <emails@astracms.dev>",
+      to: userEmail,
+      subject: `Your ${planName} subscription is now active!`,
+      react: SubscriptionCreatedEmail({
+        userEmail,
+        planName,
+        workspaceName,
+        periodStart,
+        periodEnd,
+      }),
+    });
+
+    return { message: "Email sent successfully" };
+  } catch (error) {
+    console.error("Error sending subscription created email:", error);
+    return { error: "Failed to send email", details: error };
+  }
+}
+
+type SendSubscriptionCanceledEmailProps = {
+  userEmail: string;
+  planName: string;
+  workspaceName: string;
+  accessEndDate: string;
+};
+
+export async function sendSubscriptionCanceledEmailAction({
+  userEmail,
+  planName,
+  workspaceName,
+  accessEndDate,
+}: SendSubscriptionCanceledEmailProps) {
+  if (!resend && isDevelopment) {
+    return sendDevEmail({
+      from: "AstraCMS <emails@astracms.dev>",
+      to: userEmail,
+      subject: `Your ${planName} subscription has been canceled`,
+      text: "This is a mock subscription canceled email",
+      _mockContext: {
+        type: "welcome",
+        data: { userEmail, planName, workspaceName, accessEndDate },
+      },
+    });
+  }
+
+  if (!resend) {
+    throw new Error("Resend API key not set");
+  }
+
+  try {
+    await resend.emails.send({
+      from: "AstraCMS <emails@astracms.dev>",
+      to: userEmail,
+      subject: `Your ${planName} subscription has been canceled`,
+      react: SubscriptionCanceledEmail({
+        userEmail,
+        planName,
+        workspaceName,
+        accessEndDate,
+      }),
+    });
+
+    return { message: "Email sent successfully" };
+  } catch (error) {
+    console.error("Error sending subscription canceled email:", error);
+    return { error: "Failed to send email", details: error };
+  }
+}
+
+type SendSubscriptionRenewedEmailProps = {
+  userEmail: string;
+  planName: string;
+  workspaceName: string;
+  periodStart: string;
+  periodEnd: string;
+};
+
+export async function sendSubscriptionRenewedEmailAction({
+  userEmail,
+  planName,
+  workspaceName,
+  periodStart,
+  periodEnd,
+}: SendSubscriptionRenewedEmailProps) {
+  if (!resend && isDevelopment) {
+    return sendDevEmail({
+      from: "AstraCMS <emails@astracms.dev>",
+      to: userEmail,
+      subject: `Your ${planName} subscription has been renewed`,
+      text: "This is a mock subscription renewed email",
+      _mockContext: {
+        type: "welcome",
+        data: { userEmail, planName, workspaceName, periodStart, periodEnd },
+      },
+    });
+  }
+
+  if (!resend) {
+    throw new Error("Resend API key not set");
+  }
+
+  try {
+    await resend.emails.send({
+      from: "AstraCMS <emails@astracms.dev>",
+      to: userEmail,
+      subject: `Your ${planName} subscription has been renewed`,
+      react: SubscriptionRenewedEmail({
+        userEmail,
+        planName,
+        workspaceName,
+        periodStart,
+        periodEnd,
+      }),
+    });
+
+    return { message: "Email sent successfully" };
+  } catch (error) {
+    console.error("Error sending subscription renewed email:", error);
     return { error: "Failed to send email", details: error };
   }
 }

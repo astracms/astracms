@@ -34,7 +34,7 @@ export const SITE: Site = {
 export const SOCIAL_LINKS: Link[] = [
   { href: "https://github.com/astracms", label: "GitHub" },
   { href: "https://x.com/astracms", label: "Twitter" },
-  { href: "https://discord.gg/gU44Pmwqkx", label: "Discord" },
+  // { href: "https://discord.gg/gU44Pmwqkx", label: "Discord" },
   { href: "support@astracms.dev", label: "Email" },
   { href: "/rss.xml", label: "RSS" },
 ];
@@ -105,10 +105,9 @@ export const PRICING: Pricing[] = [
     features: [
       "Unlimited posts",
       "1GB media storage",
-      "2 member seats",
-      "AI Readability insights",
+      "2 team members",
       "10k API requests per month",
-      "100 webhook events per month",
+      "No AI features",
     ],
     button: {
       href: "https://app.astracms.dev",
@@ -125,10 +124,33 @@ export const PRICING: Pricing[] = [
     features: [
       "Unlimited posts",
       "10GB media storage",
-      "10 member seats",
-      "AI Readability insights",
+      "5 team members",
+      "1,000 AI credits per month",
+      "Advanced readability insights",
       "50k API requests per month",
-      "1k webhook events per month",
+      "50 webhook events per month",
+    ],
+    button: {
+      href: "https://app.astracms.dev",
+      label: "Get Started",
+    },
+  },
+  {
+    title: "Enterprise",
+    description: "For Growing Organizations",
+    price: {
+      monthly: "$99",
+      yearly: "$950",
+    },
+    features: [
+      "Unlimited posts",
+      "100GB media storage",
+      "10 team members",
+      "10,000 AI credits per month",
+      "Full AI suite (readability + keyword optimization)",
+      "Unlimited API requests",
+      "100 webhook events per month",
+      "Priority support",
     ],
     button: {
       href: "https://app.astracms.dev",
@@ -149,7 +171,7 @@ export const PRICING_FAQS: {
   {
     question: "How do I get a refund?",
     answer:
-      "To request a refund, please contact us at <a href='mailto:support@astracms.dev'>support@astracms.dev</a> within 7 days of your purchase. We're also available on X at <a href='https://x.com/astracms'>astracms</a> and on our <a href='https://discord.gg/gU44Pmwqkx'>Discord</a> channel.",
+      "To request a refund, please contact us at <a href='mailto:support@astracms.dev'>support@astracms.dev</a> within 7 business days of your purchase. We respond to all refund requests within 3 business days. We're also available on X at <a href='https://x.com/astracms'>astracms</a>.",
   },
   {
     question: "Can I change my plan later?",
@@ -159,7 +181,7 @@ export const PRICING_FAQS: {
   {
     question: "What payment methods do you accept?",
     answer:
-      "We accept all major credit cards, including Visa, Mastercard, and American Express. All payments are processed securely via <a href='https://polar.sh'>Polar</a>.",
+      "We accept all major credit cards, including Visa, Mastercard, and American Express. All payments are processed securely via <a href='https://creem.io'>Creem.io</a>.",
   },
   {
     question: "What happens when I downgrade my plan?",
@@ -305,14 +327,14 @@ export const FOOTER_SECTIONS: FooterSection[] = [
 ];
 
 export const FOOTER_SOCIAL_LINKS: FooterLink[] = [
-  // {
-  //   label: "Twitter",
-  //   href: "https://x.com/astracms",
-  //   external: true,
-  //   target: "_blank",
-  //   rel: "noopener",
-  //   icon: X,
-  // },
+  {
+    label: "Twitter",
+    href: "https://x.com/astracms",
+    external: true,
+    target: "_blank",
+    rel: "noopener",
+    icon: X,
+  },
   {
     label: "Github",
     href: "https://github.com/astracms",

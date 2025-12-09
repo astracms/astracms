@@ -12,7 +12,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { ButtonLoadingSpinner } from "@/components/ui/loading-spinner";
 import { useLocalStorage } from "@/hooks/use-localstorage";
-import { authClient } from "@/lib/auth/client";
+import { authClient, emailOtp } from "@/lib/auth/client";
 import { type CredentialData, credentialSchema } from "@/lib/validations/auth";
 import type { AuthMethod } from "@/types/misc";
 import { Github, Google } from "../icons/social";
@@ -42,12 +42,12 @@ export function RegisterForm() {
     // at this point user is already registered
     // so we can redirect to verify even if sending fails
     // they can initiate another verification email from the verify page
-    await authClient.emailOtp
+    await emailOtp
       .sendVerificationOtp({
         email,
         type: "email-verification",
       })
-      .then((_res) => {
+      .then((_res: unknown) => {
         startTransition(() => {
           router.push(
             `/verify?email=${encodeURIComponent(email)}&from=${callbackURL}`

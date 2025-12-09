@@ -1,8 +1,11 @@
+import { db } from "@astra/db";
 import { toAISdkFormat } from "@mastra/ai-sdk";
 import { convertMessages } from "@mastra/core/agent";
 import { createUIMessageStreamResponse } from "ai";
 import { NextResponse } from "next/server";
+import { getAICreditStats } from "@/lib/ai-credits";
 import { getServerSession } from "@/lib/auth/session";
+import { getWorkspacePlan, hasAIAccess } from "@/lib/plans";
 import { createCMSAgent } from "@/mastra";
 
 export async function POST(req: Request) {
@@ -10,6 +13,41 @@ export async function POST(req: Request) {
 
   if (!sessionData?.session.activeOrganizationId) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  // Check if workspace has AI access
+  const workspace = await db.organization.findUnique({
+    where: { id: sessionData.session.activeOrganizationId },
+    include: { subscription: true },
+  });
+
+  const plan = getWorkspacePlan(workspace?.subscription);
+
+  if (!hasAIAccess(plan)) {
+    return NextResponse.json(
+      {
+        error:
+          "AI features are not available on the free plan. Please upgrade to Pro or Enterprise to access AI capabilities.",
+        upgrade: true,
+      },
+      { status: 403 }
+    );
+  }
+
+  // Check AI credit availability
+  const creditStats = await getAICreditStats(
+    sessionData.session.activeOrganizationId
+  );
+
+  if (!creditStats.canUseAI) {
+    return NextResponse.json(
+      {
+        error: `You have used all your AI credits for this billing period. You have ${creditStats.used} of ${creditStats.limit} credits used.`,
+        upgrade: true,
+        creditsExhausted: true,
+      },
+      { status: 403 }
+    );
   }
 
   const { messages } = await req.json();
@@ -70,11 +108,25 @@ export async function GET(): Promise<NextResponse> {
   });
 
   const memory = await cmsAgent.getMemory();
-  const response = await memory?.query({
-    threadId: `${sessionData.session.activeOrganizationId}-${sessionData.user.id}`,
-    resourceId: "cms-chat",
-  });
+  if (!memory) {
+    return NextResponse.json({ error: "Memory not found" }, { status: 404 });
+  }
 
-  const uiMessages = convertMessages(response?.uiMessages ?? []).to("AIV5.UI");
-  return NextResponse.json(uiMessages);
+  try {
+    const response = await memory.query({
+      threadId: `${sessionData.session.activeOrganizationId}-${sessionData.user.id}`,
+      resourceId: "cms-chat",
+    });
+
+    const uiMessages = convertMessages(response?.uiMessages ?? []).to(
+      "AIV5.UI"
+    );
+    return NextResponse.json(uiMessages);
+  } catch (error) {
+    // Thread doesn't exist yet - return empty array
+    console.log(
+      "[CMS AGENT] No existing thread found, returning empty messages"
+    );
+    return NextResponse.json([]);
+  }
 }

@@ -366,6 +366,12 @@ Return as comma-separated list, nothing else.`
 
         console.log("[AUTO BLOG] ✅ Post created successfully:", post.id);
 
+        // Get workspace slug for the edit URL
+        const workspace = await db.organization.findUnique({
+          where: { id: workspaceId },
+          select: { slug: true },
+        });
+
         return {
           success: true,
           post: {
@@ -375,7 +381,7 @@ Return as comma-separated list, nothing else.`
             category: category.name,
             tags: tagNames,
             wordCount,
-            editUrl: `/astracms/editor/p/${post.id}`,
+            editUrl: `/${workspace?.slug ?? workspaceId}/editor/p/${post.id}`,
           },
         };
       } catch (error) {

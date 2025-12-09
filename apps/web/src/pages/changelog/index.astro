@@ -9,9 +9,9 @@ const entries = await getCollection("changelog");
 ---
 
 <Layout
-  title={`Changelog - ${SITE.TITLE}`}
+  title="Changelog - Astra CMS | Latest Updates & New Features"
   image="/og-blog.jpg"
-  description="Product improvements and updates."
+  description="Stay updated with Astra CMS releases. See the latest features, improvements, and bug fixes. Track our product development and discover new capabilities."
 >
   <section class="lg:border-y border-dashed min-h-[calc(100vh-140px)]">
     <div
@@ -29,11 +29,7 @@ const entries = await getCollection("changelog");
           </p>
         </div>
         <ul class="grid gap-6 md:gap-8 auto-rows-fr max-w-lg mx-auto">
-          {
-            entries.map((entry) => (
-              <ChangelogCard entry={entry} />
-            ))
-          }
+          {entries.map((entry) => <ChangelogCard entry={entry} />)}
         </ul>
       </Container>
     </div>

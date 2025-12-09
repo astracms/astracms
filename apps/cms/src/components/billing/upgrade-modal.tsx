@@ -19,8 +19,9 @@ import {
 import { cn } from "@astra/ui/lib/utils";
 import { CheckIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { AsyncButton } from "@/components/ui/async-button";
-import { checkout } from "@/lib/auth/client";
+import { authClient } from "@/lib/auth/client";
 import { PRICING_PLANS } from "@/lib/constants";
 import { useWorkspace } from "@/providers/workspace";
 
@@ -46,12 +47,37 @@ export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
     setCheckoutLoading(plan);
 
     try {
-      await checkout({
-        slug: plan,
-        referenceId: activeWorkspace.id,
+      // Get the product ID based on the plan
+      const productIdMap = {
+        free: process.env.NEXT_PUBLIC_CREEM_HOBBY_PRODUCT_ID,
+        pro: process.env.NEXT_PUBLIC_CREEM_PRO_PRODUCT_ID,
+      };
+
+      const productId = productIdMap[plan];
+
+      if (!productId) {
+        toast.error("Product ID not configured for this plan");
+        return;
+      }
+
+      const { data, error } = await authClient.creem.createCheckout({
+        productId,
+        successUrl: `${window.location.origin}/success`,
+        metadata: {
+          workspaceId: activeWorkspace.id,
+        },
       });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data && "url" in data && data.url) {
+        window.location.href = data.url;
+      }
     } catch (error) {
       console.error(error);
+      toast.error("Failed to process checkout");
     } finally {
       setCheckoutLoading(null);
       onClose();

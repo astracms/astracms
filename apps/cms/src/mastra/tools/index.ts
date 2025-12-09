@@ -1,3 +1,4 @@
+import { wrapToolsWithCreditCheck } from "@/lib/ai-tool-wrapper";
 import type { CMSAgentContext } from "../agents/cms-agent";
 import { createAddCategoryTool } from "./add-category";
 import { createAddTagTool } from "./add-tag";
@@ -41,7 +42,7 @@ export { createWebSearchTool } from "./web-search";
 export function createCMSTools(context: CMSAgentContext) {
   const { workspaceId } = context;
 
-  return {
+  const tools = {
     // Automation tools
     createBlogAuto: createBlogAutoTool(workspaceId),
 
@@ -70,6 +71,9 @@ export function createCMSTools(context: CMSAgentContext) {
     // Research tools
     webSearch: createWebSearchTool(),
   };
+
+  // Wrap all tools with credit checking middleware
+  return wrapToolsWithCreditCheck(tools, workspaceId);
 }
 
 /**

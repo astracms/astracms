@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@astra/ui/components/badge";
 import {
   Collapsible,
   CollapsibleContent,
@@ -31,6 +32,7 @@ import {
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { useWorkspace } from "@/providers/workspace";
 
 const items = [
   {
@@ -59,7 +61,7 @@ const items = [
     icon: UsersThreeIcon,
   },
   {
-    name: "AI Agents",
+    name: "Astra AI",
     url: "agent",
     icon: RobotIcon,
   },
@@ -88,6 +90,9 @@ export function NavMain() {
   const pathname = usePathname();
   const params = useParams<{ workspace: string }>();
   const { open } = useSidebar();
+  const { activeWorkspace } = useWorkspace();
+
+  const isPro = activeWorkspace?.subscription?.plan === "pro";
 
   const isActive = (url: string) => pathname === `/${params.workspace}/${url}`;
 
@@ -124,6 +129,14 @@ export function NavMain() {
             <Link href={`/${params.workspace}/${item.url}`}>
               <item.icon />
               <span>{item.name}</span>
+              {item.url === "agent" && !isPro && (
+                <Badge
+                  className="ml-auto px-1.5 py-0 text-[10px]"
+                  variant="premium"
+                >
+                  PRO
+                </Badge>
+              )}
             </Link>
           </SidebarMenuButton>
         ))}

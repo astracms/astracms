@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import NewPostPageClient from "./page-client";
 
 export const metadata: Metadata = {
-  title: "New Post - Astra",
+  title: "New Post - Astra CMS",
 };
 
 export default function Page() {

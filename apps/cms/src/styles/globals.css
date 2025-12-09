@@ -17,7 +17,7 @@
   --card-foreground: hsl(0 0% 9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(0 0% 9%);
-  --primary: hsl(244 100% 65%);
+  --primary: hsl(244, 100%, 65%);
   --primary-foreground: hsl(0 0% 98%);
   --secondary: hsl(0 0% 96.1%);
   --secondary-foreground: hsl(0 0% 9%);

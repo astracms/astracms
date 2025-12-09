@@ -10,7 +10,7 @@ import { SITE_CONFIG } from "@/utils/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
-  title: "Sign Up - Astra",
+  title: "Sign Up - Astra CMS",
   alternates: {
     canonical: "/register",
   },

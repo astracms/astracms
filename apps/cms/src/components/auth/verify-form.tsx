@@ -12,7 +12,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AsyncButton } from "@/components/ui/async-button";
-import { authClient } from "@/lib/auth/client";
+import { authClient, emailOtp } from "@/lib/auth/client";
 import Container from "../shared/container";
 
 type VerifyFormProps = {
@@ -44,7 +44,7 @@ export function VerifyForm({ email, callbackUrl }: VerifyFormProps) {
   const handleResendCode = async () => {
     setIsResendLoading(true);
     try {
-      await authClient.emailOtp.sendVerificationOtp({
+      await emailOtp.sendVerificationOtp({
         email,
         type: "email-verification",
       });
@@ -61,7 +61,7 @@ export function VerifyForm({ email, callbackUrl }: VerifyFormProps) {
   const handleVerifyOtp = async () => {
     setIsLoading(true);
     try {
-      const result = await authClient.emailOtp.verifyEmail({
+      const result = await emailOtp.verifyEmail({
         email,
         otp,
       });

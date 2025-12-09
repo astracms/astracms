@@ -25,8 +25,10 @@ model Subscription {
   currentPeriodStart DateTime
   endedAt            DateTime?
   endsAt             DateTime?
-  polarId            String             @unique
+  creemId            String             @unique
   workspaceId        String             @unique
+  aiCreditsUsed      Int                @default(0)
+  aiCreditsLimit     Int                @default(0)
   user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   workspace          Organization       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
@@ -378,6 +380,7 @@ model UsageEvent {
   endpoint    String?
   size        Int?
   apiKeyId    String?
+  metadata    Json?
   createdAt   DateTime       @default(now())
   workspace   Organization   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   apiKey      ApiKey?        @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
@@ -396,13 +399,17 @@ enum PostStatus {
 enum PlanType {
   team
   pro
+  enterprise
 }
 
 enum SubscriptionStatus {
   active
   cancelled
-  expired
+  unpaid
+  paused
   trialing
+  expired
+  scheduled_cancel
   past_due
 }
 
@@ -438,4 +445,5 @@ enum UsageEventType {
   api_request
   media_upload
   webhook_delivery
+  ai_generation
 }

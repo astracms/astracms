@@ -1,9 +1,9 @@
 ---
 title: Privacy Policy
 slug: privacy
-published: 2020-01-01T06:15:00Z
+published: 2025-12-09T00:00:00Z
 description: AstraCMS's Privacy Policy. 
-lastUpdated: 2020-01-01T06:15:00Z
+lastUpdated: 2025-12-09T00:00:00Z
 ---
 
 AstraCMS ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our service ("the Service").

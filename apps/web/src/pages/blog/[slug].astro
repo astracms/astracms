@@ -25,7 +25,7 @@ const formattedDate = new Date(entry.data.publishedAt).toLocaleDateString(
     year: "numeric",
     month: "long",
     day: "numeric",
-  }
+  },
 );
 
 const readTime = calculateReadTime(entry.data.content);
@@ -93,7 +93,7 @@ const readTime = calculateReadTime(entry.data.content);
           )}
         </div> -->
         <Prose>
-          <div set:html={entry.data.content}/>
+          <div set:html={entry.data.content} />
         </Prose>
       </Container>
     </div>
