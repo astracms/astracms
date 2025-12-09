@@ -3,7 +3,7 @@
   "info": {
     "version": "2.0.0",
     "title": "AstraCMS API",
-    "description": "The AstraCMS API provides programmatic access to your content. \n\n## API Versions\n\n- **V1** (`/v1/{workspaceId}/...`): Uses workspace ID in the URL path\n- **V2** (`/v2/...`): Uses API key authentication via `X-API-Key` header (recommended)\n\n## Rate Limiting\n\nAll API endpoints are rate limited. When you exceed the limit, you'll receive a 429 response.",
+    "description": "The AstraCMS API provides programmatic access to your content. \n\n## API Versions\n\n- **V1** (`/v1/{workspaceId}/...`): Uses workspace ID in the URL path\n- **V2** (`/v2/...`): Uses API key authentication via `Authorization: Bearer` header (recommended)\n\n## Rate Limiting\n\nAll API endpoints are rate limited. When you exceed the limit, you'll receive a 429 response.",
     "contact": {
       "name": "AstraCMS Support",
       "url": "https://astracms.dev",
@@ -41,10 +41,9 @@
   "components": {
     "securitySchemes": {
       "ApiKeyAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-API-Key",
-        "description": "API key for V2 endpoints. Get your key from the AstraCMS dashboard."
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key for V2 endpoints. Use format: Bearer {your_api_key}. Get your key from the AstraCMS dashboard."
       }
     },
     "schemas": {

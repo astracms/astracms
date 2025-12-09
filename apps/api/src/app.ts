@@ -59,7 +59,13 @@ app.use(trimTrailingSlash());
 app.use("/:workspaceId/*", async (c, next) => {
   const path = c.req.path;
   const workspaceId = c.req.param("workspaceId");
-  if (path.startsWith("/v1/") || path === "/" || path === "/status") {
+  // Skip v1, v2, and root routes from redirect logic
+  if (
+    path.startsWith("/v1/") ||
+    path.startsWith("/v2/") ||
+    path === "/" ||
+    path === "/status"
+  ) {
     return next();
   }
 
@@ -109,7 +115,7 @@ The AstraCMS API provides programmatic access to your content.
 ## API Versions
 
 - **V1** (\`/v1/{workspaceId}/...\`): Uses workspace ID in the URL path
-- **V2** (\`/v2/...\`): Uses API key authentication via \`X-API-Key\` header (recommended)
+- **V2** (\`/v2/...\`): Uses API key authentication via \`Authorization: Bearer\` header (recommended)
 
 ## Rate Limiting
 
@@ -141,11 +147,10 @@ All API endpoints are rate limited. When you exceed the limit, you'll receive a 
 
 // OpenAPI security schemes (registered separately for proper component generation)
 app.openAPIRegistry.registerComponent("securitySchemes", "ApiKeyAuth", {
-  type: "apiKey",
-  in: "header",
-  name: "X-API-Key",
+  type: "http",
+  scheme: "bearer",
   description:
-    "API key for V2 endpoints. Get your key from the AstraCMS dashboard.",
+    "API key for V2 endpoints. Use format: Bearer {your_api_key}. Get your key from the AstraCMS dashboard.",
 });
 
 export default app;

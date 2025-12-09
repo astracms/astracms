@@ -2,8 +2,7 @@ import { defineCollection } from "astro:content";
 import { categoriesLoader, postsLoader } from "@astracms/astro-loader";
 
 const config = {
-  apiVersion: "v1" as const,
-  workspaceId: import.meta.env.ASTRA_WORKSPACE_KEY,
+  apiKey: import.meta.env.ASTRACMS_API_KEY,
 };
 
 const posts = defineCollection({
