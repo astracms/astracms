@@ -11,7 +11,7 @@ if (!entry) {
   throw new Error("Page not found");
 }
 
-const formattedDate = new Date(entry.data.lastUpdated).toLocaleDateString(
+const formattedDate = new Date(entry.data.updatedAt).toLocaleDateString(
   "en-US",
   {
     year: "numeric",
