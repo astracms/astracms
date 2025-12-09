@@ -597,6 +597,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@astracms/astro-loader':
+        specifier: ^0.1.1
+        version: 0.1.1(astro@5.16.4(@types/node@24.10.1)(@upstash/redis@1.35.7)(@vercel/functions@2.2.13(@aws-sdk/credential-provider-web-identity@3.947.0))(db0@0.3.4(@electric-sql/pglite@0.3.2)(@libsql/client@0.15.15(bufferutil@4.0.9))(mysql2@3.15.3))(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
       '@astrojs/mdx':
         specifier: ^4.3.8
         version: 4.3.12(astro@5.16.4(@types/node@24.10.1)(@upstash/redis@1.35.7)(@vercel/functions@2.2.13(@aws-sdk/credential-provider-web-identity@3.947.0))(db0@0.3.4(@electric-sql/pglite@0.3.2)(@libsql/client@0.15.15(bufferutil@4.0.9))(mysql2@3.15.3))(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))
@@ -1159,6 +1162,14 @@ packages:
     resolution: {integrity: sha512-u05zNUirlukJAf9oEHmxSF31L1XQhz9XdpVILt7+xhrz65oQqBpiOWFkGvRWL0IpjOUJ878idKoNmYPxrFnkeg==}
     peerDependencies:
       zod: ^4.0.0
+
+  '@astracms/astro-loader@0.1.1':
+    resolution: {integrity: sha512-8rZYNPykJHUME2m7UGZcezhTeDzQE7+ONFgSuH00LnH+cWbtpa1hnfqlHuvv1S4NC8X9RpWJ89Jfvu5aMuRGSQ==}
+    peerDependencies:
+      astro: ^5.0.0
+
+  '@astracms/core@0.1.0':
+    resolution: {integrity: sha512-7fFvIPjKgQLyoINHfEsVCTstn9dsz47/Mq89b5tn57Ao1juEv8qM5nayavM0bVEF2BINQ/s1klWb9Uk0eAZd0w==}
 
   '@astrojs/check@0.9.6':
     resolution: {integrity: sha512-jlaEu5SxvSgmfGIFfNgcn5/f+29H61NJzEMfAZ82Xopr4XBchXB1GVlcJsE+elUlsYSbXlptZLX+JMG3b/wZEA==}
@@ -15043,6 +15054,16 @@ snapshots:
       openapi3-ts: 4.5.0
       zod: 4.1.13
 
+  '@astracms/astro-loader@0.1.1(astro@5.16.4(@types/node@24.10.1)(@upstash/redis@1.35.7)(@vercel/functions@2.2.13(@aws-sdk/credential-provider-web-identity@3.947.0))(db0@0.3.4(@electric-sql/pglite@0.3.2)(@libsql/client@0.15.15(bufferutil@4.0.9))(mysql2@3.15.3))(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))':
+    dependencies:
+      '@astracms/core': 0.1.0
+      astro: 5.16.4(@types/node@24.10.1)(@upstash/redis@1.35.7)(@vercel/functions@2.2.13(@aws-sdk/credential-provider-web-identity@3.947.0))(db0@0.3.4(@electric-sql/pglite@0.3.2)(@libsql/client@0.15.15(bufferutil@4.0.9))(mysql2@3.15.3))(ioredis@5.8.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.3)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      zod: 3.25.76
+
+  '@astracms/core@0.1.0':
+    dependencies:
+      zod: 3.25.76
+
   '@astrojs/check@0.9.6(prettier@3.7.4)(typescript@5.9.3)':
     dependencies:
       '@astrojs/language-server': 2.16.2(prettier@3.7.4)(typescript@5.9.3)
@@ -24224,7 +24245,7 @@ snapshots:
       '@next/eslint-plugin-next': 16.0.3
       eslint: 9.39.1(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.1(jiti@2.6.1))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.1(jiti@2.6.1))
       eslint-plugin-react: 7.37.5(eslint@9.39.1(jiti@2.6.1))
@@ -24247,7 +24268,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.1(jiti@2.6.1)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.3
@@ -24262,14 +24283,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.1(jiti@2.6.1)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
       eslint: 9.39.1(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.1(jiti@2.6.1))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
@@ -24284,7 +24305,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.1(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.1(jiti@2.6.1))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.49.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3

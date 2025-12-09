@@ -1,61 +1,37 @@
 import { defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
-import { highlightContent } from "./lib/highlight";
-import { fetchCategories, fetchPosts } from "./lib/queries";
-import { categorySchema, pageSchema, postSchema } from "./lib/schemas";
+import { categoriesLoader, postsLoader } from "@astracms/astro-loader";
+
+const config = {
+  apiVersion: "v1" as const,
+  workspaceId: import.meta.env.ASTRA_WORKSPACE_KEY,
+};
 
 const posts = defineCollection({
-  loader: async () => {
-    const response = await fetchPosts("?excludeCategories=legal,changelog");
-    // Must return an array of entries with an id property
-    // or an object with IDs as keys and entries as values
-    return Promise.all(
-      response.posts.map(async (post) => ({
-        ...post,
-        content: await highlightContent(post.content),
-      }))
-    );
-  },
-  schema: postSchema,
-});
-
-const page = defineCollection({
-  // loader: async () => {
-  //   const response = await fetchPosts("?categories=legal");
-
-  //   return response.posts.map((post) => ({
-  //     ...post,
-  //     // Astro uses the id as a key to get the entry
-  //     // We can't know the id of the post so we use the slug
-  //     id: post.slug,
-  //   }));
-  // },
-  loader: glob({ pattern: "**/*.md", base: "./src/content/pages" }),
-  schema: pageSchema,
+  loader: postsLoader({
+    ...config,
+    format: "markdown", // or 'html'
+    categories: ["blog"],
+  }),
 });
 
 const changelog = defineCollection({
-  loader: async () => {
-    const response = await fetchPosts("?categories=changelog");
-
-    return response.posts.map((post) => ({
-      ...post,
-      id: post.slug,
-    }));
-  },
-  schema: postSchema,
+  loader: postsLoader({
+    ...config,
+    format: "markdown", // or 'html'
+    categories: ["changelog"],
+  }),
 });
 
 const categories = defineCollection({
-  loader: async () => {
-    const response = await fetchCategories();
+  loader: categoriesLoader(config),
+});
 
-    return response.categories.map((category) => ({
-      ...category,
-      id: category.slug,
-    }));
-  },
-  schema: categorySchema,
+const page = defineCollection({
+  loader: postsLoader({
+    ...config,
+    format: "markdown", // or 'html'
+    categories: ["page"],
+  }),
 });
 
 export const collections = {

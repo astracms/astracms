@@ -5,6 +5,9 @@ import {
   getToolCreditCost,
 } from "./ai-credits";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyTool = Tool<any, any, any, any, any>;
+
 /**
  * Wrap a Mastra tool with AI credit checking and consumption
  *
@@ -13,7 +16,7 @@ import {
  * 2. Consumes credits after successful execution
  * 3. Returns credit error if insufficient credits
  */
-export function wrapToolWithCreditCheck<T extends Tool>(
+export function wrapToolWithCreditCheck<T extends AnyTool>(
   tool: T,
   workspaceId: string
 ): T {
@@ -79,11 +82,11 @@ export function wrapToolWithCreditCheck<T extends Tool>(
 /**
  * Wrap all tools in an object with credit checking
  */
-export function wrapToolsWithCreditCheck<T extends Record<string, Tool>>(
+export function wrapToolsWithCreditCheck<T extends Record<string, AnyTool>>(
   tools: T,
   workspaceId: string
 ): T {
-  const wrappedTools: Record<string, Tool> = {};
+  const wrappedTools: Record<string, AnyTool> = {};
 
   for (const key of Object.keys(tools)) {
     const tool = tools[key];
