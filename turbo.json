@@ -35,7 +35,10 @@
         "REDIS_URL",
         "REDIS_TOKEN",
         "OPENAI_API_KEY",
-        "OPENROUTER_API_KEY"
+        "OPENROUTER_API_KEY",
+        "AI_SDK_LOG_WARNINGS",
+        "ZENMUX_API_KEY",
+        "TAVILY_API_KEY"
       ]
     },
     "lint": {
