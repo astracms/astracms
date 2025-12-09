@@ -13,7 +13,7 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection("categories");
   return blogEntries
     .filter(
-      (entry) => entry.data.slug !== "legal" && entry.data.slug !== "changelog",
+      (entry) => entry.data.slug !== "legal" && entry.data.slug !== "changelog"
     )
     .map((entry) => ({
       params: { slug: entry.data.slug },
@@ -48,7 +48,7 @@ const postsResponse = await fetchPosts([entry.data.slug], [], "");
                 "Updates, news, and guides from the team."
             }
           </p>
-          <CategoryFilter categories={categoriesEntries} />
+          <CategoryFilter categories={categoriesEntries}/>
         </div>
         {
           postsResponse.length > 0 ? (
