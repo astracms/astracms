@@ -28,6 +28,7 @@
     "docs:build": "turbo build --filter=docs",
     "test": "turbo test",
     "changeset": "changeset",
+    "changeset:add": "changeset add",
     "version-packages": "changeset version",
     "publish-packages": "turbo build --filter='@astracms/*' && changeset publish"
   },
