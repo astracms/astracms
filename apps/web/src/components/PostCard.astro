@@ -43,7 +43,9 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
         </p>
       </div>
       <div class="flex items-center gap-2 pt-2 border-t border-border/40">
-        <span class="text-muted-foreground text-xs">{authors[0].name}</span>
+        <span class="text-muted-foreground text-xs"
+          >{authors && authors[0].name}</span
+        >
         <span class="text-border">·</span>
         <time
           datetime={publishedAt.toISOString()}

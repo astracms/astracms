@@ -5,7 +5,6 @@ import Helix from "@/components/icons/brand/Helix.astro";
 import Ia from "@/components/icons/brand/Ia.astro";
 import Mantlz from "@/components/icons/brand/Mantlz.astro";
 import Opencut from "@/components/icons/brand/Opencut.astro";
-import Discord from "@/components/icons/Discord.astro";
 import Github from "@/components/icons/Github.astro";
 import X from "@/components/icons/X.astro";
 
