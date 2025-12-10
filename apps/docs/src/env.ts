@@ -8,7 +8,7 @@ export const env = createEnv({
       .default("development"),
   },
   client: {
-    NEXT_PUBLIC_BASE_URL: z.url()
+    NEXT_PUBLIC_BASE_URL: z.string().url().optional().default("http://localhost:3000")
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
