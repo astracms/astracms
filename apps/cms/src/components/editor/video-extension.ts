@@ -35,6 +35,10 @@ export const Video = Node.create<VideoOptions>({
     return [
       {
         tag: "video",
+        getAttrs: (element) => {
+          const src = (element as HTMLElement).getAttribute("src");
+          return src ? { src } : false;
+        },
       },
     ];
   },
