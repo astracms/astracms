@@ -8,7 +8,7 @@ import {
   type Post,
   type Tag,
 } from "@astracms/core";
-import { derived, type Readable, readable, writable } from "svelte/store";
+import { type Readable, readable, writable } from "svelte/store";
 
 // Re-export types and values from core
 export type {
@@ -77,8 +77,16 @@ export function createPostsStore(
     (set) => {
       client
         .getPosts(options)
-        .then((posts) => set({ data: posts, loading: false, error: null }))
-        .catch((error) => set({ data: null, loading: false, error }));
+        .then((posts: Post[]) =>
+          set({ data: posts, loading: false, error: null })
+        )
+        .catch((error: unknown) =>
+          set({
+            data: null,
+            loading: false,
+            error: error instanceof Error ? error : new Error(String(error)),
+          })
+        );
     }
   );
 }
@@ -96,8 +104,16 @@ export function createPostStore(
     (set) => {
       client
         .getPost(slug, options)
-        .then((post) => set({ data: post, loading: false, error: null }))
-        .catch((error) => set({ data: null, loading: false, error }));
+        .then((post: Post | null) =>
+          set({ data: post, loading: false, error: null })
+        )
+        .catch((error: unknown) =>
+          set({
+            data: null,
+            loading: false,
+            error: error instanceof Error ? error : new Error(String(error)),
+          })
+        );
     }
   );
 }
@@ -113,10 +129,16 @@ export function createCategoriesStore(
     (set) => {
       client
         .getCategories()
-        .then((categories) =>
+        .then((categories: Category[]) =>
           set({ data: categories, loading: false, error: null })
         )
-        .catch((error) => set({ data: null, loading: false, error }));
+        .catch((error: unknown) =>
+          set({
+            data: null,
+            loading: false,
+            error: error instanceof Error ? error : new Error(String(error)),
+          })
+        );
     }
   );
 }
@@ -132,8 +154,14 @@ export function createTagsStore(
     (set) => {
       client
         .getTags()
-        .then((tags) => set({ data: tags, loading: false, error: null }))
-        .catch((error) => set({ data: null, loading: false, error }));
+        .then((tags: Tag[]) => set({ data: tags, loading: false, error: null }))
+        .catch((error: unknown) =>
+          set({
+            data: null,
+            loading: false,
+            error: error instanceof Error ? error : new Error(String(error)),
+          })
+        );
     }
   );
 }
@@ -149,8 +177,16 @@ export function createAuthorsStore(
     (set) => {
       client
         .getAuthors()
-        .then((authors) => set({ data: authors, loading: false, error: null }))
-        .catch((error) => set({ data: null, loading: false, error }));
+        .then((authors: Author[]) =>
+          set({ data: authors, loading: false, error: null })
+        )
+        .catch((error: unknown) =>
+          set({
+            data: null,
+            loading: false,
+            error: error instanceof Error ? error : new Error(String(error)),
+          })
+        );
     }
   );
 }
