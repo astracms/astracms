@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://astracms.dev">
-    <img src="https://raw.githubusercontent.com/kalanakt/astracms/main/assets/logo-120x120-transparent.png" width="120" height="auto" alt="AstraCMS"/>
+    <img src="/assets/twitter-header.png?raw=true" width="120" height="auto" alt="AstraCMS"/>
   </a>
 </p>
 
