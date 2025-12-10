@@ -1,5 +1,3 @@
-<h1 align="center">AstraCMS</h1>
-
 <p align="center">
   <a href="https://astracms.dev">
     <img src="/assets/twitter-header.png?raw=true" width="auto" height="auto" alt="AstraCMS"/>
