@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   const blogEntries = await getCollection("categories");
   return blogEntries
     .filter(
-      (entry) => entry.data.slug !== "page" && entry.data.slug !== "changelog",
+      (entry) => entry.data.slug !== "page" && entry.data.slug !== "changelog"
     )
     .map((entry) => ({
       params: { slug: entry.data.slug },
@@ -27,7 +27,7 @@ const categoriesEntries = await getCollection("categories");
 // Get all posts and filter by the current category
 const allPosts = await getCollection("posts");
 const postsResponse = allPosts.filter(
-  (post) => post.data.category?.slug === entry.data.slug,
+  (post) => post.data.category?.slug === entry.data.slug
 );
 ---
 
@@ -52,7 +52,7 @@ const postsResponse = allPosts.filter(
                 "Updates, news, and guides from the team."
             }
           </p>
-          <CategoryFilter categories={categoriesEntries} />
+          <CategoryFilter categories={categoriesEntries}/>
         </div>
         {
           postsResponse.length > 0 ? (

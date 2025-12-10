@@ -86,12 +86,12 @@ export default function PageClient() {
     status?: {
       label: string;
       variant?:
-      | "default"
-      | "secondary"
-      | "outline"
-      | "positive"
-      | "negative"
-      | "pending";
+        | "default"
+        | "secondary"
+        | "outline"
+        | "positive"
+        | "negative"
+        | "pending";
     };
     editors?: Array<{
       name: string;
