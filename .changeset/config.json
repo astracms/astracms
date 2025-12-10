@@ -16,6 +16,5 @@
   ],
   "access": "public",
   "baseBranch": "main",
-  "updateInternalDependencies": "patch",
-  "ignore": ["@astra/db", "@astra/ui", "@astra/parser", "@astra/tsconfig"]
+  "updateInternalDependencies": "patch"
 }
