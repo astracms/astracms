@@ -150,6 +150,7 @@ Loads categories from AstraCMS.
 | `workspaceId` | `string` | * | Workspace ID |
 | `apiVersion` | `'v1' \| 'v2'` | | API version |
 | `query` | `string` | | Search query |
+| `excludeCategories` | `string[]` | | Exclude category slugs |
 
 ### `tagsLoader(options)`
 

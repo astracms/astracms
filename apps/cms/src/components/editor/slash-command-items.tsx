@@ -9,6 +9,7 @@ import {
   TextHFourIcon,
   TextHThreeIcon,
   TextHTwoIcon,
+  VideoIcon,
   YoutubeLogoIcon,
 } from "@phosphor-icons/react";
 import { Command, createSuggestionItems, renderItems } from "novel";
@@ -161,9 +162,15 @@ export const suggestionItems = createSuggestionItems([
     },
   },
   {
+    title: "Video",
+    description: "Insert a video from your media library",
+    searchTerms: ["video", "media", "clip", "movie"],
+    icon: <VideoIcon size={16} />,
+  },
+  {
     title: "YouTube",
     description: "Embed a YouTube video",
-    icon: <YoutubeLogoIcon className="size-4" />,
+    icon: <YoutubeLogoIcon size={16} />,
   },
 ]);
 

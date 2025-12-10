@@ -1,4 +1,10 @@
 export type UsageDashboardData = {
+  content: {
+    posts: number;
+    authors: number;
+    categories: number;
+    tags: number;
+  };
   api: {
     totals: {
       total: number;

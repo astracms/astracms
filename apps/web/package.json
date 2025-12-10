@@ -9,8 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astracms/astro-loader": "^0.1.1",
-    "@astracms/core": "^0.1.0",
+    "@astracms/astro-loader": "workspace:*",
+    "@astracms/core": "workspace:*",
     "@astrojs/mdx": "^4.3.8",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.6.0",

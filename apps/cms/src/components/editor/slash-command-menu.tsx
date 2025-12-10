@@ -7,10 +7,12 @@ import {
 import { useState } from "react";
 import { ImageUploadModal } from "./image-upload-modal";
 import { suggestionItems } from "./slash-command-items";
+import { VideoUploadModal } from "./video-upload-modal";
 import { YoutubeEmbedModal } from "./youtube-embed-modal";
 
 export function SlashCommandMenu() {
   const [showImageModal, setShowImageModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [showYoutubeModal, setShowYoutubeModal] = useState(false);
 
   return (
@@ -30,6 +32,11 @@ export function SlashCommandMenu() {
                     val.editor.chain().focus().deleteRange(val.range).run();
                   }
                   setShowImageModal(true);
+                } else if (item.title === "Video") {
+                  if (val.editor && val.range) {
+                    val.editor.chain().focus().deleteRange(val.range).run();
+                  }
+                  setShowVideoModal(true);
                 } else if (item.title === "YouTube") {
                   if (val.editor && val.range) {
                     val.editor.chain().focus().deleteRange(val.range).run();
@@ -52,6 +59,7 @@ export function SlashCommandMenu() {
         </EditorCommandList>
       </EditorCommand>
       <ImageUploadModal isOpen={showImageModal} setIsOpen={setShowImageModal} />
+      <VideoUploadModal isOpen={showVideoModal} setIsOpen={setShowVideoModal} />
       <YoutubeEmbedModal
         isOpen={showYoutubeModal}
         setIsOpen={setShowYoutubeModal}

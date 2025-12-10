@@ -156,3 +156,21 @@ export function ImageDropzone({
     />
   );
 }
+
+export function VideoDropzone({
+  placeholder = {},
+  ...props
+}: MediaDropzoneProps) {
+  return (
+    <Dropzone
+      accept={{ "video/*": [".mp4", ".mov", ".webm", ".avi", ".mpeg"] }}
+      placeholder={{
+        idle:
+          placeholder.idle || "Drag & drop a video here, or click to select",
+        active: placeholder.active || "Drop the video here...",
+        subtitle: placeholder.subtitle || "Supports MP4, MOV, WebM, AVI, MPEG",
+      }}
+      {...props}
+    />
+  );
+}

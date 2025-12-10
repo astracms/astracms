@@ -22,7 +22,10 @@ const changelog = defineCollection({
 });
 
 const categories = defineCollection({
-  loader: categoriesLoader(config),
+  loader: categoriesLoader({
+    ...config,
+    excludeCategories: ["page"],
+  }),
 });
 
 const page = defineCollection({

@@ -44,32 +44,32 @@ export default function PageClient() {
     );
   }
 
-  // Mock data for quick stats - replace with real data from your API
+  // Quick stats from API content counts
   const quickStats = [
     {
       title: "Total Posts",
-      value: "0",
+      value: String(data?.content?.posts ?? 0),
       description: "Published and draft",
       icon: <FileText className="size-5" />,
       accentColor: "hsl(var(--chart-1))",
     },
     {
       title: "Authors",
-      value: "0",
+      value: String(data?.content?.authors ?? 0),
       description: "Active contributors",
       icon: <Users className="size-5" />,
       accentColor: "hsl(var(--chart-2))",
     },
     {
       title: "Categories",
-      value: "0",
+      value: String(data?.content?.categories ?? 0),
       description: "Content categories",
       icon: <FolderOpen className="size-5" />,
       accentColor: "hsl(var(--chart-3))",
     },
     {
       title: "Tags",
-      value: "0",
+      value: String(data?.content?.tags ?? 0),
       description: "Content tags",
       icon: <Tag className="size-5" />,
       accentColor: "hsl(var(--chart-4))",
@@ -86,12 +86,12 @@ export default function PageClient() {
     status?: {
       label: string;
       variant?:
-        | "default"
-        | "secondary"
-        | "outline"
-        | "positive"
-        | "negative"
-        | "pending";
+      | "default"
+      | "secondary"
+      | "outline"
+      | "positive"
+      | "negative"
+      | "pending";
     };
     editors?: Array<{
       name: string;

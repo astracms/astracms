@@ -1,13 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import type { Post } from "@astracms/astro-loader";
+import type { CollectionEntry } from "astro:content";
 
 type Props = {
-  entry: Post;
+  entry: CollectionEntry<"posts">;
 };
 
 const { entry } = Astro.props as Props;
-const { title, description, coverImage, publishedAt, authors, slug } = entry;
+const { title, description, coverImage, publishedAt, authors, slug } =
+  entry.data;
 
 const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
   day: "2-digit",
@@ -36,8 +37,11 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
         <p class="text-muted-foreground text-sm line-clamp-2">{description}</p>
       </div>
       <div class="flex items-center gap-2 justify-between">
-        <p class="text-muted-foreground text-sm">{authors[0].name}</p>
-        <time datetime={publishedAt} class="text-muted-foreground text-sm">
+        <p class="text-muted-foreground text-sm">{authors?.[0]?.name}</p>
+        <time
+          datetime={publishedAt.toISOString()}
+          class="text-muted-foreground text-sm"
+        >
           {formattedDate}
         </time>
       </div>

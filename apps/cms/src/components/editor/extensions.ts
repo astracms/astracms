@@ -16,6 +16,7 @@ import {
   UploadImagesPlugin,
   Youtube,
 } from "novel";
+import { Video } from "./video-extension";
 
 // You can overwrite the placeholder with your own configuration
 const placeholder = Placeholder;
@@ -81,6 +82,12 @@ const youtube = Youtube.configure({
   },
 });
 
+const video = Video.configure({
+  HTMLAttributes: {
+    class: cx("w-full aspect-video rounded-md border border-muted"),
+  },
+});
+
 const textAlign = TextAlign.configure({
   types: ["heading", "paragraph"],
 });
@@ -127,6 +134,7 @@ export const defaultExtensions: Extension[] = [
   tiptapImage as unknown as Extension,
   // updatedImage as unknown as Extension,
   youtube as unknown as Extension,
+  video as unknown as Extension,
   tiptapLink as unknown as Extension,
   taskList as unknown as Extension,
   taskItem as unknown as Extension,

@@ -94,6 +94,10 @@ export async function GET() {
     mediaLast30,
     mediaLastUpload,
     recentMediaUploads,
+    postsCount,
+    authorsCount,
+    categoriesCount,
+    tagsCount,
   ] = await Promise.all([
     db.usageEvent.count({
       where: { workspaceId, type: UsageEventType.webhook_delivery },
@@ -163,6 +167,19 @@ export async function GET() {
         url: true,
       },
     }),
+    // Content counts for dashboard quick overview
+    db.post.count({
+      where: { workspaceId },
+    }),
+    db.author.count({
+      where: { workspaceId },
+    }),
+    db.category.count({
+      where: { workspaceId },
+    }),
+    db.tag.count({
+      where: { workspaceId },
+    }),
   ]);
 
   const webhookChartBuckets = new Map<string, number>();
@@ -185,6 +202,12 @@ export async function GET() {
   );
 
   const response = {
+    content: {
+      posts: postsCount,
+      authors: authorsCount,
+      categories: categoriesCount,
+      tags: tagsCount,
+    },
     api: {
       totals: {
         total: apiTotalCount,

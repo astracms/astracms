@@ -11,6 +11,12 @@ export type CategoriesLoaderOptions = AstraCMSConfig & {
    * Search query to filter categories by name
    */
   query?: string;
+
+  /**
+   * Exclude categories with these slugs
+   * @example ["page", "internal"]
+   */
+  excludeCategories?: string[];
 };
 
 /**
@@ -25,6 +31,7 @@ export type CategoriesLoaderOptions = AstraCMSConfig & {
  * const categories = defineCollection({
  *   loader: categoriesLoader({
  *     apiKey: import.meta.env.ASTRACMS_API_KEY,
+ *     excludeCategories: ["page"],
  *   }),
  * });
  *
@@ -32,7 +39,7 @@ export type CategoriesLoaderOptions = AstraCMSConfig & {
  * ```
  */
 export function categoriesLoader(options: CategoriesLoaderOptions): Loader {
-  const { query, ...config } = options;
+  const { query, excludeCategories, ...config } = options;
 
   return {
     name: "astracms-categories-loader",
@@ -41,7 +48,7 @@ export function categoriesLoader(options: CategoriesLoaderOptions): Loader {
       logger.info("Loading categories from AstraCMS...");
 
       try {
-        const categories = await fetchAllPages<"categories">({
+        const allCategories = await fetchAllPages<"categories">({
           ...config,
           endpoint: "categories",
           params: {
@@ -49,9 +56,17 @@ export function categoriesLoader(options: CategoriesLoaderOptions): Loader {
           },
         });
 
+        // Filter out excluded categories
+        let filteredCategories = allCategories as Category[];
+        if (excludeCategories && excludeCategories.length > 0) {
+          filteredCategories = filteredCategories.filter(
+            (cat) => !excludeCategories.includes(cat.slug)
+          );
+        }
+
         store.clear();
 
-        for (const category of categories as Category[]) {
+        for (const category of filteredCategories) {
           const data = await parseData({
             id: category.slug,
             data: {
@@ -70,7 +85,9 @@ export function categoriesLoader(options: CategoriesLoaderOptions): Loader {
           });
         }
 
-        logger.info(`Loaded ${categories.length} categories from AstraCMS`);
+        logger.info(
+          `Loaded ${filteredCategories.length} categories from AstraCMS`
+        );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         logger.error(`Failed to load categories: ${message}`);
