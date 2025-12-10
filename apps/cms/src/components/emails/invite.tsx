@@ -36,7 +36,7 @@ export const InviteUserEmail = ({
   teamImage,
   inviteLink,
 }: InviteUserEmailProps) => {
-  const previewText = `Join ${invitedByUsername} on Astra`;
+  const previewText = `Join ${invitedByUsername} on AstraCMS`;
 
   return (
     <Html>
@@ -55,11 +55,12 @@ export const InviteUserEmail = ({
               />
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center font-normal text-[24px] text-black">
-              Join <strong>{teamName}</strong> on <strong>Astra</strong>
+              Join <strong>{teamName}</strong> on <strong>AstraCMS</strong>
             </Heading>
             <Text className="text-center text-[14px] text-black leading-[24px]">
               <strong>{invitedByUsername}</strong> has invited you to the{" "}
-              <strong>{teamName}</strong> workspace on <strong>Astra.</strong>
+              <strong>{teamName}</strong> workspace on{" "}
+              <strong>AstraCMS.</strong>
             </Text>
             <Section>
               <Row>

@@ -8,7 +8,7 @@ export default function AstraIcon() {
 
   return (
     <Image
-      alt="Astra Icon"
+      alt="AstraCMS Icon"
       className="size-8"
       height={32}
       src={theme === "dark" ? "/icon-light.svg" : "/icon.svg"}

@@ -17,7 +17,7 @@ const formattedDate = new Date(entry.data.updatedAt).toLocaleDateString(
     year: "numeric",
     month: "long",
     day: "numeric",
-  }
+  },
 );
 
 const { Content } = await render(entry);
@@ -25,7 +25,7 @@ const { Content } = await render(entry);
 
 <Layout
   title={`Terms of Service - ${SITE.TITLE}`}
-  description="Astra's terms of service."
+  description="AstraCMS's terms of service."
 >
   <div class="border-y border-dashed">
     <div class="lg:border-x border-dashed md:w-[calc(100%-140px)] mx-auto">
@@ -40,7 +40,7 @@ const { Content } = await render(entry);
         </div>
 
         <Prose>
-          <Content/>
+          <Content />
         </Prose>
       </Container>
     </div>

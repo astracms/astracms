@@ -11,8 +11,8 @@ const _getWorkspaceData = async (workspace: string) => {
 
 export const metadata = {
   title: {
-    template: "%s | Astra",
-    default: "Astra",
+    template: "%s | AstraCMS",
+    default: "AstraCMS",
   },
   description: "Manage your workspace",
 };

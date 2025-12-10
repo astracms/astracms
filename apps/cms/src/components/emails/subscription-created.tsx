@@ -41,7 +41,7 @@ export const SubscriptionCreatedEmail = ({
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-[#eaeaea] border-solid p-[20px]">
             <Section className="mt-[32px]">
               <Img
-                alt="Astra Logo"
+                alt="AstraCMS Logo"
                 className="mx-auto"
                 height="48"
                 src={`${baseUrl}/icon.png`}

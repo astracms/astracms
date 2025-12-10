@@ -20,7 +20,7 @@ type WelcomeEmailProps = {
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
 export const WelcomeEmail = ({ userEmail }: WelcomeEmailProps) => {
-  const previewText = "Welcome to Astra, let's get started!";
+  const previewText = "Welcome to AstraCMS, let's get started!";
 
   return (
     <Html>
@@ -31,7 +31,7 @@ export const WelcomeEmail = ({ userEmail }: WelcomeEmailProps) => {
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-[#eaeaea] border-solid p-[20px]">
             <Section className="mt-[32px]">
               <Img
-                alt="Astra Logo"
+                alt="AstraCMS Logo"
                 className="mx-auto"
                 height="48"
                 src={`${baseUrl}/icon.png`}
@@ -44,8 +44,8 @@ export const WelcomeEmail = ({ userEmail }: WelcomeEmailProps) => {
             </Heading>
 
             <Text className="text-center text-base text-gray-700 leading-relaxed">
-              Thanks for signing up with Astra. We're excited to have you in our
-              community!
+              Thanks for signing up with AstraCMS. We're excited to have you in
+              our community!
               <br />
               You can now explore all features and start building right away.
             </Text>
