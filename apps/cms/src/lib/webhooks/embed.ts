@@ -3,7 +3,7 @@ import type { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/v10"
 import type { WebhookBody } from "./webhook-client";
 
 const ASTRA_COLOR = 5_786_879;
-const ASTRA_AVATAR_URL = "https://app.astracms.dev/logo.png";
+const ASTRA_AVATAR_URL = "https://app.astracms.dev/icon.png";
 
 function formatEvent(input: string): string {
   return (

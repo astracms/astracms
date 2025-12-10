@@ -49,9 +49,9 @@ export const InviteUserEmail = ({
               <Img
                 alt="logo"
                 className="mx-auto my-0"
-                height="37"
+                height="48"
                 src={`${baseUrl}/icon.png`}
-                width="40"
+                width="48"
               />
             </Section>
             <Heading className="mx-0 my-[30px] p-0 text-center font-normal text-[24px] text-black">

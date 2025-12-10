@@ -1,8 +1,8 @@
 <h1 align="center">AstraCMS</h1>
 
 <p align="center">
-  <a href="https://vercel.com/oss">
-    <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge.svg" />
+  <a href="https://astracms.dev">
+    <img src="https://raw.githubusercontent.com/kalanakt/astracms/main/assets/logo-120x120-transparent.png" width="120" height="auto" alt="AstraCMS"/>
   </a>
 </p>
 

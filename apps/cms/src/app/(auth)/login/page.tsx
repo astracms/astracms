@@ -28,26 +28,6 @@ export default async function LoginPage(props: PageProps) {
 
   return (
     <div className="h-screen w-full md:grid md:grid-cols-2">
-      {/*<section className="relative hidden flex-col justify-between overflow-hidden p-10 md:flex">
-        <Image
-          alt="Light astra texture background"
-          className="object-cover object-center dark:hidden"
-          fill
-          loading="lazy"
-          quality={100}
-          src="/textures/astra-light.avif"
-          unoptimized
-        />
-        <Image
-          alt="Dark astra texture background"
-          className="hidden object-cover object-center dark:block"
-          fill
-          loading="lazy"
-          quality={100}
-          src="/textures/astra-dark.avif"
-          unoptimized
-        />
-      </section>*/}
       <FeaturesCard />
       <section className="flex h-full flex-col items-center justify-between p-4">
         <div className="self-start">
