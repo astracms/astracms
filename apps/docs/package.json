@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",
+    "@databuddy/sdk": "^2.3.1",
     "@fumadocs/mdx-remote": "^1.4.3",
     "@next/bundle-analyzer": "16.0.3",
     "@next/env": "16.0.3",

@@ -10,6 +10,7 @@ import { NextProvider } from "fumadocs-core/framework/next";
 import { TreeContextProvider } from "fumadocs-ui/contexts/tree";
 import { source } from "@/lib/source";
 import { url } from "@/lib/url";
+import { Databuddy } from '@databuddy/sdk/react';
 
 const geist = Geist({
   variable: "--font-sans",
@@ -58,6 +59,8 @@ export default function Layout({ children }: LayoutProps<"/">) {
         <NextProvider>
           <TreeContextProvider tree={source.pageTree}>
             <Providers>{children}</Providers>
+            <Databuddy
+              clientId="0VXb1RKs74Ew0U6nIEM0m" />
           </TreeContextProvider>
         </NextProvider>
       </Body>
