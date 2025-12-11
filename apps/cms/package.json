@@ -17,6 +17,7 @@
     "@aws-sdk/s3-request-presigner": "^3.758.0",
     "@better-fetch/fetch": "1.1.18",
     "@creem_io/better-auth": "^0.0.12",
+    "@databuddy/sdk": "^2.3.1",
     "@discordjs/builders": "^1.13.0",
     "@hookform/resolvers": "^5.2.0",
     "@libsql/client": "^0.15.15",
