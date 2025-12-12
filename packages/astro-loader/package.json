@@ -1,6 +1,6 @@
 {
   "name": "@astracms/astro-loader",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "Astro Content Collection loader for AstraCMS",
   "type": "module",
   "private": false,

@@ -1,6 +1,6 @@
 {
   "name": "@astracms/core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Core API client, types, and schemas for AstraCMS integrations",
   "type": "module",
   "private": false,
