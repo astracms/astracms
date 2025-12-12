@@ -1,5 +1,6 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { cache } from "hono/cache";
+import { cors } from "hono/cors";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { analytics } from "./middleware/analytics";
 import { apiKeyAuth } from "./middleware/api-key-auth";
@@ -21,6 +22,18 @@ const v1 = new OpenAPIHono<{ Bindings: Env }>();
 const v2 = new OpenAPIHono<{ Bindings: Env }>();
 
 const staleTime = 3600;
+
+// CORS Middleware - Allow cross-origin requests from any origin
+app.use(
+  "*",
+  cors({
+    origin: "*",
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
+    allowHeaders: ["Content-Type", "Authorization", "Accept"],
+    exposeHeaders: ["Content-Length", "X-Request-Id"],
+    maxAge: 86_400, // 24 hours
+  })
+);
 
 // Global Middleware
 app.use("*", async (c, next) => {
