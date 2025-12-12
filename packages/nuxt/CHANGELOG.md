@@ -1,5 +1,13 @@
 # @astracms/nuxt
 
+## 1.0.3
+
+### Patch Changes
+
+- chore: Replace `repository` field with `homepage` URL in all package.json files.
+- Updated dependencies
+  - @astracms/core@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes

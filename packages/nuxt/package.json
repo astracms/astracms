@@ -1,6 +1,6 @@
 {
   "name": "@astracms/nuxt",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Nuxt 3 module for AstraCMS with auto-imports and SSR support",
   "type": "module",
   "private": false,
@@ -32,11 +32,7 @@
   ],
   "author": "AstraCMS",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/astracms/astracms",
-    "directory": "packages/nuxt"
-  },
+  "homepage": "https://docs.astracms.dev",
   "peerDependencies": {
     "nuxt": "^3.0.0",
     "vue": "^3.0.0"

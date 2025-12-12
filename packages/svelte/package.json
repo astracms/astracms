@@ -1,6 +1,6 @@
 {
   "name": "@astracms/svelte",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Svelte stores and SvelteKit utilities for AstraCMS",
   "type": "module",
   "private": false,
@@ -33,11 +33,7 @@
   ],
   "author": "AstraCMS",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/astracms/astracms",
-    "directory": "packages/svelte"
-  },
+  "homepage": "https://docs.astracms.dev",
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0"
   },

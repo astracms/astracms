@@ -1,6 +1,6 @@
 {
   "name": "@astracms/vue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Vue 3 composables for AstraCMS data fetching",
   "type": "module",
   "private": false,
@@ -31,11 +31,7 @@
   ],
   "author": "AstraCMS",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/astracms/astracms",
-    "directory": "packages/vue"
-  },
+  "homepage": "https://docs.astracms.dev",
   "peerDependencies": {
     "vue": "^3.3.0"
   },

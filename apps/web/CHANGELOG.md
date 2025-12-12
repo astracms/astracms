@@ -1,5 +1,13 @@
 # web
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @astracms/astro-loader@1.0.3
+  - @astracms/core@1.0.3
+
 ## 0.0.3
 
 ### Patch Changes

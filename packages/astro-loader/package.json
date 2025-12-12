@@ -1,6 +1,6 @@
 {
   "name": "@astracms/astro-loader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Astro Content Collection loader for AstraCMS",
   "type": "module",
   "private": false,
@@ -31,11 +31,7 @@
   ],
   "author": "AstraCMS",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/astracms/astracms",
-    "directory": "packages/astro-loader"
-  },
+  "homepage": "https://docs.astracms.dev",
   "peerDependencies": {
     "astro": "^5.0.0"
   },

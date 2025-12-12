@@ -1,6 +1,6 @@
 {
   "name": "@astracms/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Core API client, types, and schemas for AstraCMS integrations",
   "type": "module",
   "private": false,
@@ -30,11 +30,7 @@
   ],
   "author": "AstraCMS",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/astracms/astracms",
-    "directory": "packages/core"
-  },
+  "homepage": "https://docs.astracms.dev",
   "dependencies": {
     "zod": "^3.24.2"
   },
