@@ -153,6 +153,15 @@ export const PostsQuerySchema = z.object({
       example: "html",
       description: "Content format (html or markdown)",
     }),
+  excludeContent: z
+    .enum(["true", "false"])
+    .optional()
+    .openapi({
+      param: { name: "excludeContent", in: "query" },
+      example: "true",
+      description:
+        "When true, omits the content field from posts to reduce payload size. Useful for list views where only metadata is needed.",
+    }),
 });
 
 // Response schemas

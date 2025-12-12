@@ -134,6 +134,7 @@ v2Posts.openapi(listPostsV2Route, async (c) => {
       : [];
     const query = queryParams.query;
     const format = queryParams.format;
+    const excludeContent = queryParams.excludeContent === "true";
 
     const db = createClient(c.env.DATABASE_URL);
 
@@ -196,7 +197,8 @@ v2Posts.openapi(listPostsV2Route, async (c) => {
         id: true,
         slug: true,
         title: true,
-        content: true,
+        // Only fetch content if we're not excluding it
+        content: !excludeContent,
         featured: true,
         coverImage: true,
         description: true,
@@ -223,17 +225,31 @@ v2Posts.openapi(listPostsV2Route, async (c) => {
       },
     });
 
-    const formattedPosts = postsData.map((post) => ({
-      ...post,
-      content:
-        format === "markdown"
-          ? NodeHtmlMarkdown.translate(post.content || "")
-          : post.content,
-      publishedAt: post.publishedAt?.toISOString() ?? null,
-      updatedAt: post.updatedAt.toISOString(),
-      attribution:
-        typeof post.attribution === "string" ? post.attribution : null,
-    }));
+    const formattedPosts = postsData.map((post) => {
+      const basePost = {
+        ...post,
+        publishedAt: post.publishedAt?.toISOString() ?? null,
+        updatedAt: post.updatedAt.toISOString(),
+        attribution:
+          typeof post.attribution === "string" ? post.attribution : null,
+      };
+
+      // If content is excluded, set it to null
+      if (excludeContent) {
+        return { ...basePost, content: null };
+      }
+
+      // Otherwise, format content based on the format parameter
+      return {
+        ...basePost,
+        content:
+          format === "markdown"
+            ? NodeHtmlMarkdown.translate(
+                (post as { content: string | null }).content || ""
+              )
+            : (post as { content: string | null }).content,
+      };
+    });
 
     const paginationInfo = limit
       ? {
