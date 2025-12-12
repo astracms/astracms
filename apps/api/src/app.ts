@@ -1,4 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { cache } from "hono/cache";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { analytics } from "./middleware/analytics";
 import { apiKeyAuth } from "./middleware/api-key-auth";
@@ -44,14 +45,47 @@ app.use("*", async (c, next) => {
   }
 });
 
+// Cache key generator that includes query parameters for proper caching of different filter combinations
+const cacheKeyGenerator = (c: { req: { url: string } }) => {
+  const url = new URL(c.req.url);
+  // Include path and sorted query params for consistent cache keys
+  const sortedParams = [...url.searchParams.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => `${k}=${v}`)
+    .join("&");
+  return `${url.pathname}${sortedParams ? `?${sortedParams}` : ""}`;
+};
+
 // V1 Middleware (workspace ID in URL)
 app.use("/v1/:workspaceId/*", ratelimit());
 app.use("/v1/:workspaceId/*", analytics());
+app.use(
+  "/v1/:workspaceId/*",
+  cache({
+    cacheName: "astracms-v1",
+    // Blog content doesn't change frequently - cache for 10 minutes
+    // stale-while-revalidate allows serving stale content while fetching fresh
+    cacheControl: "max-age=600, stale-while-revalidate=300, public",
+    // Vary by Accept header for content negotiation (JSON vs other formats)
+    vary: ["Accept"],
+    // Include query params in cache key for proper filter/pagination caching
+    keyGenerator: cacheKeyGenerator,
+  })
+);
 
 // V2 Middleware (API key authentication)
 app.use("/v2/*", apiKeyAuth());
 app.use("/v2/*", ratelimit());
 app.use("/v2/*", analytics());
+app.use(
+  "/v2/*",
+  cache({
+    cacheName: "astracms-v2",
+    cacheControl: "max-age=600, stale-while-revalidate=300, public",
+    vary: ["Accept", "Authorization"],
+    keyGenerator: cacheKeyGenerator,
+  })
+);
 
 app.use(trimTrailingSlash());
 
