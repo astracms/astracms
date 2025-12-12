@@ -43,9 +43,16 @@ export interface AstraCMSProviderProps {
  * ```
  */
 export function AstraCMSProvider({ children, config }: AstraCMSProviderProps) {
-  const client = useMemo(() => new AstraCMSClient(config), [config]);
+  // Serialize config to create stable dependency
+  const configKey = JSON.stringify(config);
 
-  const value = useMemo(() => ({ client, config }), [client, config]);
+  const client = useMemo(
+    () => new AstraCMSClient(config),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [configKey]
+  );
+
+  const value = useMemo(() => ({ client, config }), [client, configKey]);
 
   return (
     <AstraCMSContext.Provider value={value}>

@@ -1,6 +1,6 @@
 {
   "name": "@astracms/nuxt",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Nuxt 3 module for AstraCMS with auto-imports and SSR support",
   "type": "module",
   "private": false,

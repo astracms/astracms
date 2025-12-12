@@ -224,7 +224,7 @@ describe("AstraCMSClient", () => {
       const mockPost = { id: "1", title: "My Post", slug: "my-post" };
       const mockFetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ posts: [mockPost] }),
+        json: () => Promise.resolve({ post: mockPost }),
       });
       vi.stubGlobal("fetch", mockFetch);
 
@@ -236,10 +236,12 @@ describe("AstraCMSClient", () => {
       expect(result).toEqual(mockPost);
     });
 
-    it("getPost returns null when not found", async () => {
+    it("getPost returns null when not found (404)", async () => {
       const mockFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve({ posts: [] }),
+        ok: false,
+        status: 404,
+        statusText: "Not Found",
+        text: () => Promise.resolve("Post not found"),
       });
       vi.stubGlobal("fetch", mockFetch);
 

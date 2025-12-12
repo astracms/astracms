@@ -7,7 +7,7 @@ import type {
   Post,
   Tag,
 } from "@astracms/core";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAstraCMSClient } from "./provider";
 
 interface UseAsyncResult<T> {
@@ -15,6 +15,13 @@ interface UseAsyncResult<T> {
   loading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
+}
+
+/**
+ * Stable serialization of options for dependency comparison
+ */
+function useStableOptions<T>(options: T): string {
+  return useMemo(() => JSON.stringify(options), [JSON.stringify(options)]);
 }
 
 /**
@@ -38,25 +45,28 @@ export function usePosts(
   const [data, setData] = useState<Post[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const optionsKey = useStableOptions(options);
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
-  const fetch = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const posts = await client.getPosts(options);
+      const posts = await client.getPosts(optionsRef.current);
       setData(posts);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
     }
-  }, [client, JSON.stringify(options)]);
+  }, [client, optionsKey]);
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error, refetch: fetch };
+  return { data, loading, error, refetch: fetchData };
 }
 
 /**
@@ -75,25 +85,26 @@ export function usePost(
   const [data, setData] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const format = options.format;
 
-  const fetch = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const post = await client.getPost(slug, options);
+      const post = await client.getPost(slug, { format });
       setData(post);
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoading(false);
     }
-  }, [client, slug, options.format]);
+  }, [client, slug, format]);
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error, refetch: fetch };
+  return { data, loading, error, refetch: fetchData };
 }
 
 /**
@@ -110,7 +121,7 @@ export function useCategories(): UseAsyncResult<Category[]> {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetch = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -124,10 +135,10 @@ export function useCategories(): UseAsyncResult<Category[]> {
   }, [client]);
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error, refetch: fetch };
+  return { data, loading, error, refetch: fetchData };
 }
 
 /**
@@ -144,7 +155,7 @@ export function useTags(): UseAsyncResult<Tag[]> {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetch = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -158,10 +169,10 @@ export function useTags(): UseAsyncResult<Tag[]> {
   }, [client]);
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error, refetch: fetch };
+  return { data, loading, error, refetch: fetchData };
 }
 
 /**
@@ -178,7 +189,7 @@ export function useAuthors(): UseAsyncResult<Author[]> {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetch = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -192,10 +203,10 @@ export function useAuthors(): UseAsyncResult<Author[]> {
   }, [client]);
 
   useEffect(() => {
-    fetch();
-  }, [fetch]);
+    fetchData();
+  }, [fetchData]);
 
-  return { data, loading, error, refetch: fetch };
+  return { data, loading, error, refetch: fetchData };
 }
 
 /**
@@ -217,7 +228,7 @@ export function useSearch(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetch = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     if (!query.trim()) {
       setData([]);
       return;
@@ -236,9 +247,9 @@ export function useSearch(
   }, [client, query]);
 
   useEffect(() => {
-    const timer = setTimeout(fetch, debounceMs);
+    const timer = setTimeout(fetchData, debounceMs);
     return () => clearTimeout(timer);
-  }, [fetch, debounceMs]);
+  }, [fetchData, debounceMs]);
 
-  return { data, loading, error, refetch: fetch };
+  return { data, loading, error, refetch: fetchData };
 }

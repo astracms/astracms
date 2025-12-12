@@ -67,9 +67,9 @@ export interface AuthorSocial {
 }
 
 /**
- * Author data from AstraCMS
+ * Base author data (used when embedded in posts)
  */
-export interface Author {
+export interface AuthorBase {
   id: string;
   name: string;
   slug: string;
@@ -80,9 +80,18 @@ export interface Author {
 }
 
 /**
- * Category data from AstraCMS
+ * Author data from AstraCMS (includes post count when fetched directly)
  */
-export interface Category {
+export interface Author extends AuthorBase {
+  count?: {
+    posts: number;
+  };
+}
+
+/**
+ * Base category data (used when embedded in posts)
+ */
+export interface CategoryBase {
   id: string;
   name: string;
   slug: string;
@@ -90,13 +99,31 @@ export interface Category {
 }
 
 /**
- * Tag data from AstraCMS
+ * Category data from AstraCMS (includes post count when fetched directly)
  */
-export interface Tag {
+export interface Category extends CategoryBase {
+  count?: {
+    posts: number;
+  };
+}
+
+/**
+ * Base tag data (used when embedded in posts)
+ */
+export interface TagBase {
   id: string;
   name: string;
   slug: string;
   description?: string | null;
+}
+
+/**
+ * Tag data from AstraCMS (includes post count when fetched directly)
+ */
+export interface Tag extends TagBase {
+  count?: {
+    posts: number;
+  };
 }
 
 /**

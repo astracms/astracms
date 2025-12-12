@@ -9,6 +9,15 @@ export const authorSocialSchema = z.object({
 });
 
 /**
+ * Schema for count object (post count)
+ */
+export const countSchema = z
+  .object({
+    posts: z.number(),
+  })
+  .optional();
+
+/**
  * Schema for author data
  */
 export const authorSchema = z.object({
@@ -19,6 +28,7 @@ export const authorSchema = z.object({
   image: z.string().nullable().optional(),
   role: z.string().nullable().optional(),
   socials: z.array(authorSocialSchema).default([]),
+  count: countSchema,
 });
 
 /**
@@ -29,6 +39,7 @@ export const categorySchema = z.object({
   name: z.string(),
   slug: z.string(),
   description: z.string().nullable().optional(),
+  count: countSchema,
 });
 
 /**
@@ -39,6 +50,7 @@ export const tagSchema = z.object({
   name: z.string(),
   slug: z.string(),
   description: z.string().nullable().optional(),
+  count: countSchema,
 });
 
 /**

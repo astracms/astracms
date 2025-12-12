@@ -1,5 +1,13 @@
 # @astracms/next
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @astracms/react@1.0.2
+  - @astracms/core@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes

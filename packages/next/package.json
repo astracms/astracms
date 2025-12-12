@@ -1,6 +1,6 @@
 {
   "name": "@astracms/next",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Next.js utilities for AstraCMS with RSC and caching support",
   "type": "module",
   "private": false,

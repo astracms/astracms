@@ -8,6 +8,7 @@ When you make a change that should be released, run:
 
 ```bash
 pnpm changeset
+pnpm changeset version
 ```
 
 This will prompt you to:
