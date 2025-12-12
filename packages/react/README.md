@@ -5,9 +5,9 @@ React hooks for AstraCMS data fetching.
 ## Installation
 
 ```bash
-npm install @astracms/react @astracms/core
+npm install @astracms/react
 # or
-pnpm add @astracms/react @astracms/core
+pnpm add @astracms/react
 ```
 
 ## Usage

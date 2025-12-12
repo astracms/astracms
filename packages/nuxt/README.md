@@ -5,9 +5,9 @@ Nuxt 3 module for AstraCMS with auto-imports and SSR support.
 ## Installation
 
 ```bash
-npm install @astracms/nuxt @astracms/core
+npm install @astracms/nuxt
 # or
-pnpm add @astracms/nuxt @astracms/core
+pnpm add @astracms/nuxt
 ```
 
 ## Setup

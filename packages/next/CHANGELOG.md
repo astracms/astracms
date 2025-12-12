@@ -1,5 +1,13 @@
 # @astracms/next
 
+## 1.0.1
+
+### Patch Changes
+
+- fix: update getPost to use dedicated API endpoint, update docs
+- Updated dependencies
+  - @astracms/react@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

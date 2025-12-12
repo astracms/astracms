@@ -5,9 +5,9 @@ Vue 3 composables for AstraCMS data fetching.
 ## Installation
 
 ```bash
-npm install @astracms/vue @astracms/core
+npm install @astracms/vue
 # or
-pnpm add @astracms/vue @astracms/core
+pnpm add @astracms/vue
 ```
 
 ## Usage

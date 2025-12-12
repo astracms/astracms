@@ -5,9 +5,9 @@ Next.js utilities for AstraCMS with React Server Components and caching support.
 ## Installation
 
 ```bash
-npm install @astracms/next @astracms/core
+npm install @astracms/next
 # or
-pnpm add @astracms/next @astracms/core
+pnpm add @astracms/next
 ```
 
 ## Usage

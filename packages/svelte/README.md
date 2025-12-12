@@ -5,9 +5,9 @@ Svelte stores and SvelteKit utilities for AstraCMS.
 ## Installation
 
 ```bash
-npm install @astracms/svelte @astracms/core
+npm install @astracms/svelte
 # or
-pnpm add @astracms/svelte @astracms/core
+pnpm add @astracms/svelte
 ```
 
 ## Usage

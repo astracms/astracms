@@ -1,5 +1,11 @@
 # @astracms/react
 
+## 1.0.1
+
+### Patch Changes
+
+- fix: update getPost to use dedicated API endpoint, update docs
+
 ## 1.0.0
 
 ### Major Changes
