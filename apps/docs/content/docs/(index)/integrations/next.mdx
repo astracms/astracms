@@ -31,9 +31,9 @@ The `@astracms/next` package provides optimized utilities for using AstraCMS wit
 Create a client instance in your app:
 
 ```typescript title="lib/astracms.ts"
-import { createAstraCMSNext } from '@astracms/next'
+import { createAstraCMSClient } from '@astracms/next'
 
-export const astracms = createAstraCMSNext({
+export const astracms = createAstraCMSClient({
   apiKey: process.env.ASTRACMS_API_KEY!,
 })
 ```
