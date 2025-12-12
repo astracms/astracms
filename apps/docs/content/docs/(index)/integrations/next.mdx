@@ -104,3 +104,45 @@ export default async function PostPage({
   return <article>{post.content}</article>
 }
 ```
+
+## Filtering Posts
+
+The `getPosts` function supports filtering options:
+
+```tsx title="app/blog/page.tsx"
+import { getPosts } from '@astracms/next'
+
+export default async function TechBlogPage() {
+  const posts = await getPosts({
+    categories: ['technology', 'tutorials'],  // Filter by categories
+    excludeCategories: ['internal'],          // Exclude categories
+    tags: ['javascript', 'react'],            // Filter by tags
+    excludeTags: ['draft'],                   // Exclude tags
+    query: 'search term',                     // Search query
+    format: 'html',                           // Content format
+    limit: 10,                                // Max posts
+    page: 1,                                  // Pagination
+  })
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+**Available Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `categories` | `string[]` | Filter by category slugs |
+| `excludeCategories` | `string[]` | Exclude category slugs |
+| `tags` | `string[]` | Filter by tag slugs |
+| `excludeTags` | `string[]` | Exclude tag slugs |
+| `query` | `string` | Search query |
+| `format` | `'html' \| 'markdown'` | Content format |
+| `limit` | `number` | Max posts to return |
+| `page` | `number` | Page number |

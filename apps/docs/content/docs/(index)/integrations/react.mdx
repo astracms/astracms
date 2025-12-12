@@ -141,3 +141,48 @@ function TagCloud() {
   )
 }
 ```
+
+## Filtering Posts
+
+The `usePosts` hook supports filtering options:
+
+```tsx
+import { usePosts } from '@astracms/react'
+
+function FilteredPosts() {
+  const { posts, loading } = usePosts({
+    categories: ['technology', 'tutorials'],  // Filter by categories
+    excludeCategories: ['internal'],          // Exclude categories
+    tags: ['javascript', 'react'],            // Filter by tags
+    excludeTags: ['draft'],                   // Exclude tags
+    query: 'search term',                     // Search query
+    format: 'html',                           // Content format
+    limit: 10,                                // Max posts
+    page: 1,                                  // Pagination
+  })
+
+  if (loading) return <div>Loading...</div>
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+**Available Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `categories` | `string[]` | Filter by category slugs |
+| `excludeCategories` | `string[]` | Exclude category slugs |
+| `tags` | `string[]` | Filter by tag slugs |
+| `excludeTags` | `string[]` | Exclude tag slugs |
+| `query` | `string` | Search query |
+| `format` | `'html' \| 'markdown'` | Content format |
+| `limit` | `number` | Max posts to return |
+| `page` | `number` | Page number |
+

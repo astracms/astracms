@@ -123,3 +123,38 @@ For client-side reactivity:
   </ul>
 {/if}
 ```
+
+## Filtering Posts
+
+The `getPosts` method supports filtering options:
+
+```typescript title="src/routes/blog/+page.server.ts"
+import { astracms } from '$lib/astracms'
+
+export async function load() {
+  const posts = await astracms.getPosts({
+    categories: ['technology', 'tutorials'],  // Filter by categories
+    excludeCategories: ['internal'],          // Exclude categories
+    tags: ['javascript', 'react'],            // Filter by tags
+    excludeTags: ['draft'],                   // Exclude tags
+    query: 'search term',                     // Search query
+    format: 'html',                           // Content format
+    limit: 10,                                // Max posts
+    page: 1,                                  // Pagination
+  })
+  return { posts }
+}
+```
+
+**Available Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `categories` | `string[]` | Filter by category slugs |
+| `excludeCategories` | `string[]` | Exclude category slugs |
+| `tags` | `string[]` | Filter by tag slugs |
+| `excludeTags` | `string[]` | Exclude tag slugs |
+| `query` | `string` | Search query |
+| `format` | `'html' \| 'markdown'` | Content format |
+| `limit` | `number` | Max posts to return |
+| `page` | `number` | Page number |

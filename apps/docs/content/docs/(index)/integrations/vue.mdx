@@ -137,3 +137,46 @@ const { tags } = useTags()
   </div>
 </template>
 ```
+
+## Filtering Posts
+
+The `usePosts` composable supports filtering options:
+
+```vue
+<script setup>
+import { usePosts } from '@astracms/vue'
+
+const { data: posts, loading } = usePosts({
+  categories: ['technology', 'tutorials'],  // Filter by categories
+  excludeCategories: ['internal'],          // Exclude categories
+  tags: ['javascript', 'react'],            // Filter by tags
+  excludeTags: ['draft'],                   // Exclude tags
+  query: 'search term',                     // Search query
+  format: 'html',                           // Content format
+  limit: 10,                                // Max posts
+  page: 1,                                  // Pagination
+})
+</script>
+
+<template>
+  <div v-if="loading">Loading...</div>
+  <ul v-else>
+    <li v-for="post in data" :key="post.id">
+      {{ post.title }}
+    </li>
+  </ul>
+</template>
+```
+
+**Available Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `categories` | `string[]` | Filter by category slugs |
+| `excludeCategories` | `string[]` | Exclude category slugs |
+| `tags` | `string[]` | Filter by tag slugs |
+| `excludeTags` | `string[]` | Exclude tag slugs |
+| `query` | `string` | Search query |
+| `format` | `'html' \| 'markdown'` | Content format |
+| `limit` | `number` | Max posts to return |
+| `page` | `number` | Page number |

@@ -107,3 +107,44 @@ Fetch all tags:
 const { data: tags } = await useAstraCMSTags()
 </script>
 ```
+
+## Filtering Posts
+
+The `useAstraCMSPosts` composable supports filtering options:
+
+```vue title="pages/blog.vue"
+<script setup>
+const { data: posts, pending } = await useAstraCMSPosts({
+  categories: ['technology', 'tutorials'],  // Filter by categories
+  excludeCategories: ['internal'],          // Exclude categories
+  tags: ['javascript', 'react'],            // Filter by tags
+  excludeTags: ['draft'],                   // Exclude tags
+  query: 'search term',                     // Search query
+  format: 'html',                           // Content format
+  limit: 10,                                // Max posts
+  page: 1,                                  // Pagination
+})
+</script>
+
+<template>
+  <div v-if="pending">Loading...</div>
+  <ul v-else>
+    <li v-for="post in posts" :key="post.id">
+      {{ post.title }}
+    </li>
+  </ul>
+</template>
+```
+
+**Available Options:**
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `categories` | `string[]` | Filter by category slugs |
+| `excludeCategories` | `string[]` | Exclude category slugs |
+| `tags` | `string[]` | Filter by tag slugs |
+| `excludeTags` | `string[]` | Exclude tag slugs |
+| `query` | `string` | Search query |
+| `format` | `'html' \| 'markdown'` | Content format |
+| `limit` | `number` | Max posts to return |
+| `page` | `number` | Page number |
