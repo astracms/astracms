@@ -136,14 +136,22 @@ export class AstraCMSClient {
     slug: string,
     options: { format?: "html" | "markdown" } = {}
   ): Promise<Post | null> {
-    const posts = await this.getPosts({
-      ...options,
-      query: slug,
-      limit: 1,
-    });
+    const { format = "html" } = options;
 
-    // Find exact slug match
-    return posts.find((p) => p.slug === slug) ?? null;
+    try {
+      const response = await this.fetch<{ post: Post }>({
+        endpoint: `posts/${encodeURIComponent(slug)}` as Endpoint,
+        params: { format },
+      });
+
+      return response.post;
+    } catch (error) {
+      // Return null if post not found (404)
+      if (error instanceof Error && error.message.includes("404")) {
+        return null;
+      }
+      throw error;
+    }
   }
 
   /**
