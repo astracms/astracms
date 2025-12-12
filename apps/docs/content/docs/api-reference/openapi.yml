@@ -1626,6 +1626,21 @@
             "description": "Content format (html or markdown)",
             "name": "format",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "example": "true",
+              "description": "When true, omits the content field from posts to reduce payload size. Useful for list views where only metadata is needed."
+            },
+            "required": false,
+            "description": "When true, omits the content field from posts to reduce payload size. Useful for list views where only metadata is needed.",
+            "name": "excludeContent",
+            "in": "query"
           }
         ],
         "responses": {
@@ -2754,6 +2769,21 @@
             "required": false,
             "description": "Content format (html or markdown)",
             "name": "format",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "example": "true",
+              "description": "When true, omits the content field from posts to reduce payload size. Useful for list views where only metadata is needed."
+            },
+            "required": false,
+            "description": "When true, omits the content field from posts to reduce payload size. Useful for list views where only metadata is needed.",
+            "name": "excludeContent",
             "in": "query"
           }
         ],
