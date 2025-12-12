@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, KeyIcon, PlusIcon } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AsyncButton } from "@/components/ui/async-button";
@@ -68,7 +68,6 @@ function CreateApiKeySheet({ children }: CreateApiKeySheetProps) {
 
   const watchedScopes = watch("scopes");
   const watchedExpiresAt = watch("expiresAt");
-  const router = useRouter();
 
   const { mutate: createApiKey, isPending: isCreating } = useMutation({
     mutationFn: async (data: ApiKeyFormValues) => {
@@ -99,7 +98,6 @@ function CreateApiKeySheet({ children }: CreateApiKeySheetProps) {
           queryKey: QUERY_KEYS.API_KEYS(workspaceId),
         });
       }
-      router.refresh();
     },
     onError: (error) => {
       console.error("Error creating API key:", error);
