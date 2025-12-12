@@ -74,6 +74,7 @@ For fully static sites:
 
 ```tsx title="app/blog/[slug]/page.tsx"
 import { astracms } from '@/lib/astracms'
+import { notFound } from 'next/navigation'
 
 export async function generateStaticParams() {
   const posts = await astracms.getPosts()
