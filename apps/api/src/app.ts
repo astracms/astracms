@@ -59,14 +59,16 @@ app.use("*", async (c, next) => {
 });
 
 // Cache key generator that includes query parameters for proper caching of different filter combinations
+// IMPORTANT: The Cache API requires absolute URLs, so we must return the full URL (not just the path)
 const cacheKeyGenerator = (c: { req: { url: string } }) => {
   const url = new URL(c.req.url);
-  // Include path and sorted query params for consistent cache keys
+  // Sort query params for consistent cache keys
   const sortedParams = [...url.searchParams.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => `${k}=${v}`)
     .join("&");
-  return `${url.pathname}${sortedParams ? `?${sortedParams}` : ""}`;
+  // Return the absolute URL with sorted params
+  return `${url.origin}${url.pathname}${sortedParams ? `?${sortedParams}` : ""}`;
 };
 
 // V1 Middleware (workspace ID in URL)
