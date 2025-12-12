@@ -2,11 +2,11 @@
   "$schema": "../../../../.source/json-schema/docs.meta.json",
   "pages": [
     "core",
+    "astro-loader",
     "react",
     "next",
     "vue",
     "nuxt",
-    "svelte",
-    "astro-loader"
+    "svelte"
   ]
 }
