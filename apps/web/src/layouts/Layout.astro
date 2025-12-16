@@ -4,26 +4,27 @@ import HeadComponent from "@/components/Head.astro";
 import HeaderComponent from "@/components/Header.astro";
 import ScrollToTop from "@/components/ScrollToTop.astro";
 
+import "@fontsource/poppins";
+
 const { title, description, image } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <HeadComponent title={title} description={description} image={image}/>
+    <HeadComponent title={title} description={description} image={image} />
     <script
       src="https://cdn.databuddy.cc/databuddy.js"
       data-client-id="4-KAEZVpa2ZPahKtH3w7D"
       crossorigin="anonymous"
-      async
-    ></script>
+      async></script>
   </head>
   <body>
-    <HeaderComponent/>
+    <HeaderComponent />
     <main>
-      <slot/>
+      <slot />
     </main>
-    <FooterComponent/>
-    <ScrollToTop/>
+    <FooterComponent />
+    <ScrollToTop />
   </body>
 </html>

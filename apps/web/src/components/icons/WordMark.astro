@@ -2,28 +2,18 @@
 import type { HTMLAttributes } from "astro/types";
 
 interface Props extends HTMLAttributes<"svg"> {}
-const { class: classNames, ...attrs } = Astro.props;
+const { class: classNames } = Astro.props;
 ---
 
 <svg
+  fill="none"
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="56.247 51.117 177.8774 32.208"
-  width="177.877px"
-  height="32.208px"
+  viewBox="0 0 32 32"
+  width="32"
+  height="32"
   class={classNames}
-  {...attrs}
 >
   <path
-    d="M 72.247 51.117 C 63.411 51.117 56.247 58.328 56.247 67.221 C 56.247 76.114 63.412 83.325 72.247 83.325 C 81.084 83.325 88.247 76.114 88.247 67.221 C 88.247 58.328 81.084 51.117 72.247 51.117 M 72.054 58.26 L 73.99 62.156 C 71.795 66.611 69.603 71.078 67.409 75.533 L 63.925 75.533 C 66.634 69.78 69.345 64.014 72.055 58.26 M 75.668 65.402 C 77.306 68.778 78.932 72.155 80.57 75.531 L 76.829 75.531 C 76.402 74.531 73.904 69.015 73.904 69.015 C 75.027 66.677 74.545 67.739 75.667 65.402"
-    style="stroke-width: 1;"
-    transform="matrix(1, 0, 0, 1, -7.105427357601002e-15, 0)"
-  ></path>
-  <text
-    style='fill: rgb(51, 51, 51); font-family: "Zapf Dingbats"; font-size: 24px; letter-spacing: 0.7px; word-spacing: 0.4px; white-space: pre;'
-    x="99.851"
-    y="75.963"
-    transform="matrix(1, 0, 0, 1, -7.105427357601002e-15, 0)"
-  >
-    AstraCMS
-  </text>
+    d="M16.027 0C7.175 0 0 7.178 0 16.03s7.177 16.03 16.027 16.03c8.852 0 16.027-7.178 16.027-16.03S24.879 0 16.027 0m-.193 7.11 1.939 3.878c-2.198 4.435-4.394 8.881-6.593 13.315H7.69zm3.62 7.109c1.641 3.361 3.27 6.722 4.91 10.082h-3.747c-.427-.995-2.93-6.486-2.93-6.486z"
+    fill="#584dff"></path>
 </svg>

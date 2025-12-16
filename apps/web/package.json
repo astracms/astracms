@@ -17,6 +17,7 @@
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/vercel": "^9.0.0",
+    "@fontsource/poppins": "^5.2.7",
     "@tailwindcss/vite": "^4.1.12",
     "astro": "^5.15.0",
     "clsx": "^2.1.1",

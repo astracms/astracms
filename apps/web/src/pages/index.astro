@@ -5,60 +5,55 @@ import Layout from "@/layouts/Layout.astro";
 import { FAQs, SITE } from "@/lib/constants";
 ---
 
-<Layout
-  title="AstraCMS - Modern Headless CMS for Blogs & Changelogs"
-  description="AstraCMS is a simple, API-first headless CMS for developers. Publish blog posts, changelogs, and product updates with ease. Works with Next.js, Astro, and any framework."
->
+<Layout title={SITE.TITLE} description={SITE.DESCRIPTION}>
   <!-- Hero Section -->
-
-  <section
-    class="flex flex-col items-center bg-cover pt-12 pb-8 text-sm text-gray-800 md:pt-20 md:pb-16"
-  >
-    <div class="animate-fade-in-up opacity-100" style="animation-delay: 0.1s;">
-      <span
-        class="bg-muted/50 border-border/80 text-muted-foreground mb-8 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium tracking-wide"
-      >
-        <span class="size-1.5 animate-pulse rounded-full bg-emerald-500"></span>
-        Astra AI is now live
-      </span>
+  <!-- Hero Section -->
+  <section class="relative pt-20 pb-32 overflow-hidden bg-[#584dff]">
+    <!-- Background Gradients/Shapes -->
+    <div
+      class="absolute inset-0 bg-linear-to-b from-[#584dff] to-[#584dff] -z-20"
+    >
     </div>
 
-    <h1
-      class="mt-5 max-w-3xl bg-linear-to-r from-black to-[#748298] bg-clip-text text-center text-4xl font-medium text-transparent md:text-6xl"
-    >
-      Simple content management for
-      <span class="text-primary">modern apps</span>
-    </h1>
-    <p
-      class="mt-3 max-w-xl text-center text-slate-600 max-md:px-2 md:text-base"
-    >
-      A clean, collaborative way to publish articles, changelogs, and product
-      updates. Designed for speed and simplicity
-    </p>
-
-    <a
-      href="https://app.astracms.dev"
-      target="_blank"
-      class="mt-8 flex items-center gap-2 rounded-full bg-slate-800 px-8 py-3 text-white transition hover:bg-slate-900"
-    >
-      <span>get started for free</span>
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+    <Container>
+      <div
+        class="flex flex-col items-center text-center max-w-4xl mx-auto z-10"
       >
-        <path
-          d="M4.166 10h11.667m0 0L9.999 4.167M15.833 10l-5.834 5.834"
-          stroke="#fff"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></path>
-      </svg>
-    </a>
+        <h1
+          class="text-5xl lg:text-7xl font-bold tracking-relaxed text-white leading-[1.1] mb-6 drop-shadow-sm"
+        >
+          The Headless CMS <br />
+          for Modern Developers
+        </h1>
+        <p class="text-lg text-indigo-100 mb-10 max-w-2xl leading-relaxed">
+          AstraCMS is an API-first content platform. Ship blogs, changelogs, and
+          product updates to any frontend with a fully typed SDK.
+        </p>
+
+        <!-- CTA Button -->
+        <div class="mb-8">
+          <a
+            href={`${SITE.APP_URL}/register`}
+            class="inline-block bg-[#A3E635] hover:bg-[#96d62f] text-slate-900 font-bold text-lg px-10 py-4 rounded-full transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
+          >
+            Start for Free
+          </a>
+        </div>
+
+        <!-- Dashboard Image -->
+        <div class="relative w-full max-w-5xl -mb-48 lg:-mb-64">
+          <img
+            src="/hero-img.png"
+            alt="Dashboard Preview"
+            class="w-full h-auto drop-shadow-2xl rounded-2xl"
+          />
+        </div>
+      </div>
+    </Container>
   </section>
+
+  <!-- Spacer for the overlapping image -->
+  <div class="h-24 lg:h-48 bg-white"></div>
 
   <!-- Features Section -->
   <section class="py-12 md:py-16 border-t border-border/50">
@@ -247,15 +242,16 @@ import { FAQs, SITE } from "@/lib/constants";
   <section class="py-20 md:py-28 border-t border-border/50">
     <Container>
       <div
-        class="relative overflow-hidden rounded-2xl bg-foreground px-6 py-14 md:px-12 md:py-20 text-center"
+        class="relative overflow-hidden rounded-2xl bg-[#584dff] px-6 py-14 md:px-12 md:py-20 text-center"
       >
         <div
           class="absolute inset-0 z-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120, 180, 255, 0.25), transparent 70%), #000000",
+              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120, 180, 255, 0.25), transparent 70%), #584dff",
           }}
-        ></div>
+        >
+        </div>
 
         <div class="relative z-10 max-w-xl mx-auto space-y-6">
           <h2
