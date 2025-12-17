@@ -8,12 +8,45 @@ import { db } from "@astra/db";
 import { markdownToHtml, markdownToTiptap } from "@astra/parser/tiptap";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
-import {
-  sanitizeHtml,
-  sanitizePromptInput,
-  sanitizeSlug,
-} from "@/lib/sanitize";
+import { sanitizeHtml } from "@/utils/editor";
 import { generateWithAI } from "../lib/ai-generator";
+
+/**
+ * Sanitize text for use in AI prompts - removes injection patterns
+ */
+function sanitizePromptInput(input: string): string {
+  return (
+    input
+      // Remove quotes that could break prompt structure
+      .replace(/["'`]/g, "")
+      // Collapse multiple newlines
+      .replace(/\n{3,}/g, "\n\n")
+      // Remove common injection patterns
+      .replace(/ignore\s+all\s+previous\s+instructions/gi, "")
+      .replace(/system\s*:/gi, "")
+      .replace(/assistant\s*:/gi, "")
+      // Limit length to prevent token abuse
+      .slice(0, 1000)
+      .trim()
+  );
+}
+
+/**
+ * Sanitize and validate a slug
+ */
+function sanitizeSlug(slug: string): string {
+  return slug
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove accents
+    .replace(/'/g, "") // Remove apostrophes
+    .replace(/[^\w\s-]/g, "") // Remove special chars
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Collapse multiple hyphens
+    .replace(/^-+|-+$/g, "") // Remove leading/trailing hyphens
+    .slice(0, 100); // Limit length
+}
 
 /**
  * Create the auto blog creation tool
