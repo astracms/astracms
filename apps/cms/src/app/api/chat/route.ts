@@ -6,13 +6,23 @@ import { NextResponse } from "next/server";
 import { getAICreditStats } from "@/lib/ai-credits";
 import { getServerSession } from "@/lib/auth/session";
 import { getWorkspacePlan, hasAIAccess } from "@/lib/plans";
-import { createCMSAgent } from "@/mastra";
+import { aiChatRateLimit, checkRateLimit } from "@/lib/rate-limit";
+import { type CMSAgent, createCMSAgent } from "@/mastra";
 
 export async function POST(req: Request) {
   const sessionData = await getServerSession();
 
   if (!sessionData?.session.activeOrganizationId) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
+  // Rate limiting - 10 requests per minute per workspace
+  const rateLimitCheck = await checkRateLimit(
+    sessionData.session.activeOrganizationId,
+    aiChatRateLimit
+  );
+  if (rateLimitCheck) {
+    return rateLimitCheck;
   }
 
   // Check if workspace has AI access
@@ -52,7 +62,7 @@ export async function POST(req: Request) {
 
   const { messages } = await req.json();
 
-  // Create agent with user context
+  // Create agent with user context and error handling
   console.log(
     "[CMS AGENT] Creating agent for workspace:",
     sessionData.session.activeOrganizationId
@@ -60,37 +70,71 @@ export async function POST(req: Request) {
   console.log("[CMS AGENT] User:", sessionData.user.name, sessionData.user.id);
   console.log("[CMS AGENT] Messages count:", messages.length);
 
-  const cmsAgent = createCMSAgent({
-    workspaceId: sessionData.session.activeOrganizationId,
-    userId: sessionData.user.id,
-    userName: sessionData.user.name ?? "User",
-  });
+  let cmsAgent: CMSAgent;
+  try {
+    cmsAgent = createCMSAgent({
+      workspaceId: sessionData.session.activeOrganizationId,
+      userId: sessionData.user.id,
+      userName: sessionData.user.name ?? "User",
+    });
+  } catch (error) {
+    console.error("[CMS AGENT] ❌ Failed to create agent:", error);
+    return NextResponse.json(
+      {
+        error:
+          "AI service is temporarily unavailable. Please check your configuration and try again.",
+        details:
+          process.env.NODE_ENV === "development"
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
+      },
+      { status: 503 }
+    );
+  }
 
-  console.log("[CMS AGENT] Agent created successfully");
+  console.log("[CMS AGENT] ✅ Agent created successfully");
   console.log("[CMS AGENT] Starting stream...");
 
-  const stream = await cmsAgent.stream(messages, {
-    memory: {
-      thread: `${sessionData.session.activeOrganizationId}-${sessionData.user.id}`,
-      resource: "cms-chat",
-    },
-    onStepFinish: (step) => {
-      console.log("[CMS AGENT] Step finished:", {
-        stepType: step.stepType,
-        toolCalls: step.toolCalls?.map((tc) => ({
-          name: "payload" in tc ? tc.payload?.toolName : "unknown",
-          args: "payload" in tc ? tc.payload?.args : undefined,
-        })),
-        text: step.text?.slice(0, 200),
-      });
-    },
-  });
+  try {
+    const stream = await cmsAgent.stream(messages, {
+      memory: {
+        thread: `${sessionData.session.activeOrganizationId}-${sessionData.user.id}`,
+        resource: "cms-chat",
+      },
+      onStepFinish: (step) => {
+        console.log("[CMS AGENT] Step finished:", {
+          stepType: step.stepType,
+          toolCalls: step.toolCalls?.map((tc) => ({
+            name: "payload" in tc ? tc.payload?.toolName : "unknown",
+            args: "payload" in tc ? tc.payload?.args : undefined,
+          })),
+          text: step.text?.slice(0, 200),
+        });
+      },
+    });
 
-  console.log("[CMS AGENT] Stream created, returning response");
+    console.log("[CMS AGENT] ✅ Stream created, returning response");
 
-  return createUIMessageStreamResponse({
-    stream: toAISdkFormat(stream, { from: "agent" }),
-  });
+    return createUIMessageStreamResponse({
+      stream: toAISdkFormat(stream, { from: "agent" }),
+    });
+  } catch (error) {
+    console.error("[CMS AGENT] ❌ Stream creation failed:", error);
+    return NextResponse.json(
+      {
+        error: "Failed to process your request. Please try again.",
+        details:
+          process.env.NODE_ENV === "development"
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
+      },
+      { status: 500 }
+    );
+  }
 }
 
 export async function GET(): Promise<NextResponse> {

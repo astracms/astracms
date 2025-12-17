@@ -8,29 +8,12 @@ import { db } from "@astra/db";
 import { markdownToHtml, markdownToTiptap } from "@astra/parser/tiptap";
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import {
+  sanitizeHtml,
+  sanitizePromptInput,
+  sanitizeSlug,
+} from "@/lib/sanitize";
 import { generateWithAI } from "../lib/ai-generator";
-
-/**
- * Generate a URL-friendly slug from text
- */
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
-}
-
-/**
- * Sanitize HTML content (remove scripts and event handlers)
- */
-function sanitizeHtml(html: string): string {
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-    .replace(/on\w+="[^"]*"/gi, "")
-    .replace(/on\w+='[^']*'/gi, "");
-}
 
 /**
  * Create the auto blog creation tool
@@ -96,8 +79,9 @@ export const createBlogAutoTool = (workspaceId: string) =>
 
         // ===== STEP 1: Generate Title =====
         console.log("[AUTO BLOG] Step 1: Generating title...");
+        const sanitizedTopic = sanitizePromptInput(topic);
         const titleText = await generateWithAI(
-          `Generate ONE compelling, SEO-optimized blog post title for: "${topic}"
+          `Generate ONE compelling, SEO-optimized blog post title for: "${sanitizedTopic}"
 
 Requirements:
 - Use power words (discover, master, ultimate, proven)
@@ -267,7 +251,7 @@ Return as comma-separated list, nothing else.`
         // Create or find tags
         const tagRecords = await Promise.all(
           tagNames.map(async (name) => {
-            const slug = generateSlug(name);
+            const slug = sanitizeSlug(name);
             return db.tag.upsert({
               where: { workspaceId_slug: { workspaceId, slug } },
               update: {},
@@ -344,7 +328,7 @@ Return as comma-separated list, nothing else.`
         const htmlContent = await markdownToHtml(content);
         const cleanContent = sanitizeHtml(htmlContent);
         const contentJson = markdownToTiptap(content);
-        const slug = generateSlug(title);
+        const slug = sanitizeSlug(title);
 
         const post = await db.post.create({
           data: {
