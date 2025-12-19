@@ -7,6 +7,7 @@ import {
 import { NavDevs } from "./nav-devs";
 import { NavMain } from "./nav-main";
 import { SidebarFooterContent } from "./sidebar-footer-content";
+import { StatusCards } from "./status-cards";
 import { WorkspaceSwitcher } from "./workspace-switcher";
 
 export async function AppSidebar({
@@ -20,6 +21,7 @@ export async function AppSidebar({
       <SidebarContent>
         <NavMain />
         <NavDevs />
+        <StatusCards />
       </SidebarContent>
       <SidebarFooter>
         <SidebarFooterContent />
