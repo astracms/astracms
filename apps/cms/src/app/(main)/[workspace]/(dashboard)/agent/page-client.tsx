@@ -1,6 +1,7 @@
 "use client";
 
 import { type UIMessage as AIMessage, useChat } from "@ai-sdk/react";
+import { Loader } from "@astra/ui/components/ai-elements/loader";
 import {
   Message,
   MessageAction,
@@ -329,9 +330,18 @@ export function PageClient() {
               ))}
             </AnimatePresence>
             {status === "streaming" && (
-              <div className="flex justify-center">
-                <div className="text-muted-foreground text-sm">Thinking...</div>
-              </div>
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="flex justify-center"
+                initial={{ opacity: 0, y: 10 }}
+              >
+                <div className="flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-2">
+                  <Loader className="text-primary" size={16} />
+                  <span className="text-muted-foreground text-sm">
+                    Thinking...
+                  </span>
+                </div>
+              </motion.div>
             )}
           </div>
         </ScrollArea>
