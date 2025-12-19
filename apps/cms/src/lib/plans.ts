@@ -71,11 +71,8 @@ export function getWorkspacePlan(
   }
 
   const plan = subscription.plan.toLowerCase();
-  if (plan === "pro") {
+  if (plan === "pro" || plan === "team") {
     return "pro";
-  }
-  if (plan === "team") {
-    return "team";
   }
   if (plan === "premium" || plan === "enterprise") {
     return "premium";

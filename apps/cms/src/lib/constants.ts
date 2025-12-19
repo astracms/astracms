@@ -154,6 +154,7 @@ export const WORKSPACE_SCOPED_PREFIXES = [
   "ai-credits",
   "billing-usage",
   "team",
+  "premium",
   "authors",
   "api-keys",
   "ai-readability-suggestions",

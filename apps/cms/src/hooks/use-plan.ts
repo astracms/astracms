@@ -67,7 +67,7 @@ export function usePlan() {
 
   const isFreePlan = currentPlan === "free";
   const isProPlan = currentPlan === "pro";
-  const isTeamPlan = currentPlan === "team";
+  const isPremiumPlan = currentPlan === "premium";
 
   return {
     currentPlan,
@@ -79,7 +79,7 @@ export function usePlan() {
     checkLimits,
     isFreePlan,
     isProPlan,
-    isTeamPlan,
+    isPremiumPlan,
     currentMediaUsage: data?.media ?? 0,
   };
 }
