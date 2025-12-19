@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { parseAIError } from "@/lib/ai-error-handler";
 import { aiReadabilityBodySchema } from "@/lib/validations/editor";
 import { createReadabilityAgent } from "@/mastra";
 
@@ -48,8 +49,14 @@ Respond with JSON only:
     });
   } catch (error) {
     console.error("AI suggestions error:", error);
+    const aiError = parseAIError(error);
     return NextResponse.json(
-      { error: "Failed to generate suggestions" },
+      {
+        error: aiError.userMessage,
+        type: aiError.type,
+        canRetry: aiError.canRetry,
+        requiresUpgrade: aiError.requiresUpgrade,
+      },
       { status: 500 }
     );
   }

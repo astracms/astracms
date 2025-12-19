@@ -4,6 +4,7 @@ import { convertMessages } from "@mastra/core/agent";
 import { createUIMessageStreamResponse } from "ai";
 import { NextResponse } from "next/server";
 import { getAICreditStats } from "@/lib/ai-credits";
+import { parseAIError } from "@/lib/ai-error-handler";
 import { getServerSession } from "@/lib/auth/session";
 import { getWorkspacePlan, hasAIAccess } from "@/lib/plans";
 import { aiChatRateLimit, checkRateLimit } from "@/lib/rate-limit";
@@ -79,16 +80,15 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("[CMS AGENT] Failed to create agent:", error);
+    const aiError = parseAIError(error);
     return NextResponse.json(
       {
-        error:
-          "AI service is temporarily unavailable. Please check your configuration and try again.",
+        error: aiError.userMessage,
+        type: aiError.type,
+        canRetry: aiError.canRetry,
+        requiresUpgrade: aiError.requiresUpgrade,
         details:
-          process.env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.message
-              : String(error)
-            : undefined,
+          process.env.NODE_ENV === "development" ? aiError.message : undefined,
       },
       { status: 503 }
     );
@@ -122,15 +122,15 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("[CMS AGENT] Stream creation failed:", error);
+    const aiError = parseAIError(error);
     return NextResponse.json(
       {
-        error: "Failed to process your request. Please try again.",
+        error: aiError.userMessage,
+        type: aiError.type,
+        canRetry: aiError.canRetry,
+        requiresUpgrade: aiError.requiresUpgrade,
         details:
-          process.env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.message
-              : String(error)
-            : undefined,
+          process.env.NODE_ENV === "development" ? aiError.message : undefined,
       },
       { status: 500 }
     );

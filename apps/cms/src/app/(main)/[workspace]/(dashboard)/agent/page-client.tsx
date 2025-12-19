@@ -71,18 +71,53 @@ export function PageClient() {
   const { status, sendMessage, messages, setMessages, stop } =
     useChat<AIMessage>({
       onError: (error: Error) => {
-        // Parse the error message to check for credit exhaustion
+        // Parse the error message to check for structured error response
         try {
           const errorData = JSON.parse(error.message);
+
+          // Handle credit exhaustion
           if (errorData.creditsExhausted) {
             setCreditsExhausted(true);
             queryClient.invalidateQueries({ queryKey: ["ai-credits"] });
             return;
           }
+
+          // Handle structured AI errors with user-friendly messages
+          if (errorData.error && errorData.type) {
+            const errorMessage = errorData.error;
+
+            // Show different toast types based on error type
+            if (errorData.type === "rate_limit") {
+              toast.error(errorMessage, { duration: 5000 });
+            } else if (errorData.requiresUpgrade) {
+              toast.error(errorMessage, {
+                duration: 7000,
+                action: {
+                  label: "Upgrade",
+                  onClick: () => window.location.href = `/${params.workspace}/settings/billing`
+                }
+              });
+            } else if (errorData.canRetry) {
+              toast.error(errorMessage, {
+                duration: 5000,
+                description: "Please try again in a moment."
+              });
+            } else {
+              toast.error(errorMessage, { duration: 7000 });
+            }
+            return;
+          }
         } catch {
-          // Not a JSON error, show generic toast
+          // Not a JSON error, continue to generic handling
         }
-        toast.error(`Failed to send message: ${error.message}`);
+
+        // Generic error handling
+        const errorMessage = error.message || "Failed to send message";
+        toast.error(
+          errorMessage.length > 100
+            ? "AI service temporarily unavailable. Please try again later."
+            : errorMessage
+        );
       },
       onFinish: () => {
         // Invalidate AI credits query when AI completes a task

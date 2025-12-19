@@ -20,7 +20,18 @@ export async function fetchAiReadabilityRaw(params: {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch AI suggestions");
+    // Try to parse error response for better error messages
+    try {
+      const errorData = await response.json();
+      if (errorData.error) {
+        throw new Error(errorData.error);
+      }
+    } catch (parseError) {
+      // If parsing fails, throw generic error
+    }
+    throw new Error(
+      "AI service temporarily unavailable. Please try again later."
+    );
   }
 
   return response.text();

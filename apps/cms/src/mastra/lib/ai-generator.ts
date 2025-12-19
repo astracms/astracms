@@ -7,6 +7,7 @@
  */
 import { Agent } from "@mastra/core/agent";
 import { consumeAICredits } from "@/lib/ai-credits";
+import { parseAIError } from "@/lib/ai-error-handler";
 
 /**
  * Generate AI text content using a lightweight agent
@@ -17,6 +18,7 @@ import { consumeAICredits } from "@/lib/ai-credits";
  * @param creditCost - Credit cost override (default: 10 per generation)
  * @param model - Optional model override (default: grok-4-fast)
  * @returns Generated text content
+ * @throws Error with user-friendly message if AI generation fails
  */
 export async function generateWithAI(
   prompt: string,
@@ -25,36 +27,43 @@ export async function generateWithAI(
   creditCost = 10,
   model = "zenmux/x-ai/grok-4-fast"
 ): Promise<string> {
-  // Create a lightweight agent just for generation
-  // This doesn't need memory or complex configuration
-  const agent = new Agent({
-    name: "AI Generator",
-    model,
-    instructions:
-      "You are a helpful AI assistant that generates content based on user prompts. Follow instructions precisely and provide high-quality, relevant output.",
-  });
+  try {
+    // Create a lightweight agent just for generation
+    // This doesn't need memory or complex configuration
+    const agent = new Agent({
+      name: "AI Generator",
+      model,
+      instructions:
+        "You are a helpful AI assistant that generates content based on user prompts. Follow instructions precisely and provide high-quality, relevant output.",
+    });
 
-  const response = await agent.generate([{ role: "user", content: prompt }]);
+    const response = await agent.generate([{ role: "user", content: prompt }]);
 
-  // Track AI credit consumption if workspace ID is provided
-  if (workspaceId) {
-    const consumptionResult = await consumeAICredits(
-      workspaceId,
-      operation,
-      creditCost
-    );
-
-    if (consumptionResult.success) {
-      console.log(
-        `[AI CREDITS] Consumed ${creditCost} credits for ${operation}. Remaining: ${consumptionResult.remainingCredits}`
+    // Track AI credit consumption if workspace ID is provided
+    if (workspaceId) {
+      const consumptionResult = await consumeAICredits(
+        workspaceId,
+        operation,
+        creditCost
       );
-    } else {
-      console.warn(
-        `[AI CREDITS] Failed to consume credits for ${operation}:`,
-        consumptionResult.error
-      );
+
+      if (consumptionResult.success) {
+        console.log(
+          `[AI CREDITS] Consumed ${creditCost} credits for ${operation}. Remaining: ${consumptionResult.remainingCredits}`
+        );
+      } else {
+        console.warn(
+          `[AI CREDITS] Failed to consume credits for ${operation}:`,
+          consumptionResult.error
+        );
+      }
     }
-  }
 
-  return response.text || "";
+    return response.text || "";
+  } catch (error) {
+    // Parse and throw user-friendly error
+    const aiError = parseAIError(error);
+    console.error(`[AI GENERATOR] ${operation} failed:`, aiError.message);
+    throw new Error(aiError.userMessage);
+  }
 }
