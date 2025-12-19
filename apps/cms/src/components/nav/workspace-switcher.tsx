@@ -79,7 +79,7 @@ export function WorkspaceSwitcher() {
               >
                 <Avatar className={cn("size-8", isCollapsed && "size-6.5")}>
                   <AvatarImage
-                    className="rounded-[4px]"
+                    className="rounded-lg"
                     src={activeWorkspace.logo || undefined}
                   />
                   <AvatarFallback className="border bg-sidebar-accent">
