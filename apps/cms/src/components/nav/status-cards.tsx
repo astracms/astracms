@@ -14,6 +14,7 @@ import { useSidebar } from "@astra/ui/components/sidebar";
 import { cn } from "@astra/ui/lib/utils";
 import {
   ArrowUpRightIcon,
+  CrownIcon,
   FileTextIcon,
   ImagesIcon,
   SparkleIcon,
@@ -25,6 +26,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { UpgradeModal } from "@/components/billing/upgrade-modal";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
+import { PLAN_LIMITS, type PlanType } from "@/lib/plans";
 import { QUERY_KEYS } from "@/lib/queries/keys";
 import { useWorkspace } from "@/providers/workspace";
 import type { UsageDashboardData } from "@/types/usage-dashboard";
@@ -37,7 +39,12 @@ export function StatusCards() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const isCollapsed = state === "collapsed";
-  const isPro = activeWorkspace?.subscription?.plan === "pro";
+  const currentPlan = (activeWorkspace?.subscription?.plan ||
+    "free") as PlanType;
+  const planLimits = PLAN_LIMITS[currentPlan];
+  const isFreePlan = currentPlan === "free";
+  const isProPlan = currentPlan === "pro";
+  const isPremiumPlan = currentPlan === "premium" || currentPlan === "team";
 
   const { data } = useQuery({
     queryKey: workspaceId
@@ -58,150 +65,182 @@ export function StatusCards() {
     return null;
   }
 
-  const stats = [
+  const mediaCount = data?.media?.total ?? 0;
+  const apiUsageTotal = data?.api?.totals?.total ?? 0;
+  const teamCount = activeWorkspace?.members?.length ?? 0;
+
+  const usageStats = [
     {
-      label: "Posts",
-      value: data?.content?.posts ?? 0,
-      icon: FileTextIcon,
-      color: "text-blue-500",
+      label: "API Requests",
+      used: apiUsageTotal,
+      total:
+        planLimits.maxApiRequests === -1
+          ? Number.POSITIVE_INFINITY
+          : planLimits.maxApiRequests,
+      color: "bg-blue-500",
+      type: "number" as const,
     },
     {
-      label: "Media",
-      value: data?.media?.total ?? 0,
-      icon: ImagesIcon,
-      color: "text-purple-500",
+      label: "AI Credits",
+      used: 0,
+      total: planLimits.aiCreditsPerMonth,
+      color: "bg-purple-500",
+      type: "number" as const,
     },
     {
-      label: "Team",
-      value: activeWorkspace?.members?.length ?? 0,
-      icon: UsersThreeIcon,
-      color: "text-green-500",
+      label: "Media Storage",
+      used: mediaCount,
+      total: planLimits.maxMediaStorage,
+      color: "bg-green-500",
+      type: "storage" as const,
+    },
+    {
+      label: "Team Members",
+      used: teamCount,
+      total: planLimits.maxMembers,
+      color: "bg-orange-500",
+      type: "number" as const,
     },
   ];
 
-  const apiUsageTotal = data?.api?.totals?.total ?? 0;
+  const formatUsage = (stat: (typeof usageStats)[0]) => {
+    if (stat.total === Number.POSITIVE_INFINITY) {
+      return `${stat.used.toLocaleString()} / Unlimited`;
+    }
+
+    if (stat.type === "storage") {
+      // Convert MB to GB (values in plans are in MB)
+      const usedGB = (stat.used / 1024).toFixed(2);
+      const totalGB = (stat.total / 1024).toFixed(0);
+      return `${usedGB} GB / ${totalGB} GB`;
+    }
+
+    return `${stat.used.toLocaleString()} / ${stat.total.toLocaleString()}`;
+  };
 
   return (
-    <div className="space-y-3 px-4 pb-3">
-      {/* Workspace Stats Card */}
-      <Card className="border-sidebar-border bg-sidebar-accent/50">
-        <CardHeader className="p-3 pb-2">
-          <CardTitle className="font-medium text-muted-foreground text-xs">
-            Workspace Stats
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 p-3 pt-0">
-          <div className="grid grid-cols-3 gap-2">
-            {stats.map((stat) => (
-              <div
-                className="flex flex-col items-center gap-1.5 rounded-md bg-background/50 p-2"
-                key={stat.label}
-              >
-                <stat.icon className={cn("size-4", stat.color)} weight="fill" />
-                <div className="text-center">
-                  <p className="font-semibold text-sm">{stat.value}</p>
-                  <p className="text-[10px] text-muted-foreground">
+    <>
+      {/* Usage Stats Card */}
+      <div className="m-3 space-y-4 rounded-xl border border-sidebar-border bg-card p-4">
+        {/* Usage Stats */}
+        <div className="space-y-4">
+          {usageStats.map((stat) => {
+            // Handle edge cases: 0 total, Infinity, or invalid numbers
+            let percentage = 0;
+            if (stat.total === Number.POSITIVE_INFINITY) {
+              percentage = 0;
+            } else if (stat.total === 0 || !stat.total) {
+              percentage = 0;
+            } else {
+              percentage = Math.min(100, (stat.used / stat.total) * 100);
+            }
+
+            const isNearLimit = percentage >= 85;
+
+            return (
+              <div className="space-y-2" key={stat.label}>
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-muted-foreground text-xs">
                     {stat.label}
-                  </p>
+                  </span>
+                  <span
+                    className={cn(
+                      "font-semibold text-xs",
+                      isNearLimit && "text-destructive"
+                    )}
+                  >
+                    {stat.total === Number.POSITIVE_INFINITY
+                      ? "∞"
+                      : stat.total === 0
+                        ? "N/A"
+                        : `${percentage.toFixed(0)}%`}
+                  </span>
                 </div>
+                <Progress className="h-1.5" value={percentage} />
+                <p className="text-muted-foreground text-xs">
+                  {formatUsage(stat)}
+                </p>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* API Usage */}
-          {data?.api && (
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] text-muted-foreground">
-                  API Requests
-                </p>
-                <p className="font-medium text-[10px]">
-                  {apiUsageTotal.toLocaleString()} total
-                </p>
-              </div>
-              <Progress className="h-1.5" value={75} />
+        {/* Upgrade CTA for Free Plan */}
+        {isFreePlan && (
+          <div className="space-y-3 border-sidebar-border border-t pt-4">
+            <div className="space-y-1">
+              <h3 className="font-semibold text-card-foreground text-sm">
+                Upgrade to Pro
+              </h3>
+              <p className="text-muted-foreground text-xs">
+                Get unlimited access to all features
+              </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Upgrade to Pro Card */}
-      {!isPro && (
-        <Card className="border-blue-500/20 bg-linear-to-br from-blue-500/10 to-purple-500/10">
-          <CardContent className="space-y-3 p-3">
-            <div className="flex items-start gap-2">
-              <div className="rounded-lg bg-blue-500/20 p-2">
-                <SparkleIcon className="size-4 text-blue-500" weight="fill" />
-              </div>
-              <div className="flex-1 space-y-0.5">
-                <h3 className="font-semibold text-sm">Upgrade to Pro</h3>
-                <p className="text-[11px] text-muted-foreground leading-tight">
-                  Unlock Astra AI to write blog posts instantly
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 rounded-md bg-background/60 p-2">
-                <SparkleIcon className="size-3.5 text-blue-500" weight="fill" />
-                <p className="flex-1 text-[11px] text-foreground">
-                  AI-powered blog creation
-                </p>
-              </div>
-              <div className="flex items-center gap-2 rounded-md bg-background/60 p-2">
-                <SparkleIcon className="size-3.5 text-blue-500" weight="fill" />
-                <p className="flex-1 text-[11px] text-foreground">
-                  Smart content suggestions
-                </p>
-              </div>
-            </div>
-
             <Button
-              className="h-8 w-full gap-1.5 text-xs"
+              className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={() => setShowUpgradeModal(true)}
               size="sm"
             >
-              <span>Upgrade Now</span>
-              <ArrowUpRightIcon className="size-3.5" weight="bold" />
+              <CrownIcon className="h-4 w-4" />
+              Upgrade Now
             </Button>
+          </div>
+        )}
 
-            <Link
-              className="flex items-center justify-center gap-1 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
-              href={`/${params.workspace}/agent`}
+        {/* Upgrade CTA for Pro Plan */}
+        {isProPlan && (
+          <div className="space-y-3 border-sidebar-border border-t pt-4">
+            <div className="space-y-1">
+              <h3 className="font-semibold text-card-foreground text-sm">
+                Upgrade to Premium
+              </h3>
+              <p className="text-muted-foreground text-xs">
+                Get unlimited API requests and more
+              </p>
+            </div>
+            <Button
+              className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={() => setShowUpgradeModal(true)}
+              size="sm"
             >
-              Try Astra AI
-              <ArrowUpRightIcon className="size-3" />
-            </Link>
-          </CardContent>
-        </Card>
-      )}
+              <CrownIcon className="h-4 w-4" />
+              Upgrade to Premium
+            </Button>
+          </div>
+        )}
 
-      {/* Pro Badge for Pro Users */}
-      {isPro && (
-        <Card className="border-blue-500/20 bg-linear-to-br from-blue-500/10 to-purple-500/10">
-          <CardContent className="flex items-center justify-between p-3">
+        {/* Plan Badge for Premium Plans */}
+        {isPremiumPlan && (
+          <div className="flex items-center justify-between border-sidebar-border border-t pt-4">
             <div className="flex items-center gap-2">
-              <div className="rounded-lg bg-blue-500/20 p-2">
-                <SparkleIcon className="size-4 text-blue-500" weight="fill" />
+              <div className="rounded-lg bg-primary/10 p-1.5">
+                <SparkleIcon
+                  className="h-3.5 w-3.5 text-primary"
+                  weight="fill"
+                />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">Pro Member</h3>
+                <h3 className="font-semibold text-card-foreground text-xs capitalize">
+                  {currentPlan === "premium" ? "Premium" : currentPlan} Plan
+                </h3>
                 <p className="text-[10px] text-muted-foreground">
-                  All features unlocked
+                  Premium features
                 </p>
               </div>
             </div>
             <Badge className="text-[10px]" variant="premium">
-              PRO
+              {currentPlan === "premium"
+                ? "PREMIUM"
+                : currentPlan.toUpperCase()}
             </Badge>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        )}
+      </div>
 
       <UpgradeModal
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
       />
-    </div>
+    </>
   );
 }

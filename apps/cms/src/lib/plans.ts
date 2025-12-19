@@ -1,4 +1,4 @@
-export type PlanType = "free" | "pro" | "team" | "enterprise";
+export type PlanType = "free" | "pro" | "team" | "premium";
 
 export type PlanLimits = {
   maxMembers: number;
@@ -58,7 +58,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
       unlimitedPosts: true,
     },
   },
-  enterprise: {
+  premium: {
     maxMembers: 10,
     maxMediaStorage: 102_400, // 100GB
     maxApiRequests: -1, // unlimited
@@ -91,8 +91,8 @@ export function getWorkspacePlan(
   if (plan === "team") {
     return "team";
   }
-  if (plan === "enterprise") {
-    return "enterprise";
+  if (plan === "premium" || plan === "enterprise") {
+    return "premium";
   }
 
   return "free";

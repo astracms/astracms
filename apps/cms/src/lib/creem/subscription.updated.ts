@@ -17,8 +17,8 @@ function getPlanType(productName: string): PlanType | null {
   if (plan === "team") {
     return PlanType.team;
   }
-  if (plan === "enterprise") {
-    return PlanType.enterprise;
+  if (plan === "premium" || plan === "enterprise") {
+    return PlanType.premium;
   }
   return null;
 }

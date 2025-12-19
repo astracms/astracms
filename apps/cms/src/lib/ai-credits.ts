@@ -158,7 +158,7 @@ export async function checkAICreditAvailability(
         availableCredits: 0,
         requiredCredits,
         error:
-          "No active subscription. Upgrade to Pro or Enterprise for AI features.",
+          "No active subscription. Upgrade to Pro or Premium for AI features.",
       };
     }
 

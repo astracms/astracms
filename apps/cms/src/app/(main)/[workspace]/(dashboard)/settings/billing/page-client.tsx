@@ -42,7 +42,7 @@ function PageClient() {
   const { planLimits, currentMemberCount, currentPlan, currentMediaUsage } =
     usePlan();
   const [checkoutLoading, setCheckoutLoading] = useState<
-    "pro" | "free" | "enterprise" | null
+    "pro" | "free" | "premium" | null
   >(null);
   const [aiCredits, setAICredits] = useState<AICreditStats>({
     used: 0,
@@ -160,7 +160,7 @@ function PageClient() {
     }
   };
 
-  const handleCheckout = async (plan: "pro" | "free" | "enterprise") => {
+  const handleCheckout = async (plan: "pro" | "free" | "premium") => {
     if (!activeWorkspace?.id) {
       return;
     }
@@ -172,7 +172,7 @@ function PageClient() {
       const productIdMap = {
         free: process.env.NEXT_PUBLIC_CREEM_HOBBY_PRODUCT_ID,
         pro: process.env.NEXT_PUBLIC_CREEM_PRO_PRODUCT_ID,
-        enterprise: process.env.NEXT_PUBLIC_CREEM_ENTERPRISE_PRODUCT_ID,
+        premium: process.env.NEXT_PUBLIC_CREEM_PREMIUM_PRODUCT_ID,
       };
 
       const productId = productIdMap[plan];
@@ -243,45 +243,6 @@ function PageClient() {
 
   return (
     <WorkspacePageWrapper className="flex flex-col gap-8 py-12" size="compact">
-      {/* Usage Overview */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Usage Overview</CardTitle>
-          <CardDescription>
-            Track your usage across AI credits, API requests, storage, and team
-            members
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-6 rounded-lg bg-muted/50 p-6 md:grid-cols-2 lg:grid-cols-4">
-            {usageData.map((item) => (
-              <div className="flex items-center gap-4 px-4" key={item.name}>
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-baseline justify-between">
-                    <p className="text-muted-foreground text-sm">{item.name}</p>
-                    <p className="text-muted-foreground text-xs tabular-nums">
-                      {item.percentage}%
-                    </p>
-                  </div>
-                  <Progress className="h-2" value={item.percentage} />
-                  <div className="flex items-baseline gap-1">
-                    <p className="font-semibold text-sm">{item.used}</p>
-                    <p className="text-muted-foreground text-xs">
-                      / {item.total}
-                    </p>
-                  </div>
-                  {"highlight" in item && item.highlight && (
-                    <p className="text-muted-foreground text-xs italic">
-                      {item.highlight}
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Pricing Plans */}
       {isOwner && (
         <>
@@ -348,14 +309,14 @@ function PageClient() {
                         isLoading={checkoutLoading === plan.id}
                         onClick={() =>
                           handleCheckout(
-                            plan.id as "pro" | "free" | "enterprise"
+                            plan.id as "pro" | "free" | "premium"
                           )
                         }
                       >
                         {plan.id === "free"
                           ? "Downgrade to Hobby"
-                          : plan.id === "enterprise"
-                            ? "Upgrade to Enterprise"
+                          : plan.id === "premium"
+                            ? "Upgrade to Premium"
                             : "Upgrade to Pro"}
                       </AsyncButton>
                     )}

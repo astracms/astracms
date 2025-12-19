@@ -14,7 +14,12 @@ export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props} className="border-none">
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      className="border-none"
+      suppressHydrationWarning
+    >
       <SidebarHeader>
         <WorkspaceSwitcher />
       </SidebarHeader>

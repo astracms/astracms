@@ -65,8 +65,8 @@ export const PRICING_PLANS: PricingPlan[] = [
     },
   },
   {
-    id: "enterprise",
-    title: "Enterprise",
+    id: "premium",
+    title: "Premium",
     description: "For Growing Organizations",
     price: {
       monthly: "$99",
@@ -310,7 +310,7 @@ export const RESERVED_WORKSPACE_SLUGS = [
   "netronk",
   "ai",
   "pro",
-  "enterprise",
+  "premium",
   "studio",
   "suite",
   "elite",
