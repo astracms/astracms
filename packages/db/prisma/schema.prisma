@@ -399,9 +399,9 @@ enum PostStatus {
 }
 
 enum PlanType {
-  team
+  free
   pro
-  enterprise
+  premium
 }
 
 enum SubscriptionStatus {

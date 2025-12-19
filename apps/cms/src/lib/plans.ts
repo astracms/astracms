@@ -1,4 +1,4 @@
-export type PlanType = "free" | "pro" | "team" | "premium";
+export type PlanType = "free" | "pro" | "premium";
 
 export type PlanLimits = {
   maxMembers: number;
@@ -41,20 +41,6 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
       aiAccess: true,
       advancedReadability: true,
       keywordOptimization: false,
-      unlimitedPosts: true,
-    },
-  },
-  team: {
-    maxMembers: 10,
-    maxMediaStorage: 51_200, // 50GB
-    maxApiRequests: -1, // unlimited
-    maxWebhookEvents: 100,
-    aiCreditsPerMonth: 10_000,
-    features: {
-      inviteMembers: true,
-      aiAccess: true,
-      advancedReadability: true,
-      keywordOptimization: true,
       unlimitedPosts: true,
     },
   },

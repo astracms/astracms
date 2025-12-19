@@ -44,7 +44,7 @@ export function StatusCards() {
   const planLimits = PLAN_LIMITS[currentPlan];
   const isFreePlan = currentPlan === "free";
   const isProPlan = currentPlan === "pro";
-  const isPremiumPlan = currentPlan === "premium" || currentPlan === "team";
+  const isPremiumPlan = currentPlan === "premium";
 
   const { data, refetch: refetchUsage } = useQuery({
     queryKey: workspaceId
@@ -256,9 +256,7 @@ export function StatusCards() {
               </div>
             </div>
             <Badge className="text-[10px]" variant="premium">
-              {currentPlan === "premium"
-                ? "PREMIUM"
-                : currentPlan.toUpperCase()}
+              PREMIUM
             </Badge>
           </div>
         )}
