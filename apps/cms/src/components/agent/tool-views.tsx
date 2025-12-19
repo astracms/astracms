@@ -53,7 +53,7 @@ export function AddTagView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
           <span className="text-destructive">
-            ❌ Error: {output.error || "Unknown error"}
+            Error: {output.error || "Unknown error"}
           </span>
         </div>
       );
@@ -63,7 +63,7 @@ export function AddTagView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
           <span className="text-foreground">
-            ✅ Tag "{output.tag.name}" created successfully
+            Tag "{output.tag.name}" created successfully
           </span>
         </div>
       );
@@ -74,7 +74,7 @@ export function AddTagView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -113,7 +113,7 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
           <span className="text-destructive">
-            ❌ Error: {output.error || "Unknown error"}
+            Error: {output.error || "Unknown error"}
           </span>
         </div>
       );
@@ -123,7 +123,7 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
           <span className="text-foreground">
-            ✅ Category "{output.category.name}" created successfully
+            Category "{output.category.name}" created successfully
           </span>
         </div>
       );
@@ -134,7 +134,7 @@ export function AddCategoryView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -171,7 +171,7 @@ export function CreatePostView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
           <span className="text-destructive">
-            ❌ Error: {output.error || "Unknown error"}
+            Error: {output.error || "Unknown error"}
           </span>
         </div>
       );
@@ -180,8 +180,8 @@ export function CreatePostView({ invocation }: ToolViewProps) {
     if (output.post) {
       return (
         <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
-          <span className="text-foreground">✅ Post created successfully</span>
-          <div className="ml-6 space-y-1 text-muted-foreground text-xs">
+          <span className="text-foreground">Post created successfully</span>
+          <div className="space-y-1 text-muted-foreground text-xs">
             <div>
               <strong>Title:</strong> {output.post.title}
             </div>
@@ -198,7 +198,7 @@ export function CreatePostView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -241,7 +241,7 @@ export function SearchView({ invocation }: ToolViewProps) {
     if (output.error) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
-          <span className="text-destructive">❌ Error: {output.error}</span>
+          <span className="text-destructive">Error: {output.error}</span>
         </div>
       );
     }
@@ -265,9 +265,9 @@ export function SearchView({ invocation }: ToolViewProps) {
     return (
       <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
         <span className="text-foreground">
-          ✅ Found {totalResults} result{totalResults !== 1 ? "s" : ""}
+          Found {totalResults} result{totalResults !== 1 ? "s" : ""}
         </span>
-        <div className="ml-6 space-y-2 text-muted-foreground text-xs">
+        <div className="space-y-2 text-muted-foreground text-xs">
           {results?.posts && results.posts.length > 0 && (
             <div>
               <strong>Posts ({results.posts.length}):</strong>
@@ -307,7 +307,7 @@ export function SearchView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -349,7 +349,7 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
     if (output.error) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
-          <span className="text-destructive">❌ Error: {output.error}</span>
+          <span className="text-destructive">Error: {output.error}</span>
         </div>
       );
     }
@@ -366,10 +366,10 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
     return (
       <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3 text-sm">
         <span className="text-foreground">
-          ✅ Found {pagination?.total || results.length} {resourceType}
+          Found {pagination?.total || results.length} {resourceType}
           {(pagination?.total || results.length) !== 1 ? "s" : ""}
         </span>
-        <div className="ml-6 space-y-1 text-muted-foreground text-xs">
+        <div className="space-y-1 text-muted-foreground text-xs">
           <ul className="list-inside list-disc space-y-1">
             {results.map((item, idx) => {
               const record = item as Record<string, unknown>;
@@ -401,7 +401,7 @@ export function ListResourcesView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -442,7 +442,7 @@ export function WebSearchView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
           <span className="text-destructive">
-            ❌ Web search error: {output.error}
+            Web search error: {output.error}
           </span>
         </div>
       );
@@ -495,7 +495,7 @@ export function WebSearchView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -616,7 +616,7 @@ export function PresentOptionsView({
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -658,7 +658,7 @@ export function ListMediaView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
           <span className="text-destructive">
-            ❌ Error: {output.error || "Failed to load media"}
+            Error: {output.error || "Failed to load media"}
           </span>
         </div>
       );
@@ -719,7 +719,7 @@ export function ListMediaView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );
@@ -764,7 +764,7 @@ export function CreateBlogAutoView({ invocation }: ToolViewProps) {
       return (
         <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
           <span className="text-destructive">
-            ❌ Error: {output.error || "Unknown error"}
+            Error: {output.error || "Unknown error"}
           </span>
         </div>
       );
@@ -775,9 +775,9 @@ export function CreateBlogAutoView({ invocation }: ToolViewProps) {
       return (
         <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-4 text-sm">
           <span className="text-foreground">
-            ✅ Blog post created successfully
+            Blog post created successfully
           </span>
-          <div className="ml-6 space-y-1.5 text-muted-foreground text-xs">
+          <div className="space-y-1.5 text-muted-foreground text-xs">
             <div>
               <strong>Title:</strong> {output.post.title}
             </div>
@@ -809,7 +809,7 @@ export function CreateBlogAutoView({ invocation }: ToolViewProps) {
     return (
       <div className="flex items-start gap-2 rounded-lg border bg-destructive/10 p-3 text-sm">
         <span className="text-destructive">
-          ❌ Error: {String(invocation?.errorText ?? "Unknown error")}
+          Error: {String(invocation?.errorText ?? "Unknown error")}
         </span>
       </div>
     );

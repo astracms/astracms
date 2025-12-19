@@ -50,7 +50,7 @@ export const SubscriptionRenewedEmail = ({
             </Section>
 
             <Heading className="my-6 text-center font-bold text-2xl text-black">
-              ✅ Subscription Renewed
+              Subscription Renewed
             </Heading>
 
             <Text className="text-center text-base text-gray-700 leading-relaxed">

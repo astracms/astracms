@@ -41,12 +41,12 @@ import AstraIcon from "@/components/icons/astra";
 import { useWorkspace } from "@/providers/workspace";
 
 const SUGGESTIONS = [
-  "Create a blog post about AI",
-  "Show me all available tags",
-  "List all categories",
-  "What posts do I have?",
-  "Help me write a new article",
-  "Show my media library",
+  "Write a blog post about best practices for web development",
+  "Create a tutorial on getting started with our product",
+  "Draft a case study about a recent project",
+  "Generate a product update announcement",
+  "Help me optimize an existing post for SEO",
+  "Suggest topics based on current trends in my industry",
 ];
 
 export function PageClient() {
@@ -110,7 +110,7 @@ export function PageClient() {
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-background">
       <div className="relative flex-1 overflow-hidden">
         <ScrollArea className="h-full px-4 py-6" ref={scrollRef}>
-          <div className="mx-auto max-w-3xl space-y-8 pb-32">
+          <div className="mx-auto max-w-3xl space-y-8 pb-32 px-4">
             {/* AI Credit Limit Banner */}
             <CreditLimitBanner />
 

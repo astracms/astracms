@@ -405,7 +405,7 @@ export const createSEOAnalyzerTool = () =>
           (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
         );
 
-        console.log("[SEO ANALYZER] ✅ Analysis complete");
+        console.log("[SEO ANALYZER] Analysis complete");
         console.log("[SEO ANALYZER] Overall score:", overallScore, "/100");
         console.log("[SEO ANALYZER] Recommendations:", recommendations.length);
 
@@ -416,7 +416,7 @@ export const createSEOAnalyzerTool = () =>
           summary,
         };
       } catch (error) {
-        console.error("[SEO ANALYZER] ❌ Error:", error);
+        console.error("[SEO ANALYZER] Error:", error);
         throw new Error(
           `SEO analysis failed: ${error instanceof Error ? error.message : String(error)}`
         );

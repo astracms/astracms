@@ -396,7 +396,7 @@ Return as comma-separated list, nothing else.`,
           },
         });
 
-        console.log("[AUTO BLOG] ✅ Post created successfully:", post.id);
+        console.log("[AUTO BLOG] Post created successfully:", post.id);
 
         // Get workspace slug for the edit URL
         const workspace = await db.organization.findUnique({
@@ -417,7 +417,7 @@ Return as comma-separated list, nothing else.`,
           },
         };
       } catch (error) {
-        console.error("[AUTO BLOG] ❌ Error:", error);
+        console.error("[AUTO BLOG] Error:", error);
         return {
           success: false,
           error: error instanceof Error ? error.message : String(error),

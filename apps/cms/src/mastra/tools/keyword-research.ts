@@ -304,7 +304,7 @@ Generate comprehensive keyword research now:`,
             .trim() ||
           `Focus on primary keywords with 'easy' to 'medium' difficulty. Incorporate related keywords naturally throughout your content. Target long-tail keywords for specific user queries to capture high-intent traffic.`;
 
-        console.log("[KEYWORD RESEARCH] ✅ Analysis complete");
+        console.log("[KEYWORD RESEARCH] Analysis complete");
         console.log(
           "[KEYWORD RESEARCH] Found:",
           primaryKeywords.length,
@@ -323,7 +323,7 @@ Generate comprehensive keyword research now:`,
           recommendations,
         };
       } catch (error) {
-        console.error("[KEYWORD RESEARCH] ❌ Error:", error);
+        console.error("[KEYWORD RESEARCH] Error:", error);
         throw new Error(
           `Keyword research failed: ${error instanceof Error ? error.message : String(error)}`
         );

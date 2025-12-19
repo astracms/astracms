@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       userName: sessionData.user.name ?? "User",
     });
   } catch (error) {
-    console.error("[CMS AGENT] ❌ Failed to create agent:", error);
+    console.error("[CMS AGENT] Failed to create agent:", error);
     return NextResponse.json(
       {
         error:
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
     );
   }
 
-  console.log("[CMS AGENT] ✅ Agent created successfully");
+  console.log("[CMS AGENT] Agent created successfully");
   console.log("[CMS AGENT] Starting stream...");
 
   try {
@@ -115,13 +115,13 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log("[CMS AGENT] ✅ Stream created, returning response");
+    console.log("[CMS AGENT] Stream created, returning response");
 
     return createUIMessageStreamResponse({
       stream: toAISdkFormat(stream, { from: "agent" }),
     });
   } catch (error) {
-    console.error("[CMS AGENT] ❌ Stream creation failed:", error);
+    console.error("[CMS AGENT] Stream creation failed:", error);
     return NextResponse.json(
       {
         error: "Failed to process your request. Please try again.",

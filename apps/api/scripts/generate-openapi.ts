@@ -74,10 +74,10 @@ async function main() {
     console.log(`📝 Writing to ${OUTPUT_PATH}...`);
     await writeFile(OUTPUT_PATH, content, "utf-8");
 
-    console.log("✅ OpenAPI spec generated successfully!");
+    console.log("OpenAPI spec generated successfully!");
     console.log(`   Output: ${OUTPUT_PATH}`);
   } catch (error) {
-    console.error("❌ Failed to generate OpenAPI spec:", error);
+    console.error("Failed to generate OpenAPI spec:", error);
     process.exit(1);
   } finally {
     // Clean up server process

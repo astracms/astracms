@@ -379,7 +379,7 @@ Generate comprehensive content strategy now:`,
             .trim() ||
           "Focus on creating foundational content first (guides and tutorials) to establish authority. Build topic clusters around your core keywords to improve topical relevance. Maintain a consistent publishing schedule (2-3 posts per week) and update older content quarterly.";
 
-        console.log("[CONTENT STRATEGY] ✅ Strategy generated");
+        console.log("[CONTENT STRATEGY] Strategy generated");
         console.log("[CONTENT STRATEGY] Topic ideas:", topicIdeas.length);
         console.log("[CONTENT STRATEGY] Content gaps:", contentGaps.length);
         console.log(
@@ -394,7 +394,7 @@ Generate comprehensive content strategy now:`,
           recommendations,
         };
       } catch (error) {
-        console.error("[CONTENT STRATEGY] ❌ Error:", error);
+        console.error("[CONTENT STRATEGY] Error:", error);
         throw new Error(
           `Content strategy generation failed: ${error instanceof Error ? error.message : String(error)}`
         );

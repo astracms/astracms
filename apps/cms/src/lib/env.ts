@@ -46,7 +46,7 @@ export function validateEnv(): Env {
       .join("\n");
 
     throw new Error(
-      `❌ Invalid environment variables:\n${errorMessage}\n\nPlease check your .env file.`
+      `Invalid environment variables:\n${errorMessage}\n\nPlease check your .env file.`
     );
   }
 
