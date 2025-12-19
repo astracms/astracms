@@ -16,7 +16,7 @@ export const AI_TOOL_COSTS = {
 
   // Medium operations (25-50 credits)
   "keyword-research": 25,
-  "seo-analyzer": 30,
+  "analyze-seo": 30, // tool id is "analyze-seo"
   "add-category": 15,
   "add-tag": 15,
   search: 20,
@@ -26,7 +26,17 @@ export const AI_TOOL_COSTS = {
   "create-post": 50,
   "update-post": 40,
   "content-strategy": 75,
-  "create-blog-auto": 100,
+  // create-blog-auto uses internal generateWithAI calls that track their own costs
+  // Setting to 0 to avoid double-charging (internal ops: title=2, category=1, content=12, desc=2, tags=1 = ~18 total)
+  "create-blog-auto": 0,
+
+  // Internal AI generation operations (used by tools via generateWithAI)
+  // Costs optimized so free users (100 credits) can create ~5 blog posts
+  "blog-title-generation": 2,
+  "blog-category-selection": 1,
+  "blog-content-generation": 12,
+  "blog-description-generation": 2,
+  "blog-tags-generation": 1,
 } as const;
 
 export type AIToolName = keyof typeof AI_TOOL_COSTS;
@@ -49,12 +59,46 @@ export async function getAICreditUsage(workspaceId: string): Promise<number> {
     },
   });
 
-  if (!workspace?.subscription) {
-    return 0;
+  if (workspace?.subscription) {
+    // Has subscription - return tracked usage
+    return workspace.subscription.aiCreditsUsed;
   }
 
-  // Return current usage from subscription
-  return workspace.subscription.aiCreditsUsed;
+  // No subscription (free plan) - calculate from usage events
+  return calculateUsageFromEvents(workspaceId);
+}
+
+/**
+ * Get the start of the current billing period (first day of the month)
+ */
+function getBillingPeriodStart(): Date {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
+/**
+ * Calculate AI credits used from usage events for workspaces without subscription
+ */
+async function calculateUsageFromEvents(workspaceId: string): Promise<number> {
+  const billingPeriodStart = getBillingPeriodStart();
+
+  const usageEvents = await db.usageEvent.findMany({
+    where: {
+      workspaceId,
+      type: "ai_generation",
+      createdAt: {
+        gte: billingPeriodStart,
+      },
+    },
+    select: {
+      metadata: true,
+    },
+  });
+
+  return usageEvents.reduce((total, event) => {
+    const metadata = event.metadata as { creditsConsumed?: number } | null;
+    return total + (metadata?.creditsConsumed ?? 0);
+  }, 0);
 }
 
 /**
@@ -73,38 +117,57 @@ export async function consumeAICredits(
       },
     });
 
-    if (!workspace?.subscription) {
+    // Get plan type and limits
+    const planType = getWorkspacePlan(workspace?.subscription);
+    const planLimits = PLAN_LIMITS[planType];
+
+    // Check if plan has AI access
+    if (!planLimits.features.aiAccess) {
       return {
         success: false,
         remainingCredits: 0,
-        error: "No active subscription found",
+        error: "AI features are not available on your current plan",
       };
     }
 
-    const { subscription } = workspace;
-    const newUsage = subscription.aiCreditsUsed + creditsToConsume;
+    let currentUsage: number;
+    let creditLimit: number;
+
+    if (workspace?.subscription) {
+      // Has subscription - use subscription tracking
+      currentUsage = workspace.subscription.aiCreditsUsed;
+      creditLimit =
+        workspace.subscription.aiCreditsLimit > 0
+          ? workspace.subscription.aiCreditsLimit
+          : planLimits.aiCreditsPerMonth;
+    } else {
+      // No subscription (free plan) - calculate usage from events
+      currentUsage = await calculateUsageFromEvents(workspaceId);
+      creditLimit = planLimits.aiCreditsPerMonth;
+    }
+
+    const newUsage = currentUsage + creditsToConsume;
 
     // Check if this would exceed the limit
-    if (newUsage > subscription.aiCreditsLimit) {
+    if (newUsage > creditLimit) {
       return {
         success: false,
-        remainingCredits: Math.max(
-          0,
-          subscription.aiCreditsLimit - subscription.aiCreditsUsed
-        ),
+        remainingCredits: Math.max(0, creditLimit - currentUsage),
         error: "Insufficient AI credits",
       };
     }
 
-    // Update subscription with new usage
-    await db.subscription.update({
-      where: { id: subscription.id },
-      data: {
-        aiCreditsUsed: newUsage,
-      },
-    });
+    // Update subscription usage if exists
+    if (workspace?.subscription) {
+      await db.subscription.update({
+        where: { id: workspace.subscription.id },
+        data: {
+          aiCreditsUsed: newUsage,
+        },
+      });
+    }
 
-    // Log usage event
+    // Always log usage event (this tracks usage for all users including free plan)
     await db.usageEvent.create({
       data: {
         type: "ai_generation",
@@ -119,7 +182,7 @@ export async function consumeAICredits(
 
     return {
       success: true,
-      remainingCredits: subscription.aiCreditsLimit - newUsage,
+      remainingCredits: creditLimit - newUsage,
     };
   } catch (error) {
     console.error("Error consuming AI credits:", error);
@@ -242,24 +305,21 @@ export async function getAICreditStats(workspaceId: string): Promise<{
   const planType = getWorkspacePlan(workspace?.subscription);
   const planLimits = PLAN_LIMITS[planType];
 
-  // If no subscription exists, use plan defaults (free plan has 100 credits)
-  if (!workspace?.subscription) {
-    return {
-      used: 0,
-      limit: planLimits.aiCreditsPerMonth,
-      remaining: planLimits.aiCreditsPerMonth,
-      usagePercentage: 0,
-      canUseAI:
-        planLimits.features.aiAccess && planLimits.aiCreditsPerMonth > 0,
-    };
-  }
+  let aiCreditsUsed: number;
+  let aiCreditsLimit: number;
 
-  const { aiCreditsUsed } = workspace.subscription;
-  // Use subscription limit if set, otherwise fall back to plan limits
-  const aiCreditsLimit =
-    workspace.subscription.aiCreditsLimit > 0
-      ? workspace.subscription.aiCreditsLimit
-      : planLimits.aiCreditsPerMonth;
+  if (workspace?.subscription) {
+    // Has subscription - use subscription tracking
+    aiCreditsUsed = workspace.subscription.aiCreditsUsed;
+    aiCreditsLimit =
+      workspace.subscription.aiCreditsLimit > 0
+        ? workspace.subscription.aiCreditsLimit
+        : planLimits.aiCreditsPerMonth;
+  } else {
+    // No subscription (free plan) - calculate from usage events
+    aiCreditsUsed = await calculateUsageFromEvents(workspaceId);
+    aiCreditsLimit = planLimits.aiCreditsPerMonth;
+  }
 
   const remaining = Math.max(0, aiCreditsLimit - aiCreditsUsed);
   const usagePercentage =
@@ -270,6 +330,7 @@ export async function getAICreditStats(workspaceId: string): Promise<{
     limit: aiCreditsLimit,
     remaining,
     usagePercentage: Math.min(100, usagePercentage),
-    canUseAI: aiCreditsLimit > 0 && remaining > 0,
+    canUseAI:
+      planLimits.features.aiAccess && aiCreditsLimit > 0 && remaining > 0,
   };
 }

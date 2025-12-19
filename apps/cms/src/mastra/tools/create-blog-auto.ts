@@ -125,7 +125,7 @@ Requirements:
 Return ONLY the title, nothing else.`,
           workspaceId,
           "blog-title-generation",
-          5
+          2
         );
 
         const title = (titleText.trim() || topic).slice(0, 100);
@@ -172,7 +172,7 @@ ${categoryList}
 Return ONLY the category slug, nothing else.`,
             workspaceId,
             "blog-category-selection",
-            3
+            1
           );
 
           const suggestedSlug = categoryText
@@ -227,13 +227,13 @@ REQUIREMENTS:
 SEO:
 - Natural keyword incorporation (1-2% density)
 - Front-load keywords in first 100 words
-- Use descriptive headings,
-          workspaceId,
-          "blog-content-generation",
-          50
+- Use descriptive headings
 - Optimize for featured snippets
 
-Write the complete article now:`
+Write the complete article now:`,
+          workspaceId,
+          "blog-content-generation",
+          12
         );
 
         const content =
@@ -248,16 +248,16 @@ Write the complete article now:`
           `Write an SEO-optimized meta description for a blog post titled "${title}" about "${topic}".
 
 CRITICAL:
-- EXACTLY 150-160 characters,
-          workspaceId,
-          "blog-description-generation",
-          5
+- EXACTLY 150-160 characters
 - Include primary keyword in first 80 characters
 - Use action verbs (Learn, Discover, Master, Get)
 - NO quotation marks
 - Make it compelling
 
-Return ONLY the description, nothing else.`
+Return ONLY the description, nothing else.`,
+          workspaceId,
+          "blog-description-generation",
+          2
         );
 
         const rawDescription =
@@ -287,7 +287,7 @@ Requirements:
 Return as comma-separated list, nothing else.`,
           workspaceId,
           "blog-tags-generation",
-          3
+          1
         );
 
         const tagNames = (tagsText || "")

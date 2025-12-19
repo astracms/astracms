@@ -18,10 +18,23 @@ import {
   Suggestion,
   Suggestions,
 } from "@astra/ui/components/ai-elements/suggestion";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@astra/ui/components/alert";
 import { Button } from "@astra/ui/components/button";
 import { ScrollArea } from "@astra/ui/components/scroll-area";
-import { ArrowUpIcon, StopIcon, TrashIcon } from "@phosphor-icons/react";
+import {
+  ArrowUpIcon,
+  CrownIcon,
+  StopIcon,
+  TrashIcon,
+  WarningIcon,
+} from "@phosphor-icons/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -36,7 +49,6 @@ import {
   SearchView,
   WebSearchView,
 } from "@/components/agent/tool-views";
-import { CreditLimitBanner } from "@/components/ai/credit-limit-banner";
 import AstraIcon from "@/components/icons/astra";
 import { useWorkspace } from "@/providers/workspace";
 
@@ -50,16 +62,33 @@ const SUGGESTIONS = [
 ];
 
 export function PageClient() {
+  const queryClient = useQueryClient();
+  const [creditsExhausted, setCreditsExhausted] = useState(false);
+  const params = useParams<{ workspace: string }>();
+  const { activeWorkspace } = useWorkspace();
+
   const { status, sendMessage, messages, setMessages, stop } =
     useChat<AIMessage>({
       onError: (error: Error) => {
+        // Parse the error message to check for credit exhaustion
+        try {
+          const errorData = JSON.parse(error.message);
+          if (errorData.creditsExhausted) {
+            setCreditsExhausted(true);
+            queryClient.invalidateQueries({ queryKey: ["ai-credits"] });
+            return;
+          }
+        } catch {
+          // Not a JSON error, show generic toast
+        }
         toast.error(`Failed to send message: ${error.message}`);
+      },
+      onFinish: () => {
+        // Invalidate AI credits query when AI completes a task
+        queryClient.invalidateQueries({ queryKey: ["ai-credits"] });
       },
     });
   const [input, setInput] = useState<string>("");
-  const [bannerDismissed, setBannerDismissed] = useState(false);
-  const params = useParams<{ workspace: string }>();
-  const { activeWorkspace } = useWorkspace();
 
   const isPro = activeWorkspace?.subscription?.plan === "pro";
 
@@ -110,9 +139,45 @@ export function PageClient() {
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-background">
       <div className="relative flex-1 overflow-hidden">
         <ScrollArea className="h-full px-4 py-6" ref={scrollRef}>
-          <div className="mx-auto max-w-3xl space-y-8 pb-32 px-4">
-            {/* AI Credit Limit Banner */}
-            <CreditLimitBanner />
+          <div className="mx-auto max-w-3xl space-y-8 px-4 pb-32">
+            {/* Credits Exhausted Full UI */}
+            {creditsExhausted && (
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+              >
+                <Alert className="border-destructive/50 bg-destructive/10">
+                  <WarningIcon
+                    className="h-5 w-5 text-destructive"
+                    weight="fill"
+                  />
+                  <AlertTitle className="font-semibold text-destructive">
+                    AI Credits Exhausted
+                  </AlertTitle>
+                  <AlertDescription className="mt-2 space-y-3">
+                    <p className="text-muted-foreground text-sm">
+                      You've used all your AI credits for this billing period.
+                      Upgrade your plan to continue creating content with AI.
+                    </p>
+                    <div className="flex gap-2">
+                      <Button asChild size="sm">
+                        <Link href={`/${params.workspace}/settings/billing`}>
+                          <CrownIcon className="mr-2 h-4 w-4" />
+                          Upgrade Plan
+                        </Link>
+                      </Button>
+                      <Button
+                        onClick={() => setCreditsExhausted(false)}
+                        size="sm"
+                        variant="outline"
+                      >
+                        Dismiss
+                      </Button>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              </motion.div>
+            )}
 
             <AnimatePresence initial={false}>
               {messages.length === 0 && (
@@ -284,12 +349,14 @@ export function PageClient() {
             </Suggestions>
             <PromptInputProvider>
               <PromptInputForm
+                creditsExhausted={creditsExhausted}
                 input={input}
                 isStreaming={status === "streaming"}
                 onClearChat={handleClearChat}
                 sendMessage={sendMessage}
                 setInput={setInput}
                 stop={stop}
+                workspaceSlug={params.workspace}
               />
             </PromptInputProvider>
           </div>
@@ -306,6 +373,8 @@ interface PromptInputFormProps {
   input: string;
   setInput: (value: string) => void;
   onClearChat: () => Promise<void>;
+  creditsExhausted: boolean;
+  workspaceSlug: string;
 }
 
 function PromptInputForm({
@@ -315,6 +384,8 @@ function PromptInputForm({
   input,
   setInput,
   onClearChat,
+  creditsExhausted,
+  workspaceSlug,
 }: PromptInputFormProps) {
   const [isClearing, setIsClearing] = useState(false);
 
@@ -329,6 +400,26 @@ function PromptInputForm({
       setIsClearing(false);
     }
   };
+
+  // Show upgrade prompt when credits are exhausted
+  if (creditsExhausted) {
+    return (
+      <div className="flex items-center justify-between gap-4 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <WarningIcon className="h-5 w-5 text-destructive" weight="fill" />
+          <span className="text-muted-foreground text-sm">
+            AI credits exhausted. Upgrade to continue.
+          </span>
+        </div>
+        <Button asChild size="sm">
+          <Link href={`/${workspaceSlug}/settings/billing`}>
+            <CrownIcon className="mr-2 h-4 w-4" />
+            Upgrade
+          </Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <PromptInput
