@@ -18,7 +18,7 @@ export type PlanLimits = {
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   free: {
     maxMembers: 2,
-    maxMediaStorage: 1024, // 1GB
+    maxMediaStorage: 5120, // 5GB
     maxApiRequests: 10_000,
     maxWebhookEvents: 0,
     aiCreditsPerMonth: 100,
@@ -32,7 +32,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   },
   pro: {
     maxMembers: 5,
-    maxMediaStorage: 10_240, // 10GB
+    maxMediaStorage: 51_200, // 50GB
     maxApiRequests: 50_000,
     maxWebhookEvents: 50,
     aiCreditsPerMonth: 1000,
@@ -46,7 +46,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   },
   team: {
     maxMembers: 10,
-    maxMediaStorage: 5120, // 5GB (kept for backward compatibility)
+    maxMediaStorage: 51_200, // 50GB
     maxApiRequests: -1, // unlimited
     maxWebhookEvents: 100,
     aiCreditsPerMonth: 10_000,
@@ -60,7 +60,7 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   },
   premium: {
     maxMembers: 10,
-    maxMediaStorage: 102_400, // 100GB
+    maxMediaStorage: 256_000, // 250GB
     maxApiRequests: -1, // unlimited
     maxWebhookEvents: 100,
     aiCreditsPerMonth: 10_000,

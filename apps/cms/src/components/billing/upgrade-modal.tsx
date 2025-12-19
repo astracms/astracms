@@ -117,9 +117,9 @@ export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
     >
       <DialogContent className="max-h-[700px] overflow-y-auto rounded-[20px] bg-sidebar p-2 sm:max-w-4xl">
         <DialogHeader className="sr-only">
-          <DialogTitle>Upgrade Plan</DialogTitle>
+          <DialogTitle>Start 7-Day Free Trial</DialogTitle>
           <DialogDescription>
-            Upgrade your workspace to the pro plan.
+            Start your 7-day free trial and unlock all features.
           </DialogDescription>
         </DialogHeader>
         <section className="grid grid-cols-10 gap-2">

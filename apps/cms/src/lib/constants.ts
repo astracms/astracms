@@ -32,7 +32,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     },
     features: [
       "Unlimited posts",
-      "1GB media storage",
+      "5GB media storage",
       "2 team members",
       "10k API requests per month",
       "100 AI credits per month",
@@ -52,7 +52,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     },
     features: [
       "Unlimited posts",
-      "10GB media storage",
+      "50GB media storage",
       "5 team members",
       "1,000 AI credits per month",
       "Advanced readability insights",
@@ -74,7 +74,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     },
     features: [
       "Unlimited posts",
-      "100GB media storage",
+      "250GB media storage",
       "10 team members",
       "10,000 AI credits per month",
       "Full AI suite (readability + keyword optimization)",

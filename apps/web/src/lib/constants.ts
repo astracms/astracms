@@ -1,13 +1,7 @@
 import type { SvgComponent } from "astro/types";
-import Bounty from "@/components/icons/brand/Bounty.astro";
-import Databuddy from "@/components/icons/brand/Databuddy.astro";
-import Helix from "@/components/icons/brand/Helix.astro";
-import Ia from "@/components/icons/brand/Ia.astro";
-import Mantlz from "@/components/icons/brand/Mantlz.astro";
-import Opencut from "@/components/icons/brand/Opencut.astro";
-import Github from "@/components/icons/Github.astro";
-import X from "@/components/icons/X.astro";
-
+import Github from "../components/icons/Github.astro";
+import X from "../components/icons/X.astro";
+// import Discord from "../assets/icons/discord.svg";
 export type Site = {
   TITLE: string;
   DESCRIPTION: string;
@@ -103,7 +97,7 @@ export const PRICING: Pricing[] = [
     },
     features: [
       "Unlimited posts",
-      "1GB media storage",
+      "5GB media storage",
       "2 team members",
       "10k API requests per month",
       "100 AI credits per month",
@@ -122,7 +116,7 @@ export const PRICING: Pricing[] = [
     },
     features: [
       "Unlimited posts",
-      "10GB media storage",
+      "50GB media storage",
       "5 team members",
       "1,000 AI credits per month",
       "Advanced readability insights",
@@ -143,7 +137,7 @@ export const PRICING: Pricing[] = [
     },
     features: [
       "Unlimited posts",
-      "100GB media storage",
+      "250GB media storage",
       "10 team members",
       "10,000 AI credits per month",
       "Full AI suite (readability + keyword optimization)",
@@ -186,45 +180,6 @@ export const PRICING_FAQS: {
     question: "What happens when I downgrade my plan?",
     answer:
       "When you downgrade, you'll retain access to paid features until the end of your current billing cycle. Afterward, your workspace will be moved to the Free plan, and some features may become unavailable.",
-  },
-];
-
-export const USERS = [
-  {
-    name: "I.A",
-    url: "https://independent-arts.org",
-    component: Ia,
-    showWordmark: true,
-  },
-  {
-    name: "OpenCut",
-    url: "https://opencut.app",
-    component: Opencut,
-    showWordmark: true,
-  },
-  {
-    name: "Mantlz",
-    url: "https://mantlz.com",
-    component: Mantlz,
-    showWordmark: true,
-  },
-  {
-    name: "Bounty",
-    url: "https://bounty.new",
-    component: Bounty,
-    showWordmark: false,
-  },
-  {
-    name: "Helix DB",
-    url: "https://www.helix-db.com",
-    component: Helix,
-    showWordmark: true,
-  },
-  {
-    name: "Databuddy",
-    url: "https://databuddy.cc",
-    component: Databuddy,
-    showWordmark: true,
   },
 ];
 

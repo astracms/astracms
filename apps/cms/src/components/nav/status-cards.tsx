@@ -197,7 +197,7 @@ export function StatusCards() {
           <div className="space-y-3 border-sidebar-border border-t pt-4">
             <div className="space-y-1">
               <h3 className="font-semibold text-card-foreground text-sm">
-                Upgrade to Pro
+                Start 7-Day Free Trial
               </h3>
               <p className="text-muted-foreground text-xs">
                 Get unlimited access to all features
@@ -209,7 +209,7 @@ export function StatusCards() {
               size="sm"
             >
               <CrownIcon className="h-4 w-4" />
-              Upgrade Now
+              Start Free Trial
             </Button>
           </div>
         )}
@@ -219,7 +219,7 @@ export function StatusCards() {
           <div className="space-y-3 border-sidebar-border border-t pt-4">
             <div className="space-y-1">
               <h3 className="font-semibold text-card-foreground text-sm">
-                Upgrade to Premium
+                Start 7-Day Free Trial
               </h3>
               <p className="text-muted-foreground text-xs">
                 Get unlimited API requests and more
@@ -231,7 +231,7 @@ export function StatusCards() {
               size="sm"
             >
               <CrownIcon className="h-4 w-4" />
-              Upgrade to Premium
+              Start Free Trial
             </Button>
           </div>
         )}

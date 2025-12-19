@@ -313,9 +313,7 @@ function PageClient() {
                       >
                         {plan.id === "free"
                           ? "Downgrade to Hobby"
-                          : plan.id === "premium"
-                            ? "Upgrade to Premium"
-                            : "Upgrade to Pro"}
+                          : "Start 7-Day Free Trial"}
                       </AsyncButton>
                     )}
                   </CardFooter>
