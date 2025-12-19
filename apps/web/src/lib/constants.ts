@@ -125,7 +125,7 @@ export const PRICING: Pricing[] = [
     ],
     button: {
       href: "https://app.astracms.dev",
-      label: "Get Started",
+      label: "Start 7 day free trial",
     },
   },
   {
@@ -147,7 +147,7 @@ export const PRICING: Pricing[] = [
     ],
     button: {
       href: "https://app.astracms.dev",
-      label: "Get Started",
+      label: "Start 7 day free trial",
     },
   },
 ];
