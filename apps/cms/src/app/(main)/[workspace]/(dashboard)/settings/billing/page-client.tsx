@@ -308,9 +308,7 @@ function PageClient() {
                         className="w-full cursor-pointer"
                         isLoading={checkoutLoading === plan.id}
                         onClick={() =>
-                          handleCheckout(
-                            plan.id as "pro" | "free" | "premium"
-                          )
+                          handleCheckout(plan.id as "pro" | "free" | "premium")
                         }
                       >
                         {plan.id === "free"

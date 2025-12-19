@@ -20,16 +20,8 @@ import {
 } from "@astra/ui/components/ai-elements/suggestion";
 import { Button } from "@astra/ui/components/button";
 import { ScrollArea } from "@astra/ui/components/scroll-area";
-import {
-  ArrowRightIcon,
-  ArrowUpIcon,
-  SparkleIcon,
-  StopIcon,
-  TrashIcon,
-  XIcon,
-} from "@phosphor-icons/react";
+import { ArrowUpIcon, StopIcon, TrashIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -44,6 +36,7 @@ import {
   SearchView,
   WebSearchView,
 } from "@/components/agent/tool-views";
+import { CreditLimitBanner } from "@/components/ai/credit-limit-banner";
 import AstraIcon from "@/components/icons/astra";
 import { useWorkspace } from "@/providers/workspace";
 
@@ -69,20 +62,6 @@ export function PageClient() {
   const { activeWorkspace } = useWorkspace();
 
   const isPro = activeWorkspace?.subscription?.plan === "pro";
-
-  const handleClearChat = async () => {
-    try {
-      const res = await fetch("/api/chat/clear", { method: "DELETE" });
-      if (res.ok) {
-        setMessages([]);
-        toast.success("Chat cleared");
-      } else {
-        toast.error("Failed to clear chat");
-      }
-    } catch {
-      toast.error("Failed to clear chat");
-    }
-  };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -113,79 +92,28 @@ export function PageClient() {
     setInput(suggestionValue);
   };
 
-  // Show welcome page for free users
-  if (!isPro) {
-    return (
-      <div className="flex h-[calc(100vh-4rem)] flex-col bg-background pb-6">
-        <div className="flex h-full flex-col justify-center">
-          {/* Header with Logo */}
-          <div className="-mt-20 mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-            <div className="mb-4 flex items-center justify-center">
-              <AstraIcon />
-            </div>
-
-            <h1 className="font-bold text-3xl text-foreground sm:text-4xl">
-              Welcome to Astra AI
-            </h1>
-            <p className="mt-3 text-muted-foreground">
-              Your AI-powered copilot for content creation
-            </p>
-          </div>
-
-          {/* Disabled Search Input */}
-          <div className="mx-auto mt-10 w-full max-w-2xl px-4 sm:px-6 lg:px-8">
-            <div className="relative">
-              <input
-                className="block w-full cursor-not-allowed rounded-full border border-border bg-muted/50 p-3 text-muted-foreground text-sm opacity-60 placeholder:text-muted-foreground/60 sm:p-4"
-                disabled
-                placeholder="Ask me anything..."
-                type="text"
-              />
-              <div className="-translate-y-1/2 absolute end-2 top-1/2 flex gap-1">
-                <Button
-                  className="cursor-not-allowed rounded-full transition-all hover:scale-105 active:scale-95"
-                  size="icon"
-                  title="ai feature"
-                  type="button"
-                >
-                  <ArrowUpIcon className="size-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Upgrade CTA */}
-          <div className="mx-auto mt-8 w-full max-w-2xl px-4 text-center sm:px-6 lg:px-8">
-            <div className="rounded-xl border bg-card p-6">
-              <div className="flex items-center justify-center gap-2">
-                <SparkleIcon className="size-5 text-primary" weight="fill" />
-                <span className="font-medium text-foreground">
-                  Astra AI is a Pro feature
-                </span>
-              </div>
-              <p className="mt-2 text-muted-foreground text-sm">
-                Unlock unlimited AI-powered content creation, automated blog
-                posts, and intelligent suggestions.
-              </p>
-              <Link
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 font-semibold text-primary-foreground text-sm transition-colors hover:bg-primary/90"
-                href={`/${params.workspace}/settings/billing`}
-              >
-                Start 7-day free trial
-                <ArrowRightIcon className="size-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleClearChat = async () => {
+    try {
+      const res = await fetch("/api/chat/clear", { method: "DELETE" });
+      if (res.ok) {
+        setMessages([]);
+        toast.success("Chat cleared");
+      } else {
+        toast.error("Failed to clear chat");
+      }
+    } catch {
+      toast.error("Failed to clear chat");
+    }
+  };
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-background">
       <div className="relative flex-1 overflow-hidden">
         <ScrollArea className="h-full px-4 py-6" ref={scrollRef}>
           <div className="mx-auto max-w-3xl space-y-8 pb-32">
+            {/* AI Credit Limit Banner */}
+            <CreditLimitBanner />
+
             <AnimatePresence initial={false}>
               {messages.length === 0 && (
                 <motion.div

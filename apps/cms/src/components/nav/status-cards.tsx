@@ -23,7 +23,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UpgradeModal } from "@/components/billing/upgrade-modal";
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { PLAN_LIMITS, type PlanType } from "@/lib/plans";
@@ -46,7 +46,7 @@ export function StatusCards() {
   const isProPlan = currentPlan === "pro";
   const isPremiumPlan = currentPlan === "premium" || currentPlan === "team";
 
-  const { data } = useQuery({
+  const { data, refetch: refetchUsage } = useQuery({
     queryKey: workspaceId
       ? QUERY_KEYS.USAGE_DASHBOARD(workspaceId)
       : ["usage-dashboard", "disabled"],
@@ -58,8 +58,34 @@ export function StatusCards() {
       return response.json();
     },
     enabled: Boolean(workspaceId),
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 2, // Reduced to 2 minutes
+    refetchOnMount: true, // Always refetch on mount
   });
+
+  // Fetch AI credit usage
+  const { data: aiCredits, refetch: refetchCredits } = useQuery({
+    queryKey: workspaceId
+      ? ["ai-credits", workspaceId]
+      : ["ai-credits", "disabled"],
+    queryFn: async () => {
+      const response = await fetch("/api/metrics/ai-credits");
+      if (!response.ok) {
+        throw new Error("Failed to fetch AI credits");
+      }
+      return response.json();
+    },
+    enabled: Boolean(workspaceId),
+    staleTime: 1000 * 60 * 2, // Reduced to 2 minutes
+    refetchOnMount: true, // Always refetch on mount
+  });
+
+  // Refetch data when workspace changes
+  useEffect(() => {
+    if (workspaceId) {
+      refetchUsage();
+      refetchCredits();
+    }
+  }, [workspaceId, refetchUsage, refetchCredits]);
 
   if (isCollapsed) {
     return null;
@@ -68,6 +94,7 @@ export function StatusCards() {
   const mediaCount = data?.media?.total ?? 0;
   const apiUsageTotal = data?.api?.totals?.total ?? 0;
   const teamCount = activeWorkspace?.members?.length ?? 0;
+  const aiCreditsUsed = aiCredits?.used ?? 0;
 
   const usageStats = [
     {
@@ -82,7 +109,7 @@ export function StatusCards() {
     },
     {
       label: "AI Credits",
-      used: 0,
+      used: aiCreditsUsed,
       total: planLimits.aiCreditsPerMonth,
       color: "bg-purple-500",
       type: "number" as const,

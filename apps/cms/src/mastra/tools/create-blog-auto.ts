@@ -122,7 +122,10 @@ Requirements:
 - Include relevant keywords naturally
 - Make it specific and actionable
 
-Return ONLY the title, nothing else.`
+Return ONLY the title, nothing else.`,
+          workspaceId,
+          "blog-title-generation",
+          5
         );
 
         const title = (titleText.trim() || topic).slice(0, 100);
@@ -166,7 +169,10 @@ Return ONLY the title, nothing else.`
 Available categories:
 ${categoryList}
 
-Return ONLY the category slug, nothing else.`
+Return ONLY the category slug, nothing else.`,
+            workspaceId,
+            "blog-category-selection",
+            3
           );
 
           const suggestedSlug = categoryText
@@ -221,7 +227,10 @@ REQUIREMENTS:
 SEO:
 - Natural keyword incorporation (1-2% density)
 - Front-load keywords in first 100 words
-- Use descriptive headings
+- Use descriptive headings,
+          workspaceId,
+          "blog-content-generation",
+          50
 - Optimize for featured snippets
 
 Write the complete article now:`
@@ -239,7 +248,10 @@ Write the complete article now:`
           `Write an SEO-optimized meta description for a blog post titled "${title}" about "${topic}".
 
 CRITICAL:
-- EXACTLY 150-160 characters
+- EXACTLY 150-160 characters,
+          workspaceId,
+          "blog-description-generation",
+          5
 - Include primary keyword in first 80 characters
 - Use action verbs (Learn, Discover, Master, Get)
 - NO quotation marks
@@ -272,7 +284,10 @@ Requirements:
 - Mix of broad and specific tags
 - Use lowercase
 
-Return as comma-separated list, nothing else.`
+Return as comma-separated list, nothing else.`,
+          workspaceId,
+          "blog-tags-generation",
+          3
         );
 
         const tagNames = (tagsText || "")

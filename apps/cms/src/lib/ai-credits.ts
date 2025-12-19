@@ -1,4 +1,5 @@
 import { db } from "@astra/db";
+import { getWorkspacePlan, PLAN_LIMITS } from "./plans";
 
 /**
  * AI Tool Credit Costs (moderate tier: 10-100 credits per operation)
@@ -152,26 +153,37 @@ export async function checkAICreditAvailability(
       },
     });
 
-    if (!workspace?.subscription) {
+    // Get plan type and default limits from plan configuration
+    const planType = getWorkspacePlan(workspace?.subscription);
+    const planLimits = PLAN_LIMITS[planType];
+
+    // Check if plan has AI access
+    if (!planLimits.features.aiAccess) {
       return {
         hasCredits: false,
         availableCredits: 0,
         requiredCredits,
-        error:
-          "No active subscription. Upgrade to Pro or Premium for AI features.",
+        error: "AI features are not available on your current plan.",
       };
     }
 
-    const { subscription } = workspace;
-    const availableCredits =
-      subscription.aiCreditsLimit - subscription.aiCreditsUsed;
+    // Get used credits (0 if no subscription)
+    const usedCredits = workspace?.subscription?.aiCreditsUsed ?? 0;
+    // Use subscription limit if set, otherwise fall back to plan limits
+    const creditLimit =
+      workspace?.subscription?.aiCreditsLimit &&
+      workspace.subscription.aiCreditsLimit > 0
+        ? workspace.subscription.aiCreditsLimit
+        : planLimits.aiCreditsPerMonth;
+
+    const availableCredits = creditLimit - usedCredits;
 
     if (availableCredits < requiredCredits) {
       return {
         hasCredits: false,
-        availableCredits,
+        availableCredits: Math.max(0, availableCredits),
         requiredCredits,
-        error: `Insufficient credits. You have ${availableCredits} credits but need ${requiredCredits}.`,
+        error: `Insufficient credits. You have ${Math.max(0, availableCredits)} credits but need ${requiredCredits}.`,
       };
     }
 
@@ -226,17 +238,29 @@ export async function getAICreditStats(workspaceId: string): Promise<{
     },
   });
 
+  // Get plan type and default limits from plan configuration
+  const planType = getWorkspacePlan(workspace?.subscription);
+  const planLimits = PLAN_LIMITS[planType];
+
+  // If no subscription exists, use plan defaults (free plan has 100 credits)
   if (!workspace?.subscription) {
     return {
       used: 0,
-      limit: 0,
-      remaining: 0,
+      limit: planLimits.aiCreditsPerMonth,
+      remaining: planLimits.aiCreditsPerMonth,
       usagePercentage: 0,
-      canUseAI: false,
+      canUseAI:
+        planLimits.features.aiAccess && planLimits.aiCreditsPerMonth > 0,
     };
   }
 
-  const { aiCreditsUsed, aiCreditsLimit } = workspace.subscription;
+  const { aiCreditsUsed } = workspace.subscription;
+  // Use subscription limit if set, otherwise fall back to plan limits
+  const aiCreditsLimit =
+    workspace.subscription.aiCreditsLimit > 0
+      ? workspace.subscription.aiCreditsLimit
+      : planLimits.aiCreditsPerMonth;
+
   const remaining = Math.max(0, aiCreditsLimit - aiCreditsUsed);
   const usagePercentage =
     aiCreditsLimit > 0 ? (aiCreditsUsed / aiCreditsLimit) * 100 : 0;

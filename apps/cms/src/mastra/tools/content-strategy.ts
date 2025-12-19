@@ -192,7 +192,10 @@ Provide a strategic summary (3-5 sentences) covering:
 - Topic clustering strategy (how topics should relate)
 - Long-term content goals (3-6 month vision)
 
-Generate comprehensive content strategy now:`
+Generate comprehensive content strategy now:`,
+          workspaceId,
+          "content-strategy",
+          25
         );
 
         // Extract topic ideas

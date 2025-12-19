@@ -129,14 +129,6 @@ export function NavMain() {
             <Link href={`/${params.workspace}/${item.url}`}>
               <item.icon />
               <span>{item.name}</span>
-              {item.url === "agent" && !isPro && (
-                <Badge
-                  className="ml-auto px-1.5 py-0 text-[10px]"
-                  variant="premium"
-                >
-                  PRO
-                </Badge>
-              )}
             </Link>
           </SidebarMenuButton>
         ))}

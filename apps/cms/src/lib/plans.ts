@@ -21,10 +21,10 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     maxMediaStorage: 1024, // 1GB
     maxApiRequests: 10_000,
     maxWebhookEvents: 0,
-    aiCreditsPerMonth: 0,
+    aiCreditsPerMonth: 100,
     features: {
       inviteMembers: true,
-      aiAccess: false,
+      aiAccess: true,
       advancedReadability: false,
       keywordOptimization: false,
       unlimitedPosts: true,

@@ -123,7 +123,10 @@ Provide a concise strategic summary (3-4 sentences) on:
 - Content structure suggestions
 - SEO optimization tips
 
-Generate comprehensive keyword research now:`
+Generate comprehensive keyword research now:`,
+          undefined,
+          "keyword-research",
+          10
         );
 
         // Extract primary keywords

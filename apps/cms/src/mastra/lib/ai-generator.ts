@@ -6,16 +6,23 @@
  * dependency where tools need AI capabilities but can't access the agent.
  */
 import { Agent } from "@mastra/core/agent";
+import { consumeAICredits } from "@/lib/ai-credits";
 
 /**
  * Generate AI text content using a lightweight agent
  *
  * @param prompt - The prompt to send to the AI
+ * @param workspaceId - Workspace ID for credit tracking
+ * @param operation - Operation name for credit tracking (default: "ai-generation")
+ * @param creditCost - Credit cost override (default: 10 per generation)
  * @param model - Optional model override (default: grok-4-fast)
  * @returns Generated text content
  */
 export async function generateWithAI(
   prompt: string,
+  workspaceId?: string,
+  operation = "ai-generation",
+  creditCost = 10,
   model = "zenmux/x-ai/grok-4-fast"
 ): Promise<string> {
   // Create a lightweight agent just for generation
@@ -28,5 +35,26 @@ export async function generateWithAI(
   });
 
   const response = await agent.generate([{ role: "user", content: prompt }]);
+
+  // Track AI credit consumption if workspace ID is provided
+  if (workspaceId) {
+    const consumptionResult = await consumeAICredits(
+      workspaceId,
+      operation,
+      creditCost
+    );
+
+    if (consumptionResult.success) {
+      console.log(
+        `[AI CREDITS] Consumed ${creditCost} credits for ${operation}. Remaining: ${consumptionResult.remainingCredits}`
+      );
+    } else {
+      console.warn(
+        `[AI CREDITS] Failed to consume credits for ${operation}:`,
+        consumptionResult.error
+      );
+    }
+  }
+
   return response.text || "";
 }

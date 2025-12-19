@@ -106,7 +106,7 @@ export const PRICING: Pricing[] = [
       "1GB media storage",
       "2 team members",
       "10k API requests per month",
-      "No AI features",
+      "100 AI credits per month",
     ],
     button: {
       href: "https://app.astracms.dev",

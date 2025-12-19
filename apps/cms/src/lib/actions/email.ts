@@ -13,6 +13,7 @@ import { sendDevEmail } from "@/lib/email";
 import { getServerSession } from "../auth/session";
 
 const resendApiKey = process.env.RESEND_API_KEY;
+const resendAudienceId = process.env.RESEND_AUDIENCE_ID;
 const isDevelopment = process.env.NODE_ENV === "development";
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
@@ -200,8 +201,10 @@ export async function sendResetPasswordAction({
 
 export async function sendWelcomeEmailAction({
   userEmail,
+  userName,
 }: {
   userEmail: string;
+  userName?: string;
 }) {
   if (!resend && isDevelopment) {
     return sendDevEmail({
@@ -218,6 +221,7 @@ export async function sendWelcomeEmailAction({
   }
 
   try {
+    // Send welcome email
     await resend.emails.send({
       from: "AstraCMS <emails@mail.astracms.dev>",
       to: userEmail,
@@ -227,10 +231,50 @@ export async function sendWelcomeEmailAction({
       }),
     });
 
+    // Add user to Resend audience list
+    if (resendAudienceId) {
+      await addToResendAudience(userEmail, userName);
+    }
+
     return { message: "Email sent successfully" };
   } catch (error) {
     console.error("Detailed error sending email:", error);
     return { error: "Failed to send email", details: error };
+  }
+}
+
+/**
+ * Add a user to the Resend audience list
+ */
+export async function addToResendAudience(email: string, firstName?: string) {
+  if (!resend) {
+    console.warn("Resend API key not set, skipping audience addition");
+    return null;
+  }
+
+  if (!resendAudienceId) {
+    console.warn("Resend audience ID not set, skipping audience addition");
+    return null;
+  }
+
+  try {
+    const { data, error } = await resend.contacts.create({
+      audienceId: resendAudienceId,
+      email,
+      firstName,
+      unsubscribed: false,
+    });
+
+    if (error) {
+      console.error("Error adding contact to Resend audience:", error);
+      return null;
+    }
+
+    console.log("Successfully added contact to Resend audience:", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to add contact to Resend audience:", error);
+    return null;
   }
 }
 

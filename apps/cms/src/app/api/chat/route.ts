@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "AI features are not available on the free plan. Please upgrade to Pro or Premium to access AI capabilities.",
+          "AI features are not available on your current plan. Please upgrade to access AI capabilities.",
         upgrade: true,
       },
       { status: 403 }

@@ -35,7 +35,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       "1GB media storage",
       "2 team members",
       "10k API requests per month",
-      "No AI features",
+      "100 AI credits per month",
     ],
     button: {
       href: "https://app.astracms.dev",
@@ -150,6 +150,13 @@ export const WORKSPACE_SCOPED_PREFIXES = [
   "categories",
   "media",
   "webhooks",
+  "usage-dashboard",
+  "ai-credits",
+  "billing-usage",
+  "team",
+  "authors",
+  "api-keys",
+  "ai-readability-suggestions",
 ] as const;
 
 export type WorkspaceScopedPrefix = (typeof WORKSPACE_SCOPED_PREFIXES)[number];

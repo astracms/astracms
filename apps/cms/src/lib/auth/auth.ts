@@ -1,4 +1,5 @@
 import { db } from "@astra/db";
+import { PlanType, SubscriptionStatus } from "@astra/db/client";
 import { creem } from "@creem_io/better-auth";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
@@ -23,6 +24,7 @@ import {
 import { handleSubscriptionCreated } from "../creem/subscription.created";
 import { handleSubscriptionRevoked } from "../creem/subscription.revoked";
 import { handleSubscriptionUpdated } from "../creem/subscription.updated";
+import { getAICreditLimit } from "../plans";
 import { redis } from "../redis";
 
 export const auth = betterAuth({
@@ -170,7 +172,30 @@ export const auth = betterAuth({
       },
       organizationHooks: {
         afterCreateOrganization: async ({ organization, user }) => {
+          // Create author profile
           await createAuthor(user, organization);
+
+          // Create free subscription with AI credits
+          const now = new Date();
+          const oneYearFromNow = new Date(
+            now.getFullYear() + 1,
+            now.getMonth(),
+            now.getDate()
+          );
+
+          await db.subscription.create({
+            data: {
+              userId: user.id,
+              workspaceId: organization.id,
+              plan: PlanType.free,
+              status: SubscriptionStatus.active,
+              creemId: `free_${organization.id}`,
+              currentPeriodStart: now,
+              currentPeriodEnd: oneYearFromNow,
+              aiCreditsUsed: 0,
+              aiCreditsLimit: getAICreditLimit("free"),
+            },
+          });
         },
         afterAcceptInvitation: async ({ user, organization }) => {
           await createAuthor(user, organization);
@@ -215,6 +240,7 @@ export const auth = betterAuth({
           try {
             await sendWelcomeEmailAction({
               userEmail: newSession.user.email,
+              userName: newSession.user.name,
             });
           } catch (err) {
             console.error("Failed to send welcome email:", err);
