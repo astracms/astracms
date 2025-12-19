@@ -24,15 +24,19 @@ export async function generateWithAI(
   prompt: string,
   workspaceId?: string,
   operation = "ai-generation",
-  creditCost = 10,
-  model = "zenmux/x-ai/grok-4-fast"
+  creditCost = 10
 ): Promise<string> {
   try {
     // Create a lightweight agent just for generation
     // This doesn't need memory or complex configuration
     const agent = new Agent({
       name: "AI Generator",
-      model,
+      model: [
+        {
+          model: "zai/glm-4.6v-flash",
+          maxRetries: 3,
+        },
+      ],
       instructions:
         "You are a helpful AI assistant that generates content based on user prompts. Follow instructions precisely and provide high-quality, relevant output.",
     });

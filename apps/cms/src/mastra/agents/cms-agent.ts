@@ -150,7 +150,12 @@ export function createCMSAgent(context: CMSAgentContext) {
   return new Agent({
     name: "CMS Content Assistant",
     instructions: cmsAgentInstructions(context),
-    model: "zenmux/x-ai/grok-4-fast",
+    model: [
+      {
+        model: "zai/glm-4.6v-flash",
+        maxRetries: 3,
+      },
+    ],
     memory: new Memory({
       storage: new UpstashStore({
         url: env.REDIS_URL,

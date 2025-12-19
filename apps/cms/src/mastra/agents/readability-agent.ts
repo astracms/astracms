@@ -16,7 +16,12 @@ Each suggestion should have:
 - text: The main suggestion (1-2 sentences)
 - explanation: Brief explanation (optional)
 - textReference: Specific text from content to highlight (optional)`,
-    model: "zenmux/x-ai/grok-4-fast",
+    model: [
+      {
+        model: "zai/glm-4.6v-flash",
+        maxRetries: 3,
+      },
+    ],
   });
 }
 
