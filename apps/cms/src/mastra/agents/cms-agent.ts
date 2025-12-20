@@ -152,8 +152,12 @@ export function createCMSAgent(context: CMSAgentContext) {
     instructions: cmsAgentInstructions(context),
     model: [
       {
-        model: "zai/glm-4.6v-flash",
-        maxRetries: 3,
+        model: "zenmux/z-ai/glm-4.6v-flash",
+        maxRetries: 1,
+      },
+      {
+        model: "zenmux/x-ai/grok-4-fast",
+        maxRetries: 1,
       },
     ],
     memory: new Memory({
