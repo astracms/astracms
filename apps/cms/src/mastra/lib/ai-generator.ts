@@ -33,10 +33,6 @@ export async function generateWithAI(
       name: "AI Generator",
       model: [
         {
-          model: "zenmux/z-ai/glm-4.6v-flash",
-          maxRetries: 1,
-        },
-        {
           model: "zenmux/x-ai/grok-4-fast",
           maxRetries: 1,
         },
