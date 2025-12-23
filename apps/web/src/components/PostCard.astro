@@ -27,6 +27,8 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
         src={coverImage || "/og-blog.jpg"}
         alt={title}
         loading="eager"
+        width={400}
+        height={300}
         inferSize
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
       />

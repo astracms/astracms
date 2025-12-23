@@ -46,6 +46,8 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
               src={(authors && authors[0].image) || "/og-blog.jpg"}
               alt={(authors && authors[0].name) || ""}
               class="size-7 rounded-full"
+        width={400}
+        height={300}
               inferSize
             />
             <p class="text-muted-foreground text-sm">
