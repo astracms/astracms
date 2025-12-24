@@ -61,6 +61,7 @@ model Organization {
   ShareLink         ShareLink[]
   usageEvents       UsageEvent[]
   apiKeys           ApiKey[]
+  aiKnowledgeBase   AiKnowledgeBase?
 
   @@map("workspace")
 }
@@ -81,6 +82,48 @@ model Ai {
   editorPreferences   EditorPreferences @relation(fields: [editorPreferencesId], references: [id], onDelete: Cascade)
 
   @@map("ai")
+}
+
+model AiKnowledgeBase {
+  id          String  @id @default(cuid())
+  workspaceId String  @unique
+
+  // Website Information
+  websiteUrl      String?
+  websiteAnalysis Json? // Extracted context from website analysis
+
+  // Industry & Niche
+  industry String?
+  niche    String?
+
+  // Target Audience
+  targetAudience Json? // { demographics, interests, painPoints, goals }
+
+  // Content Preferences
+  writingTone       String? // professional, casual, friendly, authoritative, educational
+  brandVoice        String? // Custom brand voice description
+  contentGuidelines String? // Specific guidelines for content
+
+  // SEO & Keywords
+  targetKeywords String[] // Primary target keywords
+  keywordThemes  Json? // { theme: [keywords] } for topic clusters
+
+  // Competitors
+  competitors Json? // [{ name, url, notes }]
+
+  // Extensible custom fields
+  customFields Json? // [{ key, value }] for user-defined data
+
+  // Onboarding Status
+  onboardingCompleted Boolean @default(false)
+  onboardingStep      Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspace Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("ai_knowledge_base")
 }
 
 model Post {

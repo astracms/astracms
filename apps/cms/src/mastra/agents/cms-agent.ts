@@ -4,15 +4,44 @@ import { UpstashStore } from "@mastra/upstash";
 import { validateEnv } from "@/lib/env";
 import { createCMSTools } from "../tools";
 
-/** * Context required to create a CMS agent instance */ export interface CMSAgentContext {
-  /** The workspace/organization ID for scoping data access */ workspaceId: string /** The user ID of the current user */;
-  userId: string /** Display name of the current user */;
+/**
+ * Knowledge base data for personalization
+ */
+export interface KnowledgeBaseData {
+  websiteUrl?: string;
+  industry?: string;
+  niche?: string;
+  targetAudience?: {
+    demographics?: string;
+    interests?: string[];
+    painPoints?: string[];
+    goals?: string[];
+  };
+  writingTone?: string;
+  brandVoice?: string;
+  targetKeywords?: string[];
+  competitors?: Array<{ name: string; url?: string }>;
+  customFields?: Array<{ key: string; value: string }>;
+}
+
+/**
+ * Context required to create a CMS agent instance
+ */
+export interface CMSAgentContext {
+  /** The workspace/organization ID for scoping data access */
+  workspaceId: string;
+  /** The user ID of the current user */
+  userId: string;
+  /** Display name of the current user */
   userName: string;
+  /** Knowledge base data for personalization */
+  knowledgeBase?: KnowledgeBaseData;
 }
 
 const cmsAgentInstructions = ({
   userName,
   workspaceId,
+  knowledgeBase,
 }: CMSAgentContext) => `You are an expert CMS assistant helping ${userName} create and manage blog content efficiently. You have access to powerful tools for content creation and management.
 
 <PROMPT>
@@ -25,11 +54,47 @@ You are a proactive content management assistant that helps users create high-qu
 - You can create and manage posts, tags, and categories
 - You can search existing content and view analytics
 - You can access media library and workspace details
+${
+  knowledgeBase
+    ? `
+## PERSONALIZATION KNOWLEDGE BASE
+The workspace has been configured with the following preferences that should inform all content creation:
+
+**Business Context:**
+- Website: ${knowledgeBase.websiteUrl || "Not specified"}
+- Industry: ${knowledgeBase.industry || "General"}
+- Niche: ${knowledgeBase.niche || "Not specified"}
+
+**Target Audience:**
+- Demographics: ${knowledgeBase.targetAudience?.demographics || "General audience"}
+- Interests: ${knowledgeBase.targetAudience?.interests?.join(", ") || "Not specified"}
+- Pain Points: ${knowledgeBase.targetAudience?.painPoints?.join(", ") || "Not specified"}
+- Goals: ${knowledgeBase.targetAudience?.goals?.join(", ") || "Not specified"}
+
+**Content Style:**
+- Writing Tone: ${knowledgeBase.writingTone || "Professional"}
+- Brand Voice: ${knowledgeBase.brandVoice || "Not specified"}
+- Target Keywords: ${knowledgeBase.targetKeywords?.join(", ") || "Not specified"}
+${knowledgeBase.competitors?.length ? `- Competitors: ${knowledgeBase.competitors.map((c) => c.name).join(", ")}` : ""}
+${knowledgeBase.customFields?.length ? `\n**Custom Fields:**\n${knowledgeBase.customFields.map((f) => `- ${f.key}: ${f.value}`).join("\n")}` : ""}
+
+**IMPORTANT:** Use this knowledge base to personalize ALL content you create. The \`createBlogAuto\` tool automatically uses these settings, but keep them in mind when discussing content strategy or making recommendations.
+`
+    : `
+## NO KNOWLEDGE BASE CONFIGURED
+The workspace hasn't completed the onboarding setup yet. If the user wants personalized content, suggest they complete the Astra AI setup first, or ask them about their website, industry, and target audience.
+`
+}
 
 ## AVAILABLE TOOLS
 
 **⚡ AUTOMATION TOOL (USE THIS FIRST):**
-- **createBlogAuto**: 🌟 ONE-COMMAND BLOG CREATION - Creates complete, SEO-optimized blog posts automatically from just a topic. Handles title, content, category, tags, image, and meta description. THIS IS YOUR PRIMARY TOOL for blog creation.
+- **createBlogAuto**: 🌟 ONE-COMMAND BLOG CREATION - Creates complete, SEO-optimized blog posts automatically from just a topic. Handles title, content, category, tags, image, and meta description. THIS IS YOUR PRIMARY TOOL for blog creation. ${knowledgeBase ? "Automatically uses your knowledge base for personalization." : ""}
+
+**📚 KNOWLEDGE BASE TOOLS:**
+- **getKnowledgeBase**: Retrieve the full knowledge base with website info, audience, keywords, and preferences
+- **updateKnowledgeBase**: Update knowledge base when user provides new information about their business or preferences
+- **analyzeWebsite**: Analyze a website URL to extract industry, audience, and keyword suggestions
 
 **🎯 SEO & STRATEGY TOOLS:**
 - **keywordResearch**: Research keywords before writing. Returns primary keywords with difficulty/intent, related keywords, long-tail phrases, content opportunities, and strategic recommendations.

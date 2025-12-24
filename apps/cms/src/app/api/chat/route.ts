@@ -63,6 +63,23 @@ export async function POST(req: Request) {
 
   const { messages } = await req.json();
 
+  // Fetch knowledge base for personalization
+  const knowledgeBase = await db.aiKnowledgeBase.findUnique({
+    where: { workspaceId: sessionData.session.activeOrganizationId },
+    select: {
+      websiteUrl: true,
+      industry: true,
+      niche: true,
+      targetAudience: true,
+      writingTone: true,
+      brandVoice: true,
+      targetKeywords: true,
+      competitors: true,
+      customFields: true,
+      onboardingCompleted: true,
+    },
+  });
+
   // Create agent with user context and error handling
   console.log(
     "[CMS AGENT] Creating agent for workspace:",
@@ -70,6 +87,10 @@ export async function POST(req: Request) {
   );
   console.log("[CMS AGENT] User:", sessionData.user.name, sessionData.user.id);
   console.log("[CMS AGENT] Messages count:", messages.length);
+  console.log(
+    "[CMS AGENT] Knowledge base:",
+    knowledgeBase ? "loaded" : "not configured"
+  );
 
   let cmsAgent: CMSAgent;
   try {
@@ -77,6 +98,36 @@ export async function POST(req: Request) {
       workspaceId: sessionData.session.activeOrganizationId,
       userId: sessionData.user.id,
       userName: sessionData.user.name ?? "User",
+      knowledgeBase: knowledgeBase
+        ? {
+            websiteUrl: knowledgeBase.websiteUrl ?? undefined,
+            industry: knowledgeBase.industry ?? undefined,
+            niche: knowledgeBase.niche ?? undefined,
+            targetAudience: knowledgeBase.targetAudience as
+              | {
+                  demographics?: string;
+                  interests?: string[];
+                  painPoints?: string[];
+                  goals?: string[];
+                }
+              | undefined,
+            writingTone: knowledgeBase.writingTone ?? undefined,
+            brandVoice: knowledgeBase.brandVoice ?? undefined,
+            targetKeywords: knowledgeBase.targetKeywords,
+            competitors: knowledgeBase.competitors as
+              | Array<{
+                  name: string;
+                  url?: string;
+                }>
+              | undefined,
+            customFields: knowledgeBase.customFields as
+              | Array<{
+                  key: string;
+                  value: string;
+                }>
+              | undefined,
+          }
+        : undefined,
     });
   } catch (error) {
     console.error("[CMS AGENT] Failed to create agent:", error);

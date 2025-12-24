@@ -39,6 +39,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { OnboardingWizard } from "@/components/agent/onboarding/onboarding-wizard";
 import {
   AddCategoryView,
   AddTagView,
@@ -65,6 +66,8 @@ const SUGGESTIONS = [
 export function PageClient() {
   const queryClient = useQueryClient();
   const [creditsExhausted, setCreditsExhausted] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingLoading, setOnboardingLoading] = useState(true);
   const params = useParams<{ workspace: string }>();
   const { activeWorkspace } = useWorkspace();
 
@@ -94,13 +97,15 @@ export function PageClient() {
                 duration: 7000,
                 action: {
                   label: "Upgrade",
-                  onClick: () => window.location.href = `/${params.workspace}/settings/billing`
-                }
+                  onClick: () => {
+                    window.location.href = `/${params.workspace}/settings/billing`;
+                  },
+                },
               });
             } else if (errorData.canRetry) {
               toast.error(errorMessage, {
                 duration: 5000,
-                description: "Please try again in a moment."
+                description: "Please try again in a moment.",
               });
             } else {
               toast.error(errorMessage, { duration: 7000 });
@@ -145,6 +150,23 @@ export function PageClient() {
     fetchMessages();
   }, [setMessages]);
 
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      try {
+        const res = await fetch("/api/ai/onboarding");
+        if (res.ok) {
+          const data = await res.json();
+          setShowOnboarding(!data.onboardingCompleted);
+        }
+      } catch (error) {
+        console.error("Failed to check onboarding status:", error);
+      } finally {
+        setOnboardingLoading(false);
+      }
+    };
+    checkOnboarding();
+  }, []);
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -170,6 +192,30 @@ export function PageClient() {
       toast.error("Failed to clear chat");
     }
   };
+
+  // Show onboarding wizard if not completed
+  if (showOnboarding) {
+    return (
+      <OnboardingWizard
+        onComplete={() => {
+          setShowOnboarding(false);
+          queryClient.invalidateQueries({ queryKey: ["ai-knowledge-base"] });
+        }}
+      />
+    );
+  }
+
+  // Show loading while checking onboarding
+  if (onboardingLoading) {
+    return (
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center bg-background">
+        <div className="flex items-center gap-2">
+          <Loader className="text-primary" size={20} />
+          <span className="text-muted-foreground">Loading Astra AI...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col overflow-hidden bg-background">

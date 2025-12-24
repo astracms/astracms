@@ -3,6 +3,7 @@
  *
  * Automatically creates a complete, SEO-optimized blog post from just a topic.
  * Handles title, content, category, tags, image, and meta description automatically.
+ * Uses the workspace's AI Knowledge Base for personalization when available.
  */
 import { db } from "@astra/db";
 import { markdownToHtml, markdownToTiptap } from "@astra/parser/tiptap";
@@ -12,21 +13,45 @@ import { sanitizeHtml } from "@/utils/editor";
 import { generateWithAI } from "../lib/ai-generator";
 
 /**
+ * Knowledge base context for content personalization
+ */
+interface KnowledgeBaseContext {
+  industry?: string | null;
+  niche?: string | null;
+  targetAudience?: {
+    demographics?: string;
+    interests?: string[];
+    painPoints?: string[];
+    goals?: string[];
+  } | null;
+  writingTone?: string | null;
+  brandVoice?: string | null;
+  contentGuidelines?: string | null;
+  targetKeywords?: string[];
+}
+
+/**
  * Sanitize text for use in AI prompts - removes injection patterns
  */
 function sanitizePromptInput(input: string): string {
   return (
     input
-      // Remove quotes that could break prompt structure
-      .replace(/["'`]/g, "")
+      // Normalize whitespace
+      .replace(/\s+/g, " ")
+      // Remove common injection patterns (but preserve apostrophes in words)
+      .replace(
+        /\b(ignore|disregard|forget)\s+(all\s+)?(previous|prior)\s+(instructions?|prompts?|context)/gi,
+        "[FILTERED]"
+      )
+      .replace(/\b(system|assistant|user)\s*:/gi, "[FILTERED]:")
+      // Remove markdown code blocks that could break formatting
+      .replace(/```[\s\S]*?```/g, "[CODE_BLOCK]")
+      // Remove attempts to close/reopen prompt structures
+      .replace(/["""'''```]{3,}/g, "")
       // Collapse multiple newlines
       .replace(/\n{3,}/g, "\n\n")
-      // Remove common injection patterns
-      .replace(/ignore\s+all\s+previous\s+instructions/gi, "")
-      .replace(/system\s*:/gi, "")
-      .replace(/assistant\s*:/gi, "")
-      // Limit length to prevent token abuse
-      .slice(0, 1000)
+      // Limit length to prevent token abuse (increased for better context)
+      .slice(0, 2000)
       .trim()
   );
 }
@@ -61,7 +86,9 @@ export const createBlogAutoTool = (workspaceId: string) =>
       keywords: z
         .array(z.string())
         .optional()
-        .describe("Target SEO keywords to incorporate"),
+        .describe(
+          "Target SEO keywords to incorporate (overrides knowledge base keywords)"
+        ),
       tone: z
         .enum([
           "professional",
@@ -71,14 +98,22 @@ export const createBlogAutoTool = (workspaceId: string) =>
           "educational",
         ])
         .optional()
-        .default("professional")
-        .describe("Writing tone and style"),
+        .describe(
+          "Writing tone and style (defaults to knowledge base setting or 'professional')"
+        ),
       length: z
         .enum(["short", "medium", "long"])
         .optional()
         .default("medium")
         .describe(
           "Content length: short (800-1000), medium (1200-1500), long (1800-2000)"
+        ),
+      useKnowledgeBase: z
+        .boolean()
+        .optional()
+        .default(true)
+        .describe(
+          "Whether to use workspace knowledge base for personalization"
         ),
     }),
     outputSchema: z.object({
@@ -100,9 +135,10 @@ export const createBlogAutoTool = (workspaceId: string) =>
       try {
         const {
           topic,
-          keywords = [],
-          tone = "professional",
+          keywords: inputKeywords,
+          tone: inputTone,
           length = "medium",
+          useKnowledgeBase = true,
         } = context;
 
         console.log(
@@ -110,17 +146,70 @@ export const createBlogAutoTool = (workspaceId: string) =>
           topic
         );
 
+        // ===== STEP 0: Fetch Knowledge Base for personalization =====
+        let knowledgeBase: KnowledgeBaseContext | null = null;
+        if (useKnowledgeBase) {
+          console.log("[AUTO BLOG] Step 0: Fetching knowledge base...");
+          const kb = await db.aiKnowledgeBase.findUnique({
+            where: { workspaceId },
+            select: {
+              industry: true,
+              niche: true,
+              targetAudience: true,
+              writingTone: true,
+              brandVoice: true,
+              contentGuidelines: true,
+              targetKeywords: true,
+            },
+          });
+          if (kb) {
+            knowledgeBase = {
+              ...kb,
+              targetAudience:
+                kb.targetAudience as KnowledgeBaseContext["targetAudience"],
+            };
+            console.log("[AUTO BLOG] Knowledge base loaded:", {
+              industry: knowledgeBase.industry,
+              tone: knowledgeBase.writingTone,
+              keywordsCount: knowledgeBase.targetKeywords?.length ?? 0,
+            });
+          } else {
+            console.log("[AUTO BLOG] No knowledge base found, using defaults");
+          }
+        }
+
+        // Use knowledge base values as defaults, allow overrides from input
+        const keywords = inputKeywords ?? knowledgeBase?.targetKeywords ?? [];
+        const tone =
+          inputTone ??
+          (knowledgeBase?.writingTone as typeof inputTone) ??
+          "professional";
+
+        // Build personalization context for prompts
+        const personalizationContext = knowledgeBase
+          ? `
+BRAND CONTEXT:
+- Industry: ${knowledgeBase.industry || "General"}
+- Niche: ${knowledgeBase.niche || "Not specified"}
+- Target Audience: ${knowledgeBase.targetAudience?.demographics || "General audience"}
+- Audience Interests: ${knowledgeBase.targetAudience?.interests?.join(", ") || "Not specified"}
+- Audience Pain Points: ${knowledgeBase.targetAudience?.painPoints?.join(", ") || "Not specified"}
+- Brand Voice: ${knowledgeBase.brandVoice || "Professional and informative"}
+${knowledgeBase.contentGuidelines ? `- Content Guidelines: ${knowledgeBase.contentGuidelines}` : ""}`
+          : "";
+
         // ===== STEP 1: Generate Title =====
         console.log("[AUTO BLOG] Step 1: Generating title...");
         const sanitizedTopic = sanitizePromptInput(topic);
         const titleText = await generateWithAI(
           `Generate ONE compelling, SEO-optimized blog post title for: "${sanitizedTopic}"
-
+${personalizationContext}
 Requirements:
 - Use power words (discover, master, ultimate, proven)
 - Optimize for 40-60 characters
 - Include relevant keywords naturally
 - Make it specific and actionable
+${knowledgeBase?.brandVoice ? `- Match the brand voice: ${knowledgeBase.brandVoice}` : ""}
 
 Return ONLY the title, nothing else.`,
           workspaceId,
@@ -199,6 +288,16 @@ Return ONLY the category slug, nothing else.`,
             ? `\nTarget keywords to incorporate naturally: ${keywords.join(", ")}`
             : "";
 
+        // Build audience-specific content guidance
+        const audienceGuidance = knowledgeBase?.targetAudience
+          ? `
+AUDIENCE FOCUS:
+- Write for: ${knowledgeBase.targetAudience.demographics || "general readers"}
+- Address these pain points: ${knowledgeBase.targetAudience.painPoints?.join(", ") || "common challenges"}
+- Help them achieve: ${knowledgeBase.targetAudience.goals?.join(", ") || "their goals"}
+- Topics they care about: ${knowledgeBase.targetAudience.interests?.join(", ") || "relevant topics"}`
+          : "";
+
         const contentText = await generateWithAI(
           `Write a comprehensive, SEO-optimized blog post in markdown format.
 
@@ -206,6 +305,8 @@ Title: "${title}"
 Topic: "${topic}"
 Tone: ${tone}
 Target length: ${wordTarget} words${keywordContext}
+${personalizationContext}
+${audienceGuidance}
 
 STRUCTURE:
 1. Hook introduction (100-150 words) - Start with attention-grabbing statement
@@ -223,6 +324,8 @@ REQUIREMENTS:
 - Keep paragraphs short (3-4 sentences max)
 - DO NOT include word count annotations like "(Word count: 248)" anywhere in the content
 - Write continuously without mentioning word counts
+${knowledgeBase?.brandVoice ? `- Maintain this brand voice: ${knowledgeBase.brandVoice}` : ""}
+${knowledgeBase?.contentGuidelines ? `- Follow these guidelines: ${knowledgeBase.contentGuidelines}` : ""}
 
 SEO:
 - Natural keyword incorporation (1-2% density)

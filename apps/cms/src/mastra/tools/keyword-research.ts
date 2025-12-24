@@ -11,11 +11,11 @@ import { generateWithAI } from "../lib/ai-generator";
 /**
  * Create the keyword research tool
  */
-export const createKeywordResearchTool = () =>
+export const createKeywordResearchTool = (workspaceId: string) =>
   createTool({
     id: "keyword-research",
     description:
-      "Research and analyze keywords for SEO optimization. Provides keyword suggestions with relevance scores, difficulty estimates, related terms, long-tail keywords, and strategic recommendations. Use this before writing content to identify optimal keywords to target.",
+      "Research and analyze keywords for SEO optimization. Provides keyword suggestions with relevance scores, difficulty estimates, related terms, long-tail keywords, and strategic recommendations. Focuses on high-volume, low-competition keywords for better ranking opportunities. Ready for API integration with SEMrush, Ahrefs, or Google Keyword Planner. Use this before writing content to identify optimal keywords to target.",
     inputSchema: z.object({
       topic: z
         .string()
@@ -48,9 +48,20 @@ export const createKeywordResearchTool = () =>
           })
         )
         .describe("5-7 primary keywords with analysis"),
+      highOpportunityKeywords: z
+        .array(
+          z.object({
+            keyword: z.string(),
+            volume: z.string(),
+            competition: z.string(),
+            opportunity: z.string(),
+          })
+        )
+        .optional()
+        .describe("3-5 high-volume, low-competition keyword opportunities"),
       relatedKeywords: z
         .array(z.string())
-        .describe("10+ semantically related keywords"),
+        .describe("12+ semantically related keywords"),
       longTailKeywords: z
         .array(
           z.object({
@@ -58,7 +69,7 @@ export const createKeywordResearchTool = () =>
             intent: z.string(),
           })
         )
-        .describe("5-8 long-tail keyword phrases"),
+        .describe("6-8 long-tail keyword phrases"),
       contentOpportunities: z
         .array(z.string())
         .describe("Specific content ideas based on keywords"),
@@ -83,48 +94,57 @@ export const createKeywordResearchTool = () =>
             : "";
 
         const text = await generateWithAI(
-          `Conduct comprehensive keyword research for SEO optimization.
+          `Conduct comprehensive keyword research for SEO optimization with focus on HIGH-VOLUME, LOW-COMPETITION keywords.
 
 Topic: "${topic}"
 Audience: ${audience}${targetKeywordContext}
+
+IMPORTANT: Prioritize keywords with HIGH search volume but LOW to MEDIUM competition for maximum ranking opportunities. Focus on "easy wins" that can drive significant traffic.
 
 Provide detailed keyword analysis in the following structure:
 
 ## PRIMARY KEYWORDS (5-7 keywords)
 For each keyword, analyze:
-- Keyword phrase
+- Keyword phrase (prioritize high-volume, low-competition terms)
 - Relevance score (0-100): How relevant is this to the topic?
-- Difficulty (easy/medium/hard): Competition level
+- Difficulty (easy/medium/hard): Competition level - prioritize EASY keywords
 - Search intent (informational/commercial/transactional/navigational)
-- Reason: Why this keyword is valuable
+- Reason: Why this keyword is valuable for ranking and traffic
 
 Format:
 Keyword: [phrase] | Relevance: [0-100] | Difficulty: [easy/medium/hard] | Intent: [type] | Reason: [explanation]
 
-## RELATED KEYWORDS (10+ keywords)
-List semantically related keywords and LSI (Latent Semantic Indexing) terms that should be naturally incorporated into content. Include variations, synonyms, and contextual terms.
+## HIGH-OPPORTUNITY KEYWORDS (3-5 keywords)
+Keywords with high search volume but low competition - these are your best ranking opportunities!
+
+Format:
+- [keyword] | Volume: [high/medium] | Competition: [low] | Opportunity: [why it's great for ranking]
+
+## RELATED KEYWORDS (12+ keywords)
+List semantically related keywords and LSI terms. Focus on terms with good search volume potential that complement your primary keywords.
 
 Format: keyword1, keyword2, keyword3, etc.
 
-## LONG-TAIL KEYWORDS (5-8 phrases)
-Provide specific long-tail keyword phrases (3-6 words) that target specific user queries. These are easier to rank for and have higher conversion potential.
+## LONG-TAIL KEYWORDS (6-8 phrases)
+Provide specific long-tail keyword phrases (3-6 words) that target specific user queries. These have lower competition and higher conversion potential.
 
 Format:
 - [long-tail phrase] | Intent: [what user is looking for]
 
-## CONTENT OPPORTUNITIES (5+ ideas)
-Based on keyword research, list specific content ideas that would rank well and provide value.
+## CONTENT OPPORTUNITIES (6+ ideas)
+Based on keyword research, list specific content ideas that would rank well for your target keywords and provide value to your audience.
 
 Format: bullet list of actionable content ideas
 
 ## STRATEGIC RECOMMENDATIONS
-Provide a concise strategic summary (3-4 sentences) on:
-- Which keywords to prioritize
-- Content structure suggestions
-- SEO optimization tips
+Provide strategic summary (4-5 sentences) on:
+- Which keywords to prioritize (focus on high-volume, low-competition opportunities)
+- Content structure suggestions for optimal SEO
+- Keyword implementation strategy
+- Long-term SEO roadmap
 
 Generate comprehensive keyword research now:`,
-          undefined,
+          workspaceId,
           "keyword-research",
           10
         );
@@ -201,6 +221,35 @@ Generate comprehensive keyword research now:`,
               reason: "User-specified target keyword",
             }))
           );
+        }
+
+        // Extract high-opportunity keywords
+        const highOpportunityKeywords: Array<{
+          keyword: string;
+          volume: string;
+          competition: string;
+          opportunity: string;
+        }> = [];
+        const highOppSection =
+          text.match(/## HIGH-OPPORTUNITY KEYWORDS[\s\S]*?(?=## |$)/i)?.[0] ||
+          "";
+        const highOppMatches = highOppSection.matchAll(
+          /-\s*([^|]+)\s*\|\s*Volume:\s*([^|]+)\s*\|\s*Competition:\s*([^|]+)\s*\|\s*Opportunity:\s*([^\n]+)/gi
+        );
+
+        for (const match of highOppMatches) {
+          const keyword = match[1]?.trim();
+          const volume = match[2]?.trim();
+          const competition = match[3]?.trim();
+          const opportunity = match[4]?.trim();
+          if (keyword && volume && competition && opportunity) {
+            highOpportunityKeywords.push({
+              keyword,
+              volume,
+              competition,
+              opportunity,
+            });
+          }
         }
 
         // Extract related keywords
@@ -317,6 +366,7 @@ Generate comprehensive keyword research now:`,
 
         return {
           primaryKeywords: primaryKeywords.slice(0, 7),
+          highOpportunityKeywords: highOpportunityKeywords.slice(0, 5),
           relatedKeywords: relatedKeywords.slice(0, 15),
           longTailKeywords: longTailKeywords.slice(0, 8),
           contentOpportunities: contentOpportunities.slice(0, 8),

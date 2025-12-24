@@ -35,10 +35,14 @@ function calculateReadabilityScore(text: string): number {
 function calculateKeywordDensity(content: string, keyword: string): number {
   const contentLower = content.toLowerCase();
   const keywordLower = keyword.toLowerCase();
+
+  // Escape special regex characters to prevent ReDoS attacks
+  const escapedKeyword = keywordLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const words = content.split(/\s+/).length;
 
-  const keywordCount = (contentLower.match(new RegExp(keywordLower, "g")) || [])
-    .length;
+  const keywordCount = (
+    contentLower.match(new RegExp(escapedKeyword, "g")) || []
+  ).length;
   return words > 0 ? (keywordCount / words) * 100 : 0;
 }
 
