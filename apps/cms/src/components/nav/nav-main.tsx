@@ -66,11 +66,6 @@ const items = [
     url: "agent",
     icon: RobotIcon,
   },
-  {
-    name: "AI Workflows",
-    url: "workflows",
-    icon: FlowArrowIcon,
-  },
 ];
 
 const settingsItems = [
