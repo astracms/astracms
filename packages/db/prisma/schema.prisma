@@ -62,6 +62,7 @@ model Organization {
   usageEvents       UsageEvent[]
   apiKeys           ApiKey[]
   aiKnowledgeBase   AiKnowledgeBase?
+  aiWorkflows       AiWorkflow[]
 
   @@map("workspace")
 }
@@ -85,8 +86,8 @@ model Ai {
 }
 
 model AiKnowledgeBase {
-  id          String  @id @default(cuid())
-  workspaceId String  @unique
+  id          String @id @default(cuid())
+  workspaceId String @unique
 
   // Website Information
   websiteUrl      String?
@@ -491,4 +492,114 @@ enum UsageEventType {
   media_upload
   webhook_delivery
   ai_generation
+}
+
+// =============================================================================
+// AI WORKFLOW MODELS
+// =============================================================================
+
+// AI Workflow - The main workflow definition
+model AiWorkflow {
+  id            String            @id @default(cuid())
+  name          String
+  description   String?
+  workspaceId   String
+  status        AiWorkflowStatus  @default(draft)
+  triggerType   AiWorkflowTrigger
+  triggerConfig Json? // Cron expression, webhook config, RSS URL, etc.
+  customPrompt  String? // User-defined prompt for blog generation
+  isActive      Boolean           @default(false)
+  lastRunAt     DateTime?
+  nextRunAt     DateTime? // For scheduled workflows
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  workspace Organization     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  nodes     AiWorkflowNode[]
+  edges     AiWorkflowEdge[]
+  runs      AiWorkflowRun[]
+
+  @@index([workspaceId])
+  @@index([workspaceId, isActive])
+  @@index([isActive, nextRunAt])
+  @@map("ai_workflow")
+}
+
+// Workflow Nodes - Individual steps in the workflow
+model AiWorkflowNode {
+  id         String   @id @default(cuid())
+  workflowId String
+  type       String // trigger, action, condition
+  actionType String? // generate_topic, generate_content, create_post, select_category, generate_tags
+  label      String
+  config     Json? // Node-specific configuration
+  positionX  Float    @default(0)
+  positionY  Float    @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  workflow    AiWorkflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  sourceEdges AiWorkflowEdge[] @relation("SourceNode")
+  targetEdges AiWorkflowEdge[] @relation("TargetNode")
+
+  @@index([workflowId])
+  @@map("ai_workflow_node")
+}
+
+// Workflow Edges - Connections between nodes
+model AiWorkflowEdge {
+  id           String   @id @default(cuid())
+  workflowId   String
+  sourceNodeId String
+  targetNodeId String
+  label        String?
+  createdAt    DateTime @default(now())
+
+  workflow   AiWorkflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  sourceNode AiWorkflowNode @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  targetNode AiWorkflowNode @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@map("ai_workflow_edge")
+}
+
+// Workflow Runs - Execution history and logs
+model AiWorkflowRun {
+  id          String              @id @default(cuid())
+  workflowId  String
+  status      AiWorkflowRunStatus @default(pending)
+  triggeredBy String? // manual, scheduled, webhook, rss
+  startedAt   DateTime            @default(now())
+  completedAt DateTime?
+  error       String?
+  logs        Json? // Step-by-step execution logs
+  result      Json? // Final output data (created post info, etc.)
+
+  workflow AiWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([workflowId])
+  @@index([workflowId, status])
+  @@index([startedAt])
+  @@map("ai_workflow_run")
+}
+
+enum AiWorkflowStatus {
+  draft
+  active
+  paused
+  archived
+}
+
+enum AiWorkflowTrigger {
+  manual
+  scheduled
+  webhook
+  rss_feed
+}
+
+enum AiWorkflowRunStatus {
+  pending
+  running
+  completed
+  failed
 }

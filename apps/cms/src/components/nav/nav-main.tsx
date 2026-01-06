@@ -20,6 +20,7 @@ import {
 import { cn } from "@astra/ui/lib/utils";
 import {
   FadersIcon,
+  FlowArrowIcon,
   HouseIcon,
   ImagesIcon,
   LayoutIcon,
@@ -64,6 +65,11 @@ const items = [
     name: "Astra AI",
     url: "agent",
     icon: RobotIcon,
+  },
+  {
+    name: "AI Workflows",
+    url: "workflows",
+    icon: FlowArrowIcon,
   },
 ];
 

@@ -3,6 +3,18 @@ import { PrismaNeon } from "@prisma/adapter-neon";
 import ws from "ws";
 import { PrismaClient } from "./generated/client";
 
+export type {
+  AiWorkflow,
+  AiWorkflowEdge,
+  AiWorkflowNode,
+  AiWorkflowRun,
+  AiWorkflowRunStatus,
+  AiWorkflowStatus,
+  AiWorkflowTrigger,
+} from "./generated/client";
+// Re-export Prisma namespace and types for consumers
+export { Prisma } from "./generated/client";
+
 neonConfig.webSocketConstructor = ws;
 
 const createClient = (url?: string): PrismaClient => {
