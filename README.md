@@ -1,3 +1,5 @@
+**Disclaimer**: This project is an open-source fork of [Marble CMS](https://github.com/usemarble/marble). AstraCMS is built on top of Marble CMS with modifications and enhancements. Full credit goes to the original Marble CMS contributors.
+
 <p align="center">
   <a href="https://astracms.dev">
     <img src="/assets/twitter-header.png?raw=true" width="auto" height="auto" alt="AstraCMS"/>
