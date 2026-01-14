@@ -21,7 +21,7 @@ const categories = await getCollection("categories");
         <p class="text-muted-foreground">
           Updates, news, and guides from the team.
         </p>
-        <CategoryFilter categories={categories}/>
+        <CategoryFilter categories={categories} />
       </div>
       <ul class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
         {posts.map((post) => <PostCard entry={post} />)}

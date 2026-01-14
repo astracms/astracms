@@ -8,7 +8,7 @@
     "ultracite/remix"
   ],
   "files": {
-    "includes": ["**", "!packages/ui/src", "!apps/docs", "!packages/agent"]
+    "includes": ["!packages/ui/src", "!apps/docs", "!packages/agent"]
   },
   "linter": {
     "rules": {

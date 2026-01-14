@@ -24,8 +24,7 @@ import { cn } from "@/lib/utils";
       <div
         class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-3xl sm:max-w-5xl mx-auto"
       >
-        {
-          PRICING.map((plan, index) => (
+        {PRICING.map((plan, index) => (
             <div
               class={cn(
                 "relative flex flex-col p-6 rounded-xl border transition-all duration-300",
@@ -86,8 +85,7 @@ import { cn } from "@/lib/utils";
                 ))}
               </ul>
             </div>
-          ))
-        }
+          ))}
       </div>
     </Container>
   </section>
@@ -107,16 +105,14 @@ import { cn } from "@/lib/utils";
       <div
         class="divide-y divide-border/60 border-y border-border/60 bg-background rounded-xl"
       >
-        {
-          PRICING_FAQS.map((faq) => (
+        {PRICING_FAQS.map((faq) => (
             <AccordionItem name="details" title={faq.question} class="px-6">
               <p
                 class="text-sm text-muted-foreground leading-relaxed [&>a]:text-foreground hover:[&>a]:text-muted-foreground [&>a]:underline [&>a]:underline-offset-2"
                 set:html={faq.answer}
               />
             </AccordionItem>
-          ))
-        }
+          ))}
       </div>
     </Container>
   </section>

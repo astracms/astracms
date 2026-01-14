@@ -47,15 +47,12 @@ const postsResponse = allPosts.filter(
             Blog
           </h1>
           <p class="text-muted-foreground text-center text-sm md:text-base">
-            {
-              entry.data.description ||
-                "Updates, news, and guides from the team."
-            }
+            {entry.data.description ||
+                "Updates, news, and guides from the team."}
           </p>
-          <CategoryFilter categories={categoriesEntries}/>
+          <CategoryFilter categories={categoriesEntries} />
         </div>
-        {
-          postsResponse.length > 0 ? (
+        {postsResponse.length > 0 ? (
             <ul class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 auto-rows-fr">
               {postsResponse.map((post) => (
                 <CategoryCard entry={post} />
@@ -65,8 +62,7 @@ const postsResponse = allPosts.filter(
             <p class="text-muted-foreground text-center text-sm md:text-base">
               No posts found
             </p>
-          )
-        }
+          )}
       </Container>
     </div>
   </section>

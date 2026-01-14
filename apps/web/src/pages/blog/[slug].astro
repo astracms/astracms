@@ -80,8 +80,7 @@ const readTime = calculateReadTime(entry.body as string);
               </div>
             </div>
             <div class="flex items-center gap-2">
-              {
-                entry.data?.authors?.map((author) => (
+              {entry.data?.authors?.map((author) => (
                   <div class="flex items-center gap-2">
                     {author.image ? (
                       <Image
@@ -97,26 +96,23 @@ const readTime = calculateReadTime(entry.body as string);
                       {author.name}
                     </p>
                   </div>
-                ))
-              }
+                ))}
             </div>
           </div>
         </section>
         <div>
-          {
-            entry.data.coverImage && (
+          {entry.data.coverImage && (
               <Image
                 src={entry.data.coverImage}
                 alt={entry.data.title}
                 class="w-full max-w-3xl mx-auto mb-8"
                 inferSize
               />
-            )
-          }
+            )}
         </div>
 
         <Prose>
-          <Content/>
+          <Content />
         </Prose>
       </Container>
     </div>

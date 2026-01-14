@@ -31,7 +31,7 @@ export default function SignupFeaturesCard() {
               <div className="relative z-1 flex size-fit w-fit items-center gap-2 rounded-lg border bg-background px-3 py-1 font-medium text-xs shadow-md shadow-zinc-950/5 dark:bg-muted">
                 <span className="text-lg">🇨🇩</span> Traffic from Kinshasa, DRC
               </div>
-              <div className="-bottom-2 absolute inset-2 mx-auto rounded-lg border bg-background px-3 py-4 font-medium text-xs shadow-md shadow-zinc-950/5 dark:bg-zinc-900" />
+              <div className="absolute inset-2 -bottom-2 mx-auto rounded-lg border bg-background px-3 py-4 font-medium text-xs shadow-md shadow-zinc-950/5 dark:bg-zinc-900" />
             </div>
 
             <div className="relative overflow-hidden">

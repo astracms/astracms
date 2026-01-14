@@ -117,10 +117,10 @@ const FeatureCard = ({ children, className }: FeatureCardProps) => (
 
 const CardDecorator = () => (
   <>
-    <span className="-left-px -top-px absolute block size-2 border-primary border-t-2 border-l-2" />
-    <span className="-right-px -top-px absolute block size-2 border-primary border-t-2 border-r-2" />
-    <span className="-bottom-px -left-px absolute block size-2 border-primary border-b-2 border-l-2" />
-    <span className="-bottom-px -right-px absolute block size-2 border-primary border-r-2 border-b-2" />
+    <span className="absolute -top-px -left-px block size-2 border-primary border-t-2 border-l-2" />
+    <span className="absolute -top-px -right-px block size-2 border-primary border-t-2 border-r-2" />
+    <span className="absolute -bottom-px -left-px block size-2 border-primary border-b-2 border-l-2" />
+    <span className="absolute -right-px -bottom-px block size-2 border-primary border-r-2 border-b-2" />
   </>
 );
 
@@ -188,7 +188,7 @@ type CircularUIProps = {
 const CircularUI = ({ label, circles, className }: CircularUIProps) => (
   <div className={className}>
     <div className="size-fit rounded-2xl bg-linear-to-b from-border to-transparent p-px">
-      <div className="-space-x-4 relative flex aspect-square w-fit items-center rounded-[15px] bg-linear-to-b from-background to-muted/25 p-4">
+      <div className="relative flex aspect-square w-fit items-center -space-x-4 rounded-[15px] bg-linear-to-b from-background to-muted/25 p-4">
         {circles.map((circle, i) => (
           <div
             className={cn("size-7 rounded-full border sm:size-8", {

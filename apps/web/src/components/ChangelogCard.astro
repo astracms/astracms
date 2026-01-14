@@ -22,8 +22,7 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
     class="space-y-1 p-4 border bg-white flex gap-4 flex-col rounded-2xl hover:shadow-xs transition-all duration-300 h-full"
   >
     <div class="w-full border rounded-md overflow-hidden group">
-      {
-        coverImage && (
+      {coverImage && (
           <Image
             src={coverImage}
             alt={title}
@@ -31,8 +30,7 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
             inferSize
             class="w-full object-cover group-hover:scale-102 transition-all duration-500"
           />
-        )
-      }
+        )}
     </div>
     <div class="flex flex-col gap-4 justify-between flex-1">
       <div class="space-y-2">
@@ -64,14 +62,12 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("en-US", {
         </div>
 
         <div class="flex items-center gap-2">
-          {
-            tags &&
+          {tags &&
               tags.map((tag) => (
                 <span class="text-muted-foreground text-sm bg-muted px-2 py-0.5 rounded-md">
                   #{tag.name}
                 </span>
-              ))
-          }
+              ))}
         </div>
       </div>
     </div>

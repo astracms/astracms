@@ -44,7 +44,7 @@ export function UserAvatarStack({
       .slice(0, 2);
 
   return (
-    <div className={cn("-space-x-1.5 flex", className)}>
+    <div className={cn("flex -space-x-1.5", className)}>
       {displayedUsers.map((user, index) => (
         <Avatar
           className={cn(

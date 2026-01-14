@@ -11,9 +11,7 @@ import { FAQs, SITE } from "@/lib/constants";
     class="relative w-full bg-linear-to-r from-gray-800 via-accent to-gray-900 min-h-[85vh] h-full pt-8 sm:pt-20 pb-32 overflow-hidden"
   >
     <Container>
-      <div
-        class="flex flex-col items-center text-center z-10"
-      >
+      <div class="flex flex-col items-center text-center z-10">
         <h1
           class="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-relaxed text-white leading-[1.1] mb-6 drop-shadow-sm"
         >
@@ -218,16 +216,14 @@ import { FAQs, SITE } from "@/lib/constants";
       <div
         class="divide-y divide-border/60 border-y border-border/60 bg-background rounded-xl"
       >
-        {
-          FAQs.map((faq) => (
+        {FAQs.map((faq) => (
             <AccordionItem name="faq" title={faq.question} class="px-6">
               <div
                 class="text-muted-foreground text-sm leading-relaxed"
                 set:html={faq.answer}
               />
             </AccordionItem>
-          ))
-        }
+          ))}
       </div>
     </Container>
   </section>

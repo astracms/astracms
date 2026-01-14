@@ -3,7 +3,10 @@ import { tavily } from "@tavily/core";
 import { NextResponse } from "next/server";
 import { consumeAICredits, getAICreditStats } from "@/lib/ai-credits";
 import { getServerSession } from "@/lib/auth/session";
-import { websiteAnalysisRequestSchema } from "@/lib/validations/ai-knowledge-base";
+import {
+  type WebsiteAnalysisResult,
+  websiteAnalysisRequestSchema,
+} from "@/lib/validations/ai-knowledge-base";
 import { generateWithAI } from "@/mastra/lib/ai-generator";
 
 const WEBSITE_ANALYSIS_CREDIT_COST = 10;
@@ -119,7 +122,7 @@ Important:
     );
 
     // Parse the AI response
-    let parsedResult;
+    let parsedResult: WebsiteAnalysisResult;
     try {
       // Remove markdown code blocks if present
       const cleanedResult = analysisResult
