@@ -10,26 +10,29 @@ import type * as React from "react";
 import { useOptimistic, useTransition } from "react";
 
 type ButtonProps = React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>;
+  VariantProps<typeof buttonVariants> & {
+    ref?: React.Ref<HTMLButtonElement>;
+  };
 
 export function CopyButton({
   textToCopy,
   toastMessage,
   className,
+  variant = "outline",
+  size = "icon",
   ...props
-}: { textToCopy: string; toastMessage?: string } & Omit<
-  ButtonProps,
-  "onClick" | "children"
->) {
+}: {
+  textToCopy: string;
+  toastMessage?: string;
+  className?: string;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
+  size?: VariantProps<typeof buttonVariants>["size"];
+} & Omit<React.ComponentProps<"button">, "onClick" | "children" | "className">) {
   const [state, setState] = useOptimistic<"idle" | "copied">("idle");
   const [, startTransition] = useTransition();
 
   return (
-    <Button
-      className={cn("size-9 shadow-none", className)}
-      size="icon"
-      variant="outline"
-      {...props}
+    <div
       onClick={() => {
         startTransition(async () => {
           if (!textToCopy) {
@@ -44,12 +47,19 @@ export function CopyButton({
         });
       }}
     >
-      <span className="sr-only">Copy</span>
-      {state === "idle" ? (
-        <CopyIcon className="size-4" />
-      ) : (
-        <CheckIcon className="size-4" />
-      )}
-    </Button>
-  );
+        <Button
+          className={cn("size-9 shadow-none", className)}
+          size={size}
+          variant={variant}
+          tabIndex={-1}
+        >
+          <span className="sr-only">Copy</span>
+          {state === "idle" ? (
+            <CopyIcon className="size-4" />
+          ) : (
+            <CheckIcon className="size-4" />
+          )}
+        </Button>
+      </div>
+    );
 }
