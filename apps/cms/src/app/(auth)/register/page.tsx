@@ -58,7 +58,7 @@ export default async function RegisterPage(props: PageProps) {
             By continuing, you agree to our{" "}
             <Link
               className="underline underline-offset-4 hover:text-primary"
-              href="https://astracms.dev/terms"
+              href="https://www.astracms.dev/terms"
               target="_blank"
             >
               Terms of Service
@@ -66,7 +66,7 @@ export default async function RegisterPage(props: PageProps) {
             and{" "}
             <Link
               className="underline underline-offset-4 hover:text-primary"
-              href="https://astracms.dev/privacy"
+              href="https://www.astracms.dev/privacy"
               target="_blank"
             >
               Privacy Policy

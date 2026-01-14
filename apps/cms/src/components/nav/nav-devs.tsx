@@ -38,7 +38,7 @@ const items = [
   },
   {
     name: "Blog",
-    url: "https://astracms.dev/blog",
+    url: "https://www.astracms.dev/blog",
     external: true,
     icon: BookOpenIcon,
   },

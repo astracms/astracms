@@ -10,7 +10,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwind()],
   },
-  site: "https://astracms.dev",
+  site: "https://www.astracms.dev",
   trailingSlash: "never",
   image: {
     domains: ["cdn.astracms.dev"],

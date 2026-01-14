@@ -172,7 +172,7 @@ All API endpoints are rate limited. When you exceed the limit, you'll receive a 
     `.trim(),
     contact: {
       name: "AstraCMS Support",
-      url: "https://astracms.dev",
+      url: "https://www.astracms.dev",
       email: "support@astracms.dev",
     },
     license: {

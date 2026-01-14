@@ -20,7 +20,7 @@ export const SITE: Site = {
   DESCRIPTION:
     "A simple, collaborative CMS for publishing articles, changelogs, and product updates.",
   EMAIL: "support@astracms.dev",
-  URL: "https://astracms.dev",
+  URL: "https://www.astracms.dev",
   APP_URL: "https://app.astracms.dev",
 };
 

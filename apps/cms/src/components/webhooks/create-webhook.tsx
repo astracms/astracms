@@ -206,7 +206,7 @@ function CreateWebhookSheet({ children }: CreateWebhookSheetProps) {
 
               <Input
                 id="endpoint"
-                placeholder="https://astracms.dev/webhooks/"
+                placeholder="https://www.astracms.dev/webhooks/"
                 {...register("endpoint")}
               />
               {errors.endpoint && (

@@ -1,6 +1,6 @@
 # @astracms/astro-loader
 
-Astro Content Collection loaders for [AstraCMS](https://astracms.dev). Seamlessly integrate your AstraCMS content into Astro.js projects.
+Astro Content Collection loaders for [AstraCMS](https://www.astracms.dev). Seamlessly integrate your AstraCMS content into Astro.js projects.
 
 ## Features
 

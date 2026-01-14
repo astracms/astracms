@@ -6,7 +6,7 @@
     "description": "The AstraCMS API provides programmatic access to your content. \n\n## API Versions\n\n- **V1** (`/v1/{workspaceId}/...`): Uses workspace ID in the URL path\n- **V2** (`/v2/...`): Uses API key authentication via `Authorization: Bearer` header (recommended)\n\n## Rate Limiting\n\nAll API endpoints are rate limited. When you exceed the limit, you'll receive a 429 response.",
     "contact": {
       "name": "AstraCMS Support",
-      "url": "https://astracms.dev",
+      "url": "https://www.astracms.dev",
       "email": "support@astracms.dev"
     },
     "license": {
